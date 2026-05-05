@@ -1,32 +1,90 @@
 services:
+  # Persistance + logs + cache
+  postgres:
+    image: postgres:16-alpine
+    container_name: logsentinel-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-logsentinel}
+      POSTGRES_USER: ${POSTGRES_USER:-n8n}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - logsentinel-net
+
   n8n:
     image: n8nio/n8n:2.17.7
+    container_name: logsentinel-n8n
     restart: unless-stopped
     ports:
       - "5678:5678"
-    env_file:
-      - .env
     environment:
-      # n8n core
+      # Reseau & URL
       N8N_HOST: ${N8N_HOST:-localhost}
       N8N_PORT: 5678
       N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
       WEBHOOK_URL: ${WEBHOOK_URL:-http://localhost:5678}
+
+      # Logging & Securite
       N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: false
 
       # Timezone
       GENERIC_TIMEZONE: ${TIMEZONE:-Africa/Casablanca}
       TZ: ${TIMEZONE:-Africa/Casablanca}
 
-      # Encryption key
-      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      # Base de donnees n8n (PostgreSQL, pas SQLite)
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB:-logsentinel}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-n8n}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      # LLM
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      GROQ_MODEL: ${GROQ_MODEL}
+      FALLBACK_API_KEY: ${FALLBACK_API_KEY}
+      FALLBACK_MODEL: ${FALLBACK_MODEL}
+
     volumes:
       - n8n-data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --spider -q http://localhost:5678/healthz/readiness || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 30s
+    networks:
+      - logsentinel-net
 
+# Volumes persistants
 volumes:
+  postgres-data:
+    name: logsentinel-postgres-data
   n8n-data:
+    name: logsentinel-n8n-data
+
+# Reseau interne (les services communiquent par nom de conteneur)
+networks:
+  logsentinel-net:
+    name: logsentinel-net
+    driver: bridge
