@@ -17,7 +17,9 @@
         "columns": {
           "mappingMode": "autoMapInputData",
           "value": {},
-          "matchingColumns": ["id"],
+          "matchingColumns": [
+            "id"
+          ],
           "schema": [
             {
               "id": "id",
@@ -152,8 +154,11 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [160, 32],
-      "id": "b10541ea-2311-4da0-9a22-2b4838794444",
+      "position": [
+        -304,
+        288
+      ],
+      "id": "120c99d6-810a-41f7-8fad-5c7a04cad0da",
       "name": "Insert rows in a table",
       "credentials": {
         "postgres": {
@@ -169,8 +174,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-720, 32],
-      "id": "ac630d30-0b66-410c-9bd5-fa36b72cba15",
+      "position": [
+        -1184,
+        288
+      ],
+      "id": "56634b38-4ffa-4467-8a44-86aa2e7481c5",
       "name": "Format Detector"
     },
     {
@@ -307,8 +315,11 @@
       },
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
-      "position": [-448, -16],
-      "id": "b3abe692-8094-425d-953e-3d97b331d99d",
+      "position": [
+        -912,
+        240
+      ],
+      "id": "bcdfa2de-413b-470f-9f13-0fa825958428",
       "name": "Switch"
     },
     {
@@ -318,8 +329,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-96, -288],
-      "id": "99e00747-be87-429b-9d85-7d69ae77695b",
+      "position": [
+        -560,
+        -32
+      ],
+      "id": "01b5d055-430b-4015-9272-81e4178fbbdd",
       "name": "JSON Processor"
     },
     {
@@ -329,8 +343,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-96, -128],
-      "id": "aaa554b6-17eb-47ab-b81b-47b936a6b89f",
+      "position": [
+        -560,
+        128
+      ],
+      "id": "297c19c0-b975-4645-9b18-b66364646647",
       "name": "Syslog Processor"
     },
     {
@@ -340,8 +357,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-96, 32],
-      "id": "b4cc31b9-cb5c-4a13-a5b4-ee35d512daf2",
+      "position": [
+        -560,
+        288
+      ],
+      "id": "0e9bdccf-508b-414d-b796-6dfa3bd570c0",
       "name": "Apache Processor"
     },
     {
@@ -351,8 +371,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-96, 208],
-      "id": "12a68f76-0243-4483-a4bf-588e01725d42",
+      "position": [
+        -560,
+        464
+      ],
+      "id": "89656458-9b89-408f-b2b3-bfb8e707c3e1",
       "name": "Plaintext Processor"
     },
     {
@@ -362,8 +385,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-96, 384],
-      "id": "5512eed1-e86e-43a6-871e-5d67b3f96be6",
+      "position": [
+        -560,
+        640
+      ],
+      "id": "4e44378b-050b-4a0c-9529-70f7be48d691",
       "name": "Unknown Processor"
     },
     {
@@ -371,12 +397,16 @@
         "httpMethod": "POST",
         "path": "logs",
         "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [-928, 16],
-      "id": "458a028a-0eb1-4653-8077-600b73af1a88",
+      "position": [
+        -1392,
+        272
+      ],
+      "id": "40d1a075-5f24-4929-9ef9-02933acca0a8",
       "name": "Webhook1",
       "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd",
       "credentials": {
@@ -394,8 +424,11 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [400, 32],
-      "id": "a1b2c3d4-e5f6-7890-abcd-111111111111",
+      "position": [
+        -64,
+        288
+      ],
+      "id": "a3dd7f8e-3aee-4736-acd7-f3a1d7eeb3b6",
       "name": "AFD State Read",
       "credentials": {
         "postgres": {
@@ -407,12 +440,15 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// WF1 - Code Node: AFD Engine + Regex Evaluation\n// Issue #5 | Branch: feat/05-wf1-afd-engine\n// LogSentinel - IA-01\n//\n// $json = output of \"AFD State Read\" (always 1 row, COALESCE LEFT JOIN)\n// $('Insert rows in a table').first().json = log row with id, source_id, message\n//\n// n8n mode: runOnceForEachItem\n// Phase 1 scope: ERROR_CASCADE, RECOVERY, cascade_count not implemented (Issue #13)\n\n\n// 0. ENV CONFIG\n// Requires N8N_BLOCK_ENV_ACCESS_IN_NODE=false in docker-compose (already set).\n\nconst TIMEOUT_WINDOW_SEC = parseInt(process.env.TIMEOUT_WINDOW ?? '300', 10);\nconst EFFECTIVE_TIMEOUT = Number.isFinite(TIMEOUT_WINDOW_SEC) && TIMEOUT_WINDOW_SEC > 0\n  ? TIMEOUT_WINDOW_SEC : 300;\n\n\n// 1. TRANSITION TABLE delta: Q x Sigma -> Q\n// Source: Issue #3, Section 3, 4x6 = 24 entries\n// Determinism: 1 output per (state, symbol) pair\n// Totality: all 24 entries defined\n// Monotonicity: delta(q, sigma_log) >= q except sigma_timeout (resets to INFO)\n// Absorption: delta(CRITICAL, sigma) = CRITICAL for all sigma != sigma_timeout\n\nconst TRANSITIONS = {\n  //           sigma_info    sigma_warn    sigma_error   sigma_crit    sigma_malformed  sigma_timeout\n  INFO:     { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'INFO',     sigma_timeout: 'INFO'     },\n  WARNING:  { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'WARNING',  sigma_timeout: 'INFO'     },\n  ERROR:    { sigma_info: 'WARNING',  sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'ERROR',    sigma_timeout: 'INFO'     },\n  CRITICAL: { sigma_info: 'CRITICAL', sigma_warn: 'CRITICAL', sigma_error: 'CRITICAL', sigma_crit: 'CRITICAL', sigma_malformed: 'CRITICAL', sigma_timeout: 'INFO'     },\n};\n\n// Note on delta(ERROR, sigma_info) = WARNING (not INFO):\n// Partial recovery - service responds again but we stay in WARNING.\n// Only sigma_timeout (prolonged silence) resets fully to INFO.\n\n\n// 2. REGEX PATTERNS in strict priority order\n// Priority: sigma_crit > sigma_error > sigma_warn > sigma_info > sigma_malformed\n// First match wins. sigma_malformed is the default (no regex). sigma_timeout is internal.\n\nconst REGEX_PATTERNS = [\n  {\n    symbol: 'sigma_crit',\n    // \\b prevents partial matches: \"uncritical\", \"non-fatal\" won't fire.\n    pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i,\n  },\n  {\n    symbol: 'sigma_error',\n    // HTTP 5xx via 5[0-9]{2}. Common exception class names included.\n    // Known false positive (Phase 1): 'GET /error-page 200' -> sigma_error because\n    // '/' is a non-word char so \\b fires before 'error' in the URL path.\n    // Issue #3 Section 5 edge case 1 was wrong on this. Fix in Phase 2 (Issue #4).\n    pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i,\n  },\n  {\n    symbol: 'sigma_warn',\n    // Negative lookahead TIMEOUT(?!_WINDOW): excludes \"TIMEOUT_WINDOW\" (internal config param).\n    pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i,\n  },\n  {\n    symbol: 'sigma_info',\n    // HTTP 2xx via 2[0-9]{2}.\n    pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i,\n  },\n  // sigma_malformed: no pattern, default in evaluateSymbol()\n  // sigma_timeout: internal temporal signal, never in REGEX_PATTERNS\n];\n\n\n// 3. PURE ENGINE FUNCTIONS\n\n/**\n * evaluateSymbol(message) -> symbol in Sigma\n * null/empty -> sigma_malformed before any regex. First match wins.\n */\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\n/**\n * applyTransition(currentState, symbol) -> newState\n * Unknown state falls back to INFO. Unknown symbol leaves state unchanged.\n */\nfunction applyTransition(currentState, symbol) {\n  const row = TRANSITIONS[currentState];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? currentState;\n}\n\n\n// 4. READ LOG DATA from the Insert node (carries id, source_id, message, etc.)\nconst logObject = $('Insert rows in a table').first().json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst now       = new Date();\n\n\n// 5. READ CURRENT AFD STATE from $json (= \"AFD State Read\" output)\n// \"AFD State Read\" uses COALESCE with a LEFT JOIN so it always returns exactly 1 row.\n// New service: current_state = 'INFO', last_event_time = null\nconst stateRow = $json;\n\nlet currentState  = 'INFO';\nlet lastEventTime = now;\nlet isNewService  = true;\n\nif (stateRow?.current_state) {\n  // Normalize legacy 'NOMINAL' (schema.sql default from Phase 0) -> 'INFO' (Phase 1 q0)\n  currentState = (stateRow.current_state === 'NOMINAL') ? 'INFO' : stateRow.current_state;\n  if (!TRANSITIONS[currentState]) currentState = 'INFO';\n\n  if (stateRow.last_event_time) {\n    lastEventTime = new Date(stateRow.last_event_time);\n    isNewService  = false;\n    // last_event_time is null for new services (COALESCE returned INFO but no real row)\n  }\n}\n\n\n// 6. TEMPORAL RESET (sigma_timeout)\n// If no log received for TIMEOUT_WINDOW seconds: apply delta(q, sigma_timeout) first,\n// then delta(result, sigma_log). New services skip this (no last_event_time to compare).\n\nconst elapsedMs  = now - lastEventTime;\nconst elapsedSec = elapsedMs / 1000;\n\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n}\n\n\n// 7. SYMBOL EVALUATION AND TRANSITION\n\nconst symbol        = evaluateSymbol(message);\nconst newState      = applyTransition(stateAfterTimeout, symbol);\nconst previousState = currentState; // state before any transition (audit trail)\n\n\n// 8. RETURN ENRICHED OBJECT\n// \"AFD State Write\" node (after this) runs:\n//   INSERT INTO afd_states ... ON CONFLICT DO UPDATE using $json.afd_state etc.\n// \"Log State Write\" node (after this) runs:\n//   UPDATE logs SET afd_state, afd_symbol, previous_state WHERE id = $json.id\n\nreturn {\n  ...logObject,           // all fields from Insert node (including id)\n  afd_symbol:      symbol,\n  afd_state:       newState,\n  previous_state:  previousState,\n  source_id:       sourceId,\n  is_new_service:  isNewService,\n  timeout_applied: timeoutApplied,\n  elapsed_sec:     Math.round(elapsedSec),\n  timeout_window:  EFFECTIVE_TIMEOUT,\n  engine_ts:       now.toISOString(),\n  // Not in Phase 1: cascade_count, cascade_start_time, ERROR_CASCADE, RECOVERY (Issue #13)\n};\n"
+        "jsCode": "// WF1 - Code Node: AFD Engine + Regex Evaluation\n// Issue #5 | Branch: feat/05-wf1-afd-engine\n// LogSentinel - IA-01\n//\n// $json = output of \"AFD State Read\" (always 1 row, COALESCE LEFT JOIN)\n// $('Insert rows in a table').first().json = log row with id, source_id, message\n//\n// n8n mode: runOnceForEachItem\n// Phase 1 scope: ERROR_CASCADE, RECOVERY, cascade_count not implemented (Issue #13)\n\n\n// 0. ENV CONFIG\n// Requires N8N_BLOCK_ENV_ACCESS_IN_NODE=false in docker-compose (already set).\n\nconst TIMEOUT_WINDOW_SEC = parseInt($env.TIMEOUT_WINDOW ?? '300', 10);\nconst EFFECTIVE_TIMEOUT = Number.isFinite(TIMEOUT_WINDOW_SEC) && TIMEOUT_WINDOW_SEC > 0\n  ? TIMEOUT_WINDOW_SEC : 300;\n\n\n// 1. TRANSITION TABLE delta: Q x Sigma -> Q\n// Source: Issue #3, Section 3, 4x6 = 24 entries\n// Determinism: 1 output per (state, symbol) pair\n// Totality: all 24 entries defined\n// Monotonicity: delta(q, sigma_log) >= q except sigma_timeout (resets to INFO)\n// Absorption: delta(CRITICAL, sigma) = CRITICAL for all sigma != sigma_timeout\n\nconst TRANSITIONS = {\n  //           sigma_info    sigma_warn    sigma_error   sigma_crit    sigma_malformed  sigma_timeout\n  INFO:     { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'INFO',     sigma_timeout: 'INFO'     },\n  WARNING:  { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'WARNING',  sigma_timeout: 'INFO'     },\n  ERROR:    { sigma_info: 'WARNING',  sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'ERROR',    sigma_timeout: 'INFO'     },\n  CRITICAL: { sigma_info: 'CRITICAL', sigma_warn: 'CRITICAL', sigma_error: 'CRITICAL', sigma_crit: 'CRITICAL', sigma_malformed: 'CRITICAL', sigma_timeout: 'INFO'     },\n};\n\n// Note on delta(ERROR, sigma_info) = WARNING (not INFO):\n// Partial recovery - service responds again but we stay in WARNING.\n// Only sigma_timeout (prolonged silence) resets fully to INFO.\n\n\n// 2. REGEX PATTERNS in strict priority order\n// Priority: sigma_crit > sigma_error > sigma_warn > sigma_info > sigma_malformed\n// First match wins. sigma_malformed is the default (no regex). sigma_timeout is internal.\n\nconst REGEX_PATTERNS = [\n  {\n    symbol: 'sigma_crit',\n    // \\b prevents partial matches: \"uncritical\", \"non-fatal\" won't fire.\n    pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i,\n  },\n  {\n    symbol: 'sigma_error',\n    // HTTP 5xx via 5[0-9]{2}. Common exception class names included.\n    // Known false positive (Phase 1): 'GET /error-page 200' -> sigma_error because\n    // '/' is a non-word char so \\b fires before 'error' in the URL path.\n    // Issue #3 Section 5 edge case 1 was wrong on this. Fix in Phase 2 (Issue #4).\n    pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i,\n  },\n  {\n    symbol: 'sigma_warn',\n    // Negative lookahead TIMEOUT(?!_WINDOW): excludes \"TIMEOUT_WINDOW\" (internal config param).\n    pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i,\n  },\n  {\n    symbol: 'sigma_info',\n    // HTTP 2xx via 2[0-9]{2}.\n    pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i,\n  },\n  // sigma_malformed: no pattern, default in evaluateSymbol()\n  // sigma_timeout: internal temporal signal, never in REGEX_PATTERNS\n];\n\n\n// 3. PURE ENGINE FUNCTIONS\n\n/**\n * evaluateSymbol(message) -> symbol in Sigma\n * null/empty -> sigma_malformed before any regex. First match wins.\n */\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\n/**\n * applyTransition(currentState, symbol) -> newState\n * Unknown state falls back to INFO. Unknown symbol leaves state unchanged.\n */\nfunction applyTransition(currentState, symbol) {\n  const row = TRANSITIONS[currentState];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? currentState;\n}\n\n\n// 4. READ LOG DATA from the Insert node (carries id, source_id, message, etc.)\nconst logObject = $('Insert rows in a table').first().json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst now       = new Date();\n\n\n// 5. READ CURRENT AFD STATE from $json (= \"AFD State Read\" output)\n// \"AFD State Read\" uses COALESCE with a LEFT JOIN so it always returns exactly 1 row.\n// New service: current_state = 'INFO', last_event_time = null\nconst stateRow = $json;\n\nlet currentState  = 'INFO';\nlet lastEventTime = now;\nlet isNewService  = true;\n\nif (stateRow?.current_state) {\n  // Normalize legacy 'NOMINAL' (schema.sql default from Phase 0) -> 'INFO' (Phase 1 q0)\n  currentState = (stateRow.current_state === 'NOMINAL') ? 'INFO' : stateRow.current_state;\n  if (!TRANSITIONS[currentState]) currentState = 'INFO';\n\n  if (stateRow.last_event_time) {\n    lastEventTime = new Date(stateRow.last_event_time);\n    isNewService  = false;\n    // last_event_time is null for new services (COALESCE returned INFO but no real row)\n  }\n}\n\n\n// 6. TEMPORAL RESET (sigma_timeout)\n// If no log received for TIMEOUT_WINDOW seconds: apply delta(q, sigma_timeout) first,\n// then delta(result, sigma_log). New services skip this (no last_event_time to compare).\n\nconst elapsedMs  = now - lastEventTime;\nconst elapsedSec = elapsedMs / 1000;\n\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n}\n\n\n// 7. SYMBOL EVALUATION AND TRANSITION\n\nconst symbol        = evaluateSymbol(message);\nconst newState      = applyTransition(stateAfterTimeout, symbol);\nconst previousState = currentState; // state before any transition (audit trail)\n\n\n// 8. RETURN ENRICHED OBJECT\n// \"AFD State Write\" node (after this) runs:\n//   INSERT INTO afd_states ... ON CONFLICT DO UPDATE using $json.afd_state etc.\n// \"Log State Write\" node (after this) runs:\n//   UPDATE logs SET afd_state, afd_symbol, previous_state WHERE id = $json.id\n\nreturn {\n  ...logObject,           // all fields from Insert node (including id)\n  afd_symbol:      symbol,\n  afd_state:       newState,\n  previous_state:  previousState,\n  source_id:       sourceId,\n  is_new_service:  isNewService,\n  timeout_applied: timeoutApplied,\n  elapsed_sec:     Math.round(elapsedSec),\n  timeout_window:  EFFECTIVE_TIMEOUT,\n  engine_ts:       now.toISOString(),\n  // Not in Phase 1: cascade_count, cascade_start_time, ERROR_CASCADE, RECOVERY (Issue #13)\n};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [640, 32],
-      "id": "b2c3d4e5-f6a7-8901-bcde-222222222222",
+      "position": [
+        176,
+        288
+      ],
+      "id": "69750850-62ba-45a2-a343-843573954ee9",
       "name": "AFD Engine"
     },
     {
@@ -423,8 +459,11 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [880, 32],
-      "id": "c3d4e5f6-a7b8-9012-cdef-333333333333",
+      "position": [
+        400,
+        608
+      ],
+      "id": "2a741f4f-f4a2-41b1-a4d4-54d19d6121ce",
       "name": "AFD State Write",
       "credentials": {
         "postgres": {
@@ -441,8 +480,11 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [1120, 32],
-      "id": "d4e5f6a7-b8c9-0123-defa-444444444444",
+      "position": [
+        400,
+        848
+      ],
+      "id": "702e0861-c3e2-42d2-af59-c4443e2a4da9",
       "name": "Log State Write",
       "credentials": {
         "postgres": {
@@ -450,6 +492,252 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ab6ff2e0-ca5f-4b91-8970-f46690fb1d74",
+                    "leftValue": "={{ ['INFO', 'NOMINAL'].includes($json.afd_state) }}",
+                    "rightValue": "true",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "INFO Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "710fdff7-1a07-4f1a-aeea-f9404a85c721",
+                    "leftValue": "={{ ['WARNING', 'DEGRADED'].includes($json.afd_state) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WARNING Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "22be804b-0965-4e3a-adca-ab0d690c5965",
+                    "leftValue": "={{$json.afd_state}}",
+                    "rightValue": "ERROR",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ERROR Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ff408d4f-2f53-4e9a-bbfc-7d9bfa22e67d",
+                    "leftValue": "={{ ['CRITICAL', 'ERROR_CASCADE'].includes($json.afd_state) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CRITICAL Handler"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        256
+      ],
+      "id": "d7eeb775-3172-4e56-ac64-7aa8d3437abd",
+      "name": "AFD State Switch Router"
+    },
+    {
+      "parameters": {
+        "subject": "=WARNING - {{$json.source_id}}",
+        "emailFormat": "text",
+        "text": "=Warning detected:\n{{$json.message}}\n\nState: WARNING\nTime: {{$now}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1008,
+        -48
+      ],
+      "id": "4b0751ef-f389-4ee9-a62f-fdb46d0574af",
+      "name": "Send an Email",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+    },
+    {
+      "parameters": {
+        "subject": "=ERROR - {{$json.source_id}}",
+        "emailFormat": "text",
+        "text": "=Error detected:\n{{$json.message}}\n\nPlease investigate immediately.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1008,
+        416
+      ],
+      "id": "515aed58-a761-4242-a7c1-f3dec6d62314",
+      "name": "Send an Email1",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.GROQ_API_URL}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"source_id\": \"{{$json.source_id}}\",\n  \"message\": \"{{$json.message}}\",\n  \"category\": \"{{$json.category}}\",\n  \"afd_state\": \"CRITICAL\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1008,
+        976
+      ],
+      "id": "a40861b9-6a82-48d5-8906-a3a0e3113558",
+      "name": "Trigger LLM Workflow"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"WARNING\",\n  \"message\": \"email_sent\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        112
+      ],
+      "id": "c0356c51-49b8-4d42-8ae4-7bed32cca58d",
+      "name": "WARNING Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"INFO\",\n  \"message\": \"processed\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        -224
+      ],
+      "id": "7701f251-910c-442b-9405-475bed70031e",
+      "name": "INFO Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"ERROR\",\n  \"message\": \"email_sent\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        576
+      ],
+      "id": "9d78e1d5-f178-4b40-add3-403fed8a2e1f",
+      "name": "ERROR Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"CRITICAL\",\n  \"message\": \"sent_to_llm\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        832
+      ],
+      "id": "15633f39-41e8-4749-b945-ab77d31b3bd7",
+      "name": "CRITICAL Message"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"{{$json.status}}\",\n  \"message\": \"{{$json.message}}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1760,
+        384
+      ],
+      "id": "92f87ef2-4b22-446b-99cd-c3a49337d4aa",
+      "name": "Final Response"
     }
   ],
   "pinData": {},
@@ -599,15 +887,110 @@
             "node": "AFD State Write",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Log State Write",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AFD State Switch Router",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
     "AFD State Write": {
       "main": [
+        []
+      ]
+    },
+    "AFD State Switch Router": {
+      "main": [
         [
           {
-            "node": "Log State Write",
+            "node": "INFO Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WARNING Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ERROR Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Trigger LLM Workflow",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CRITICAL Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "INFO Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WARNING Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ERROR Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRITICAL Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
             "type": "main",
             "index": 0
           }
@@ -620,11 +1003,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "05-afd-engine-impl",
+  "versionId": "4f89c69a-7d90-4501-85f2-11e66aa4024e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
   },
-  "id": "pntD9nBY8mXI7hAC",
+  "id": "oqOA7u7h9TvjAf9s",
   "tags": []
 }
