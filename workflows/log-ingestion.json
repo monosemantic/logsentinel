@@ -1,0 +1,582 @@
+{
+  "name": "Log Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "logs",
+          "mode": "list",
+          "cachedResultName": "logs"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "log_timestamp",
+              "displayName": "log_timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "level",
+              "displayName": "level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "raw_log",
+              "displayName": "raw_log",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "format_type",
+              "displayName": "format_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "afd_state",
+              "displayName": "afd_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "afd_symbol",
+              "displayName": "afd_symbol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "previous_state",
+              "displayName": "previous_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "llm_cache_hit",
+              "displayName": "llm_cache_hit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "classified_at",
+              "displayName": "classified_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        160,
+        32
+      ],
+      "id": "b10541ea-2311-4da0-9a22-2b4838794444",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const input = $json.body || $json;\n\nfunction detectFormat(log) {\n  if (typeof log === \"object\" && !Array.isArray(log)) {\n    return \"json\";\n  }\n\n  if (typeof log === \"string\") {\n    if (log.includes(\"GET\") && log.includes(\"HTTP\")) return \"apache\";\n    if (/^[A-Z][a-z]{2}\\s\\d{1,2}/.test(log)) return \"syslog\";\n    if (/\\d{4}-\\d{2}-\\d{2}/.test(log)) return \"plaintext\";\n  }\n\n  return \"unknown\";\n}\n\nreturn {\n  raw_log: input,\n  format_type: detectFormat(input)\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        32
+      ],
+      "id": "ac630d30-0b66-410c-9bd5-fa36b72cba15",
+      "name": "Format Detector"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "json",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a567dbb2-09e4-4a0f-bb09-68436f7dd491"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JSON Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b10f9faa-df5a-4c60-81bc-8e9527ea522d",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "syslog",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Syslog Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "591c9d88-29f2-4a9b-b9e5-fc53137fac20",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "apache",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Apache Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7359ff2b-2af0-4189-9e0f-b713fa7eec3a",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "plaintext",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Plaintext Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0a645b9e-9940-4670-b75d-08b82fbf443d",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "unknown",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Unknown Processor"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        -16
+      ],
+      "id": "b3abe692-8094-425d-953e-3d97b331d99d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nreturn {\n  source_id: log.service || \"unknown\",\n  log_timestamp: log.timestamp || new Date().toISOString(),\n  raw_log: log,\n  message: log.message || \"\",\n  format_type: \"json\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        -288
+      ],
+      "id": "99e00747-be87-429b-9d85-7d69ae77695b",
+      "name": "JSON Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nconst match = typeof log === \"string\"\n  ? log.match(/^[A-Z][a-z]{2}\\s+\\d+\\s+\\d+:\\d+:\\d+\\s+\\S+\\s+(\\S+)\\[\\d+\\]:\\s+(.*)$/)\n  : null;\n\nreturn {\n  source_id: match?.[1] || \"unknown\",\n  log_timestamp: new Date().toISOString(),\n  raw_log: log,\n  message: match?.[2] || log,\n  format_type: \"syslog\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        -128
+      ],
+      "id": "aaa554b6-17eb-47ab-b81b-47b936a6b89f",
+      "name": "Syslog Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nconst match = typeof log === \"string\"\n  ? log.match(/(\\d+\\.\\d+\\.\\d+\\.\\d+).*?\\[(.*?)\\]\\s+\"(.*?)\"/)\n  : null;\n\nreturn {\n  source_id: \"apache\",\n  log_timestamp: match?.[2] || new Date().toISOString(),\n  raw_log: log,\n  message: match ? match[3] : log,\n  format_type: \"apache\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        32
+      ],
+      "id": "b4cc31b9-cb5c-4a13-a5b4-ee35d512daf2",
+      "name": "Apache Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nconst parts = typeof log === \"string\" ? log.split(\" \") : [];\n\nreturn {\n  source_id: \"unknown\",\n  log_timestamp: parts.slice(0, 2).join(\" \") || new Date().toISOString(),\n  raw_log: log,\n  message: parts.slice(2).join(\" \") || log,\n  format_type: \"text\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        208
+      ],
+      "id": "12a68f76-0243-4483-a4bf-588e01725d42",
+      "name": "Plaintext Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {\n  source_id: \"unknown\",\n  log_timestamp: new Date().toISOString(),\n  raw_log: $json.raw_log,\n  message: $json.raw_log,\n  format_type: \"unknown\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        384
+      ],
+      "id": "5512eed1-e86e-43a6-871e-5d67b3f96be6",
+      "name": "Unknown Processor"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "logs",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -928,
+        16
+      ],
+      "id": "458a028a-0eb1-4653-8077-600b73af1a88",
+      "name": "Webhook1",
+      "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9mzRDgj4hYdUAqjW",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM logs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        368,
+        32
+      ],
+      "id": "ad39bcf3-738b-4465-90b0-5e9c2e90a58a",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Format Detector": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "JSON Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Syslog Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Apache Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plaintext Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unknown Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apache Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Format Detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Syslog Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plaintext Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unknown Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "80f2bd7c-0943-4038-ba5f-9b4776dace9f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
+  },
+  "id": "pntD9nBY8mXI7hAC",
+  "tags": []
+}
