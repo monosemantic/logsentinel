@@ -1,0 +1,71 @@
+{
+  "accuracy": 0.9625,
+  "macro_f1": 0.963,
+  "per_class": {
+    "INFO": {
+      "tp": 19,
+      "fp": 0,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.95,
+      "f1": 0.9744
+    },
+    "WARNING": {
+      "tp": 18,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1": 0.9474
+    },
+    "ERROR": {
+      "tp": 20,
+      "fp": 3,
+      "fn": 0,
+      "precision": 0.8696,
+      "recall": 1.0,
+      "f1": 0.9302
+    },
+    "CRITICAL": {
+      "tp": 20,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "confusion_matrix": {
+    "INFO": {
+      "INFO": 19,
+      "ERROR": 1,
+      "WARNING": 0,
+      "CRITICAL": 0
+    },
+    "WARNING": {
+      "WARNING": 18,
+      "ERROR": 2,
+      "INFO": 0,
+      "CRITICAL": 0
+    },
+    "ERROR": {
+      "ERROR": 20,
+      "INFO": 0,
+      "WARNING": 0,
+      "CRITICAL": 0
+    },
+    "CRITICAL": {
+      "CRITICAL": 20,
+      "INFO": 0,
+      "WARNING": 0,
+      "ERROR": 0
+    }
+  },
+  "latency_ms": {
+    "mean": 117.3,
+    "min": 77.6,
+    "max": 408.3,
+    "p95": 209.4
+  },
+  "errors": 0
+}
