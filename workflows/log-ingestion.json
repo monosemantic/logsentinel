@@ -1,5 +1,5 @@
 {
-  "name": "Log Ingestion",
+  "name": "My workflow",
   "nodes": [
     {
       "parameters": {
@@ -158,7 +158,7 @@
         -1312,
         512
       ],
-      "id": "6bd5adf6-0d72-4145-bda8-b7bc1965c2a2",
+      "id": "7c75f556-23f0-4a32-a98b-82e28ab6bb30",
       "name": "Insert rows in a table",
       "credentials": {
         "postgres": {
@@ -178,7 +178,7 @@
         -2192,
         512
       ],
-      "id": "c6167c50-b3b2-4526-beb7-338093fca64a",
+      "id": "8c57a8ad-a33e-4aa4-8c06-c38c6a393dec",
       "name": "Format Detector"
     },
     {
@@ -319,7 +319,7 @@
         -1920,
         464
       ],
-      "id": "15fe5ad9-c2da-4f96-a3e0-a65d7a8809d4",
+      "id": "13d558cf-dce6-472c-9f00-98752fdc8bd8",
       "name": "Switch"
     },
     {
@@ -333,7 +333,7 @@
         -1568,
         192
       ],
-      "id": "fad603a5-5bf7-440a-b02c-1cfc1102ad1a",
+      "id": "fd3322c0-4ad8-4c8c-b8ab-70f3bc3fcf1f",
       "name": "JSON Processor"
     },
     {
@@ -347,7 +347,7 @@
         -1568,
         352
       ],
-      "id": "bab7014a-582e-4f21-bdb4-b01656a8a7c3",
+      "id": "2cacf092-b0d5-493b-a4cc-c347cb66feef",
       "name": "Syslog Processor"
     },
     {
@@ -361,7 +361,7 @@
         -1568,
         512
       ],
-      "id": "5dbbdac9-5cb5-49fa-b146-503282d8a3f7",
+      "id": "0b457b38-2ec2-47d5-bb03-135ef8fd95ad",
       "name": "Apache Processor"
     },
     {
@@ -375,7 +375,7 @@
         -1568,
         688
       ],
-      "id": "f3cfdb1d-8049-4fed-bf59-37664cb9f736",
+      "id": "b2ec860b-937a-4aab-858d-aee1e813de77",
       "name": "Plaintext Processor"
     },
     {
@@ -389,7 +389,7 @@
         -1568,
         864
       ],
-      "id": "8374586d-b53c-4cca-be68-ad8d524f8706",
+      "id": "48b3e282-6115-4b12-949b-eb7990b4009a",
       "name": "Unknown Processor"
     },
     {
@@ -404,7 +404,7 @@
         -1072,
         512
       ],
-      "id": "b2b5096e-7f6f-4cd1-a774-31a6344530ac",
+      "id": "b8f836a5-0db2-40ba-8675-dda3417bd944",
       "name": "AFD State Read",
       "credentials": {
         "postgres": {
@@ -424,7 +424,7 @@
         -832,
         512
       ],
-      "id": "6c5230e6-fb20-4c3f-92eb-5675cb61a245",
+      "id": "ce8f9e3b-2d20-427e-8719-9f8ec630925e",
       "name": "AFD Engine"
     },
     {
@@ -439,8 +439,14 @@
         -608,
         832
       ],
-      "id": "2852e1c2-1378-4577-af81-08ebb6e495f8",
-      "name": "AFD State Write"
+      "id": "3d5f71a1-7323-4e16-a5ba-8b510aaa0750",
+      "name": "AFD State Write",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
@@ -454,8 +460,14 @@
         -608,
         1072
       ],
-      "id": "1bc3af41-cbed-454a-808f-247b30fa1d5a",
-      "name": "Log State Write"
+      "id": "0f2a0dd8-9ac4-4599-8b98-2b47f57b6b6d",
+      "name": "Log State Write",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
@@ -571,7 +583,7 @@
         -576,
         480
       ],
-      "id": "5d4da384-dfd6-4fc7-b1bc-2d37b40bcc95",
+      "id": "bd4ca5b9-a398-472a-b139-7dcb8940f274",
       "name": "AFD State Switch Router"
     },
     {
@@ -589,7 +601,7 @@
         0,
         176
       ],
-      "id": "b9c19fa2-3024-4ecf-b841-37b31a4df1a9",
+      "id": "4696e195-0cd3-43cb-b8b1-235a8d9a25ff",
       "name": "Send an Email",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
@@ -608,7 +620,7 @@
         0,
         640
       ],
-      "id": "db920e8a-0e23-4f78-b9c2-7ddebeb74d26",
+      "id": "b59ceddd-8fd7-43f9-9c03-d036b4e03156",
       "name": "Send an Email1",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
@@ -624,7 +636,7 @@
         0,
         336
       ],
-      "id": "f1705a80-b404-40eb-926e-5dc7b7595e74",
+      "id": "fb227179-47fc-4b36-b77c-48e62ee64382",
       "name": "WARNING Message"
     },
     {
@@ -639,7 +651,7 @@
         0,
         0
       ],
-      "id": "884a4d4e-d52b-4513-acf5-1bd8d4ec32e0",
+      "id": "ff4d3986-f3e5-43db-851b-e8ccf207292f",
       "name": "INFO Message"
     },
     {
@@ -654,7 +666,7 @@
         0,
         800
       ],
-      "id": "c8bf64fd-1da3-4bd4-b710-52253fa0fd78",
+      "id": "16f86c4e-ef5a-4370-b48d-52d96095e372",
       "name": "ERROR Message"
     },
     {
@@ -669,7 +681,7 @@
         0,
         1056
       ],
-      "id": "bfd99814-741f-4fa5-9cfa-8c2b6e0a1ab7",
+      "id": "2651af66-7039-4648-a4d1-3964508e4a3e",
       "name": "CRITICAL Message"
     },
     {
@@ -686,7 +698,7 @@
         752,
         608
       ],
-      "id": "49b5ba67-b03a-4330-85ee-6422b56df8a3",
+      "id": "f210a398-0bef-479b-93a6-60d98c4472dd",
       "name": "Final Response"
     },
     {
@@ -703,7 +715,7 @@
         -2480,
         512
       ],
-      "id": "e1062552-aa69-4605-af67-02cad720efba",
+      "id": "316398fd-8a56-4fc9-a966-a03b38219883",
       "name": "Webhook1",
       "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd",
       "credentials": {
@@ -725,7 +737,7 @@
         -256,
         1296
       ],
-      "id": "9d1972eb-e086-40ce-9e91-27159dbde2ed",
+      "id": "ce08b14b-e4bb-4b8f-a8b4-d10af514b3f6",
       "name": "Get Recent Logs",
       "credentials": {
         "postgres": {
@@ -744,7 +756,7 @@
         0,
         1296
       ],
-      "id": "9e9dbe6e-931a-4e69-9290-28e1f49a7a76",
+      "id": "4e94da8d-3e20-4d13-8725-04ccb043577e",
       "name": "Format Recent Logs"
     },
     {
@@ -757,7 +769,7 @@
         256,
         1296
       ],
-      "id": "17192c3a-1923-40a4-b87a-040b14af7245",
+      "id": "bfd09a5c-f1a8-425f-82e2-069ca2df20c4",
       "name": "LLM Groq "
     },
     {
@@ -770,7 +782,7 @@
         464,
         1296
       ],
-      "id": "5f0b35c9-fd1b-4974-845c-4762e57a0599",
+      "id": "1d0f704c-4f60-4fdc-86ad-c0c472ec252f",
       "name": "Format Alert Message"
     },
     {
@@ -787,7 +799,7 @@
         736,
         1296
       ],
-      "id": "0b5b5a33-0685-4af8-9d39-2ab14dee7d89",
+      "id": "ccb6b055-b0d9-41aa-9a02-399002cbc2c5",
       "name": "Alert Email",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
@@ -800,10 +812,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        752,
+        736,
         1488
       ],
-      "id": "57ccbcab-e476-4c4d-a69f-fc01d34ab048",
+      "id": "cb379ef1-72a1-4857-b2ce-cc59ca9f5bc0",
       "name": "Reset ACK Time",
       "credentials": {
         "postgres": {
@@ -844,7 +856,7 @@
         736,
         1088
       ],
-      "id": "c38f86af-cfff-4fee-8621-1eb9b3dd03a6",
+      "id": "c804c492-5711-4657-8063-1431b762b667",
       "name": "Twilio WhatsApp Alert",
       "credentials": {
         "httpBasicAuth": {
@@ -852,6 +864,509 @@
           "name": "Unnamed credential"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/whatsapp-feedback",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        1744
+      ],
+      "id": "84aaa56e-188b-4ddd-a46a-d4225999f834",
+      "name": "WhatsApp Feedback Webhook",
+      "webhookId": "fb262572-5df0-4631-8114-2ce8c96ac0db"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get WhatsApp data directly from the Webhook node\n// Replace 'WhatsApp Feedback Webhook' with the exact name of your webhook node\nconst webhookData = $('WhatsApp Feedback Webhook').item.json;\nconst body = webhookData.body?.Body?.trim()?.toUpperCase() || \"\";\nconst from = webhookData.body?.From;\n\n// 2. Get context data from the Postgres node (the current input)\nconst source_id = $json.source_id || null;\nconst afd_state = $json.afd_state || null;\nconst message = $json.message || null;\n\nlet result = {\n  type: \"UNKNOWN\",\n  new_state: afd_state,\n  raw: body,\n  from: from,\n  source_id: source_id,\n  afd_state: afd_state,\n  message: message\n};\n\n// 3. Command Logic\n// 3. Improved Command Logic using .startsWith()\nif (body.startsWith(\"ACK\")) {\n    result.type = \"ACK\";\n} \nelse if (body.startsWith(\"FALSE POSITIVE\")) {\n    result.type = \"FALSE_POSITIVE\";\n} \nelse if (body.startsWith(\"CORRIGER WARNING\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"WARNING\";\n} \nelse if (body.startsWith(\"CORRIGER ERROR\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"ERROR\";\n} \nelse if (body.startsWith(\"RESOLVED\")) {\n    result.type = \"RESOLVED\";\n} \nelse if (body.startsWith(\"STATUS\")) {\n    result.type = \"STATUS\";\n} \nelse if (body.startsWith(\"ESCALATE\")) {\n    result.type = \"ESCALATE\";\n} \nelse if (body.startsWith(\"HELP\")) {\n    result.type = \"HELP\";\n}\n\nreturn [{ json: result }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        1744
+      ],
+      "id": "d82a2edd-7908-4b72-b117-6c015d2dd59f",
+      "name": "Parse Feedback Command"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "ACK",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "281a8952-88b5-4e80-b040-bee34eaaaad0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ACK Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ef17d727-271c-49bc-90f5-f9f6be3da846",
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "FALSE_POSITIVE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FALSE_POSITIVE Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "13578fcd-a1e0-4756-a4e0-d65f6f43f4fb",
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "CORRIGER",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CORRIGER Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "469048e2-dafc-4890-8e63-14edfe983853",
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "RESOLVED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RESOLVED Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b5049b40-9760-4847-8431-3601f3feab9b",
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "STATUS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "STATUS Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8b538c7e-c3bb-458b-95de-df043d6bcfa6",
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "ESCALATE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ESCALATE Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "59311c52-9c8b-4085-95f0-132bc4a59089",
+                    "leftValue": "={{$json.type}}",
+                    "rightValue": "HELP",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "HELP Handler"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1056,
+        1664
+      ],
+      "id": "1422476f-12e1-4ee1-b09d-404491955d12",
+      "name": "Feedback Router"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';\n\n\nINSERT INTO feedback_corrections (source_id, original_state, corrected_state, command_used)\nVALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', 'NOMINAL', 'FALSE_POSITIVE');",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1568,
+        1328
+      ],
+      "id": "d7448f70-8672-43a0-9810-c85a600e4575",
+      "name": "FALSE_POSITIVE Handler",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO feedback_corrections (source_id, corrected_state, corrected_at)\nVALUES (\n  '{{$json.source_id}}',\n  '{{$json.new_state}}',\n  NOW()\n);\n\nUPDATE afd_states \nSET \n    current_state = '{{ $json.new_state }}',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING current_state;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1568,
+        1504
+      ],
+      "id": "f6e213ce-7873-422b-964d-6240b12e2a90",
+      "name": "CORRIGER Handler",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    ack_time = COALESCE(ack_time, last_event_time),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING EXTRACT(EPOCH FROM (NOW() - last_event_time))::integer AS mttr_seconds;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1568,
+        1744
+      ],
+      "id": "934210e6-a671-4f32-9fe4-9751b7b8ac36",
+      "name": "RESOLVED Handler",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    source_id, \n    current_state, \n    last_event_time \nFROM afd_states \nORDER BY current_state DESC, last_event_time DESC;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1568,
+        1968
+      ],
+      "id": "7cf01feb-7a76-47d3-9eed-fa3c4fd32638",
+      "name": "STATUS Handler",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+            },
+            {
+              "name": "To",
+              "value": "={{$env.TWILIO_WHATSAPP_TO}}"
+            },
+            {
+              "name": "Body",
+              "value": "={{ $json.message}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2352,
+        1744
+      ],
+      "id": "b5b227b9-873d-4938-b8bd-d37a3a1b2ee5",
+      "name": "Escalation Alert (Twilio)",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "nFNQQLi2HhozL6qX",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE afd_states \nSET \n    ack_time = NOW(),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1568,
+        1120
+      ],
+      "id": "9040386b-e841-4bd1-aae3-aac0046ddb46",
+      "name": "ACK Handler",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "(\n  -- First attempt: Find the specific service extracted from WhatsApp\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      1 as priority\n  FROM afd_states a\n  WHERE a.source_id = '{{ $json.extracted_service }}'\n)\nUNION ALL\n(\n  -- Fallback: If the above doesn't exist, get the most recent service overall\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      2 as priority\n  FROM afd_states a\n  ORDER BY a.last_event_time DESC\n  LIMIT 1\n)\nORDER BY priority ASC\nLIMIT 1;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        672,
+        1744
+      ],
+      "id": "6631f2df-a313-447c-952a-0c5146591700",
+      "name": "Fetch alert context",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"message\": \"*PRISE EN CHARGE ENREGISTREE*\\n\\nL'intervention humaine a bien été notée dans le système.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        1120
+      ],
+      "id": "dd0e9840-e946-44d8-ac63-eefd49a2bfb0",
+      "name": "ACK Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"message\": \"*RECLASSIFICATION REUSSIE*\\n\\nLe système a enregistré cette erreur de classification.\\nL'état du service est repassé en NOMINAL.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        1328
+      ],
+      "id": "a8a651fb-7751-4488-800e-fb933dd58ecf",
+      "name": "FALSE_POSITIVE Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"message\": \"*RECLASSIFICATION APPLIQUÉE*\\n\\nLe service a été reclassifié avec succès en *{{ $json.current_state }}*.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        1504
+      ],
+      "id": "3e27e87a-5fd2-4bc9-91b7-384fd7a3fca9",
+      "name": "CORRIGER Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"message\": \"*INCIDENT RÉSOLU*\\n\\nLe service est repassé en état NOMINAL.\\n\\n*MTTR :* {{ Math.floor($json.mttr_seconds / 60) }} minutes.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        1744
+      ],
+      "id": "9f4bd27a-ae03-4bb2-af03-558cda06b59f",
+      "name": "RESOLVED Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"message\": \"*ESCALATION REQUEST*\\n*Service:* {{ $json.source_id }}\\n*State:* {{ $json.afd_state }}\\n*Message:* {{ $json.message }}\\n\\n*Immediate intervention required*\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        2160
+      ],
+      "id": "38b80882-72bb-4b40-a82f-baf7be0b54f6",
+      "name": "ESCALATE Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"message\": \"GUIDE DES COMMANDES DISPONIBLES\\n\\n*ACK* : Confirmer la prise en charge de l'alerte.\\n\\n*FALSE POSITIVE* : Signaler une erreur de classification (l'état repassera en NOMINAL).\\n\\n*CORRIGER [ETAT]* : Forcer manuellement un nouvel état.\\nExemple : CORRIGER WARNING\\n\\n*RESOLVED* : Clôturer l'incident et calculer le temps de résolution (MTTR).\\n\\n*STATUS* : Obtenir l'état actuel de tous les services monitorés.\\n\\n*ESCALATE* : Transférer l'alerte à l'astreinte de niveau supérieur.\\n\\n*HELP* : Afficher ce menu d'aide.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        2352
+      ],
+      "id": "7d8e746a-3f58-444f-b85e-675d6c53421b",
+      "name": "HELP Message"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nlet statusList = items.map(item => {\n  return `• *${item.json.source_id}*: ${item.json.current_state}`;\n}).join('\\n');\n\nreturn {\n  message: `État actuel des services :*\\n${statusList}`\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        1968
+      ],
+      "id": "a2b76604-db81-4083-9729-50a417a0588c",
+      "name": "STATUS Message"
+    },
+    {
+      "parameters": {
+        "jsCode": "// On récupère le texte avec la majuscule \"Body\"\nconst text = $input.item.json.body.Body; \n\nif (!text) {\n  return { extracted_service: \"unknown\" };\n}\n\n// On sépare les mots\nconst parts = text.split(\" \");\n\n/* Si l'admin écrit \"ESCALATE payment-api\" :\n  parts[0] = \"ESCALATE\"\n  parts[1] = \"payment-api\"\n*/\nconst service = parts[1] ? parts[1].toLowerCase() : \"all\"; \n\nreturn {\n  extracted_service: service\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        1744
+      ],
+      "id": "58b4480b-264d-4b4b-aad4-b2de37b8d2cb",
+      "name": "Extract Service"
     }
   ],
   "pinData": {},
@@ -1159,6 +1674,235 @@
           }
         ]
       ]
+    },
+    "WhatsApp Feedback Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Service",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Feedback Command": {
+      "main": [
+        [
+          {
+            "node": "Feedback Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback Router": {
+      "main": [
+        [
+          {
+            "node": "ACK Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "FALSE_POSITIVE Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CORRIGER Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "RESOLVED Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "STATUS Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ESCALATE Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HELP Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch alert context": {
+      "main": [
+        [
+          {
+            "node": "Parse Feedback Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ACK Handler": {
+      "main": [
+        [
+          {
+            "node": "ACK Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FALSE_POSITIVE Handler": {
+      "main": [
+        [
+          {
+            "node": "FALSE_POSITIVE Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CORRIGER Handler": {
+      "main": [
+        [
+          {
+            "node": "CORRIGER Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RESOLVED Handler": {
+      "main": [
+        [
+          {
+            "node": "RESOLVED Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STATUS Handler": {
+      "main": [
+        [
+          {
+            "node": "STATUS Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ACK Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FALSE_POSITIVE Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CORRIGER Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RESOLVED Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ESCALATE Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HELP Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STATUS Message": {
+      "main": [
+        [
+          {
+            "node": "Escalation Alert (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Service": {
+      "main": [
+        [
+          {
+            "node": "Fetch alert context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1166,10 +1910,10 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "7f73c00d-d1d7-4ab6-95b3-9120a8d72e10",
+  "versionId": "8d267e0c-dd19-4549-8809-f094cb2660bd",
   "meta": {
     "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
   },
-  "id": "bi2L67sU1Ymj4q04",
+  "id": "RKPp5EokW2rfF4iR",
   "tags": []
 }
