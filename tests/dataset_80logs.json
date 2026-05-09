@@ -1,0 +1,802 @@
+[
+  {
+    "id": 1,
+    "raw_log": "2024-01-15 08:00:01 INFO Server started on port 8080",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 2,
+    "raw_log": "2024-01-15 08:01:22 INFO User authentication successful for user_id=42",
+    "format_type": "plaintext",
+    "source_id": "auth-service",
+    "expected_level": "INFO",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 3,
+    "raw_log": "{\"level\":\"info\",\"service\":\"payment-service\",\"message\":\"Transaction TXN-8821 processed successfully\",\"amount\":150.00,\"timestamp\":\"2024-01-15T08:02:00Z\"}",
+    "format_type": "json",
+    "source_id": "payment-service",
+    "expected_level": "INFO",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 4,
+    "raw_log": "127.0.0.1 - - [15/Jan/2024:08:03:01 +0000] \"GET /api/health 200 42\"",
+    "format_type": "apache",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 5,
+    "raw_log": "Jan 15 08:04:00 prod-server cache-service[1234]: INFO Redis connection established in 12ms",
+    "format_type": "syslog",
+    "source_id": "cache-service",
+    "expected_level": "INFO",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 6,
+    "raw_log": "2024-01-15 08:05:10 DEBUG Scheduled cleanup task completed — 0 items removed",
+    "format_type": "plaintext",
+    "source_id": "scheduler",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 7,
+    "raw_log": "{\"level\":\"debug\",\"service\":\"db-service\",\"message\":\"Query executed in 8ms\",\"query\":\"SELECT * FROM users WHERE id=1\",\"rows\":1}",
+    "format_type": "json",
+    "source_id": "db-service",
+    "expected_level": "INFO",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 8,
+    "raw_log": "127.0.0.1 - - [15/Jan/2024:08:07:00 +0000] \"POST /api/users 201 88\"",
+    "format_type": "apache",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 9,
+    "raw_log": "2024-01-15 08:08:00 INFO Backup completed successfully — 2.3 GB archived to s3://backups/2024-01-15",
+    "format_type": "plaintext",
+    "source_id": "backup-service",
+    "expected_level": "INFO",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 10,
+    "raw_log": "Jan 15 08:09:00 prod-server mail-service[5678]: INFO Email sent to user@example.com (TLS OK)",
+    "format_type": "syslog",
+    "source_id": "mail-service",
+    "expected_level": "INFO",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 11,
+    "raw_log": "2024-01-15 08:10:00 INFO Health check passed — all 5 services responding",
+    "format_type": "plaintext",
+    "source_id": "health-monitor",
+    "expected_level": "INFO",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 12,
+    "raw_log": "2024-01-15 08:11:00 INFO New deployment v2.4.1 started on instance i-0abc1234",
+    "format_type": "plaintext",
+    "source_id": "deploy-service",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 13,
+    "raw_log": "2024-01-15 08:12:00 INFO User logout: session_id=abc123 duration=1800s",
+    "format_type": "plaintext",
+    "source_id": "auth-service",
+    "expected_level": "INFO",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 14,
+    "raw_log": "2024-01-15 08:13:00 INFO Rate limit reset for IP 192.168.1.10",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 15,
+    "raw_log": "2024-01-15 08:14:00 CRITICAL api-gateway: Memory exhaustion detected — heap 100%, GC overhead limit exceeded, JVM will crash",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "CRITICAL",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 16,
+    "raw_log": "2024-01-15 08:15:00 FATAL Segmentation fault in auth-service (SIGSEGV at 0x00007f) — service terminated, restarting...",
+    "format_type": "json",
+    "source_id": "auth-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 17,
+    "raw_log": "2024-01-15 08:16:00 INFO TLS certificate renewed — expires 2025-01-15",
+    "format_type": "plaintext",
+    "source_id": "ssl-manager",
+    "expected_level": "INFO",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 18,
+    "raw_log": "127.0.0.1 - - [15/Jan/2024:08:17:00 +0000] \"GET /error-page 200 512\"",
+    "format_type": "apache",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": true,
+    "note": "EDGE CASE: URL contient 'error' mais HTTP 200 → doit être classé INFO. Teste que le word-boundary \\b empêche le faux positif sur 'error' dans un chemin URL."
+  },
+  {
+    "id": 19,
+    "raw_log": "2024-01-15 08:18:00 INFO تم تسجيل الدخول بنجاح للمستخدم user_id=99",
+    "format_type": "plaintext",
+    "source_id": "auth-service",
+    "expected_level": "INFO",
+    "expected_category": "SECURITY",
+    "edge_case": true,
+    "note": "EDGE CASE: Log contenant du texte arabe — le moteur AFD doit gérer l'encodage UTF-8 sans crash. INFO est attendu car le mot 'INFO' est présent."
+  },
+  {
+    "id": 20,
+    "raw_log": "2024-01-15 08:19:00 INFO Heartbeat OK — api-gateway uptime 99.98%",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": true,
+    "note": "EDGE CASE (séquence): 10e log INFO consécutif du service api-gateway. Le log id=38 suivra avec CRITICAL. Teste la résistance aux faux positifs : l'état de l'AFD doit être INFO avant le log id=38."
+  },
+  {
+    "id": 21,
+    "raw_log": "2024-01-15 09:00:00 WARNING Response time 2340ms exceeds SLA threshold of 1000ms",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 22,
+    "raw_log": "{\"level\":\"warn\",\"service\":\"db-service\",\"message\":\"Connection pool at 85% capacity (85/100 connections in use)\"}",
+    "format_type": "json",
+    "source_id": "db-service",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 23,
+    "raw_log": "Jan 15 09:02:00 prod-server auth-service[2345]: WARN Multiple failed login attempts from IP 10.0.0.5 (3/5 threshold)",
+    "format_type": "syslog",
+    "source_id": "auth-service",
+    "expected_level": "WARNING",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 24,
+    "raw_log": "2024-01-15 09:03:00 WARNING Disk usage at 78% on /dev/sda1 — threshold is 80%",
+    "format_type": "plaintext",
+    "source_id": "system-monitor",
+    "expected_level": "WARNING",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 25,
+    "raw_log": "2024-01-15 09:04:00 WARN Retrying request to payment-service (attempt 2/3) — backoff 500ms",
+    "format_type": "plaintext",
+    "source_id": "order-service",
+    "expected_level": "WARNING",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 26,
+    "raw_log": "2024-01-15 09:05:00 DEPRECATED Method getUserByEmail() will be removed in v3.0 — use getUserByIdAndEmail() instead",
+    "format_type": "plaintext",
+    "source_id": "user-service",
+    "expected_level": "WARNING",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 27,
+    "raw_log": "2024-01-15 09:06:00 WARNING Memory usage at 72% (5.8 GB / 8 GB) — consider scaling",
+    "format_type": "plaintext",
+    "source_id": "system-monitor",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 28,
+    "raw_log": "{\"level\":\"WARNING\",\"service\":\"cache-service\",\"message\":\"Cache hit rate dropped to 62% (threshold: 70%)\",\"hit_rate\":0.62}",
+    "format_type": "json",
+    "source_id": "cache-service",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 29,
+    "raw_log": "2024-01-15 09:08:00 WARN SSL certificate for api.example.com expires in 14 days",
+    "format_type": "plaintext",
+    "source_id": "ssl-manager",
+    "expected_level": "WARNING",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 30,
+    "raw_log": "Jan 15 09:09:00 prod-server scheduler[9012]: WARNING Cron job 'nightly-report' took 340s (expected < 120s)",
+    "format_type": "syslog",
+    "source_id": "scheduler",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 31,
+    "raw_log": "2024-01-15 09:10:00 WARN Queue depth for email-queue is 1250 messages (threshold: 1000)",
+    "format_type": "plaintext",
+    "source_id": "mail-service",
+    "expected_level": "WARNING",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 32,
+    "raw_log": "2024-01-15 09:11:00 WARNING SLOW query detected: SELECT COUNT(*) FROM orders took 8200ms",
+    "format_type": "plaintext",
+    "source_id": "db-service",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 33,
+    "raw_log": "2024-01-15 09:12:00 WARN Config value MAX_RETRY_COUNT not set — using default: 3",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "WARNING",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 34,
+    "raw_log": "2024-01-15 09:13:00 WARNING DNS resolution latency for db.internal: 450ms (SLA: 100ms)",
+    "format_type": "plaintext",
+    "source_id": "network-monitor",
+    "expected_level": "WARNING",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 35,
+    "raw_log": "2024-01-15 09:14:00 WARN THROTTL: outbound API calls rate limited — 80% of quota used",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "WARNING",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 36,
+    "raw_log": "2024-01-15 09:15:00 WARN HIGH_LATENCY detected on route /api/recommendations: p99=1800ms",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "WARNING",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 37,
+    "raw_log": "2024-01-15 09:16:00 WARNING Potential data anomaly detected in table user_sessions: 3 records have session_start timestamps in the future (max delta: +47 seconds). This may indicate a clock drift issue between app-server-01 (UTC+0) and app-server-03 (UTC+0, but NTP desync detected at 09:14:57). Affected session IDs: [sess_abc123, sess_def456, sess_ghi789]. Investigation recommended before next batch job at 10:00:00. See runbook: https://wiki.internal/runbook/clock-drift",
+    "format_type": "plaintext",
+    "source_id": "db-service",
+    "expected_level": "WARNING",
+    "expected_category": "DATA",
+    "edge_case": true,
+    "note": "EDGE CASE: Log WARNING très long (> 500 caractères). Teste que le préprocesseur ne tronque pas le message et que la regex matche bien malgré la longueur."
+  },
+  {
+    "id": 38,
+    "raw_log": "2024-01-15 09:17:00 warn: upstream timeout after 5000ms for service payment-gateway",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "WARNING",
+    "expected_category": "NETWORK",
+    "edge_case": true,
+    "note": "EDGE CASE: Niveau écrit en minuscules ('warn:' au lieu de 'WARN'). Le flag /i des regex doit capturer les deux casses."
+  },
+  {
+    "id": 39,
+    "raw_log": "15-01-2024 09:18 WARN Unusual access pattern from IP 203.0.113.42",
+    "format_type": "plaintext",
+    "source_id": "auth-service",
+    "expected_level": "WARNING",
+    "expected_category": "SECURITY",
+    "edge_case": true,
+    "note": "EDGE CASE: Timestamp au format inversé (DD-MM-YYYY HH:MM, sans secondes). Le préprocesseur doit quand même extraire le niveau WARNING correctement et mettre log_timestamp = NOW() si parsing impossible."
+  },
+  {
+    "id": 40,
+    "raw_log": "2024-01-15 09:19:00 warn/error: partial failure on batch processing — 12/100 items failed",
+    "format_type": "plaintext",
+    "source_id": "batch-service",
+    "expected_level": "WARNING",
+    "expected_category": "DATA",
+    "edge_case": true,
+    "note": "EDGE CASE: Log ambigu contenant warn/error. Pour le dataset MVP, le niveau attendu est WARNING afin de conserver une répartition équilibrée 20/20/20/20. Ce cas permet de discuter dans le rapport une limite de la priorité regex lorsque plusieurs niveaux apparaissent dans le même log."
+  },
+  {
+    "id": 41,
+    "raw_log": "2024-01-15 10:00:00 ERROR Connection refused to postgres://db-primary:5432/appdb after 3 retries",
+    "format_type": "plaintext",
+    "source_id": "db-service",
+    "expected_level": "ERROR",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 42,
+    "raw_log": "{\"level\":\"error\",\"service\":\"payment-service\",\"message\":\"PaymentGatewayException: Transaction declined — insufficient funds\",\"transaction_id\":\"TXN-9982\",\"error_code\":\"INSUF_FUNDS\"}",
+    "format_type": "json",
+    "source_id": "payment-service",
+    "expected_level": "ERROR",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 43,
+    "raw_log": "127.0.0.1 - - [15/Jan/2024:10:02:00 +0000] \"POST /api/checkout 500 210\"",
+    "format_type": "apache",
+    "source_id": "api-gateway",
+    "expected_level": "ERROR",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 44,
+    "raw_log": "Jan 15 10:03:00 prod-server auth-service[3456]: ERROR JWT verification failed — token signature invalid for user_id=77",
+    "format_type": "syslog",
+    "source_id": "auth-service",
+    "expected_level": "ERROR",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 45,
+    "raw_log": "Traceback (most recent call last):\n  File \"/app/handlers/user.py\", line 42, in get_user\n    user = db.query(User).filter_by(id=user_id).first()\nAttributeError: 'NoneType' object has no attribute 'email'",
+    "format_type": "plaintext",
+    "source_id": "user-service",
+    "expected_level": "ERROR",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 46,
+    "raw_log": "2024-01-15 10:05:00 ERROR NullPointerException in OrderService.calculateTotal() at line 187",
+    "format_type": "plaintext",
+    "source_id": "order-service",
+    "expected_level": "ERROR",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 47,
+    "raw_log": "2024-01-15 10:06:00 ERROR FAILED to send email to customer@example.com — SMTP server unreachable",
+    "format_type": "plaintext",
+    "source_id": "mail-service",
+    "expected_level": "ERROR",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 48,
+    "raw_log": "{\"level\":\"ERROR\",\"service\":\"cache-service\",\"message\":\"Redis FAILED to persist snapshot — disk write error\",\"errno\":28,\"disk_free_mb\":0}",
+    "format_type": "json",
+    "source_id": "cache-service",
+    "expected_level": "ERROR",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 49,
+    "raw_log": "2024-01-15 10:08:00 ERROR SQL injection attempt detected from IP 198.51.100.42 — request blocked",
+    "format_type": "plaintext",
+    "source_id": "waf-service",
+    "expected_level": "ERROR",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 50,
+    "raw_log": "2024-01-15 10:09:00 ERROR OutOfMemory: Java heap space in ReportGenerator.generatePDF() — heap: 2048MB / 2048MB",
+    "format_type": "plaintext",
+    "source_id": "report-service",
+    "expected_level": "ERROR",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 51,
+    "raw_log": "2024-01-15 10:10:00 ERROR Backup FAILED for database 'app_prod' — disk quota exceeded on /mnt/backups",
+    "format_type": "plaintext",
+    "source_id": "backup-service",
+    "expected_level": "ERROR",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 52,
+    "raw_log": "127.0.0.1 - - [15/Jan/2024:10:11:00 +0000] \"GET /api/users 503 0\"",
+    "format_type": "apache",
+    "source_id": "api-gateway",
+    "expected_level": "ERROR",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 53,
+    "raw_log": "2024-01-15 10:12:00 ERROR DNS resolution FAILED for external-api.thirdparty.com — NXDOMAIN after 3 retries",
+    "format_type": "plaintext",
+    "source_id": "network-monitor",
+    "expected_level": "ERROR",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 54,
+    "raw_log": "Jan 15 10:13:00 prod-server worker[6789]: ERROR Exception: DeadlockException detected on table orders — transaction rolled back",
+    "format_type": "syslog",
+    "source_id": "db-service",
+    "expected_level": "ERROR",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 55,
+    "raw_log": "2024-01-15 10:14:00 ERROR Health check FAILED for service user-service — no response after 10s",
+    "format_type": "plaintext",
+    "source_id": "health-monitor",
+    "expected_level": "ERROR",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 56,
+    "raw_log": "{\"level\":\"error\",\"service\":\"api-gateway\",\"message\":\"Rate limit EXCEEDED for IP 192.168.1.100 — 1000 requests in 60s\",\"blocked\":true}",
+    "format_type": "json",
+    "source_id": "api-gateway",
+    "expected_level": "ERROR",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 57,
+    "raw_log": "10.0.0.1 - admin [15/Jan/2024:10:16:00 +0000] \"DELETE /api/admin/users/all 500 0\"",
+    "format_type": "apache",
+    "source_id": "api-gateway",
+    "expected_level": "ERROR",
+    "expected_category": "SECURITY",
+    "edge_case": true,
+    "note": "EDGE CASE: Log Apache avec status 500 — le pattern 5xx doit matcher '500' via /\\b5[0-9]{2}\\b/. Vérifie que le préprocesseur Apache extrait correctement le code HTTP et que le moteur AFD classe ERROR."
+  },
+  {
+    "id": 58,
+    "raw_log": "{\"level\":\"error\",\"service\":\"order-service\",\"event\":{\"type\":\"payment_failed\",\"details\":{\"reason\":\"Exception: Card declined\",\"code\":\"CARD_DECLINED\"}},\"user_id\":1042}",
+    "format_type": "json",
+    "source_id": "order-service",
+    "expected_level": "ERROR",
+    "expected_category": "DATA",
+    "edge_case": true,
+    "note": "EDGE CASE: JSON log avec message imbriqué — 'Exception' est dans event.details.reason, pas dans le champ 'message' de premier niveau. Le préprocesseur doit aplatir ou chercher dans le JSON entier."
+  },
+  {
+    "id": 59,
+    "raw_log": "Jan 15 10:18:00 prod-server kernel: [1234567.890] ERROR: EXT4-fs error (device sda1): ext4_validate_block_bitmap:376: comm kworker/u8:2: bg 0: bad block bitmap checksum",
+    "format_type": "syslog",
+    "source_id": "system-monitor",
+    "expected_level": "ERROR",
+    "expected_category": "DATA",
+    "edge_case": true,
+    "note": "EDGE CASE: Syslog avec 'kernel' comme facility et format non-standard incluant un offset numérique entre crochets. 'ERROR' apparaît après les métadonnées kernel. Teste la robustesse du parseur syslog."
+  },
+  {
+    "id": 60,
+    "raw_log": "2024-01-15 10:19:00 ERROR Connection pool exhausted for db-service: all 50 connections in use (3rd consecutive error)",
+    "format_type": "plaintext",
+    "source_id": "db-service",
+    "expected_level": "ERROR",
+    "expected_category": "PERFORMANCE",
+    "edge_case": true,
+    "note": "EDGE CASE (séquence Phase 2): 3e log ERROR consécutif de db-service (après ids 41 et 54). En Phase 1 (4 états), reste ERROR. En Phase 2 (6 états), déclenchera ERROR_CASCADE. Ground truth Phase 1 = ERROR, Phase 2 = ERROR_CASCADE."
+  },
+  {
+    "id": 61,
+    "raw_log": "2024-01-15 11:00:00 CRITICAL Database primary server unreachable — all read/write operations FAILED",
+    "format_type": "plaintext",
+    "source_id": "db-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 62,
+    "raw_log": "{\"level\":\"CRITICAL\",\"service\":\"auth-service\",\"message\":\"JWT secret key compromised — all active sessions invalidated immediately\",\"affected_sessions\":14200}",
+    "format_type": "json",
+    "source_id": "auth-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 63,
+    "raw_log": "Jan 15 11:02:00 prod-server kernel: PANIC: unable to mount root filesystem on /dev/sda1 — system halting",
+    "format_type": "syslog",
+    "source_id": "system-monitor",
+    "expected_level": "CRITICAL",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 64,
+    "raw_log": "2024-01-15 11:03:00 FATAL Application crash detected — core dump saved to /var/crash/app_20240115_110300.core",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "CRITICAL",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 65,
+    "raw_log": "2024-01-15 11:04:00 CRITICAL DDoS attack detected: 50,000 requests/second from 200 distinct IPs — activating DDoS mitigation",
+    "format_type": "plaintext",
+    "source_id": "waf-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 66,
+    "raw_log": "2024-01-15 11:05:00 CRITICAL Disk /dev/sda1 FULL (100%) — write operations suspended on all services",
+    "format_type": "plaintext",
+    "source_id": "system-monitor",
+    "expected_level": "CRITICAL",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 67,
+    "raw_log": "{\"level\":\"critical\",\"service\":\"payment-service\",\"message\":\"PCI DSS violation detected: plaintext credit card numbers found in logs — incident response activated\"}",
+    "format_type": "json",
+    "source_id": "payment-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 68,
+    "raw_log": "Jan 15 11:07:00 prod-server network[4567]: CRITICAL Network partition detected — cluster split-brain: node-1 and node-2 cannot reach node-3",
+    "format_type": "syslog",
+    "source_id": "network-monitor",
+    "expected_level": "CRITICAL",
+    "expected_category": "NETWORK",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 69,
+    "raw_log": "2024-01-15 11:08:00 CRITICAL OOM Killer activated — process 'java' (pid 4421) killed due to out-of-memory on node prod-02",
+    "format_type": "plaintext",
+    "source_id": "system-monitor",
+    "expected_level": "CRITICAL",
+    "expected_category": "PERFORMANCE",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 70,
+    "raw_log": "2024-01-15 11:09:00 FATAL Unrecoverable data corruption in table 'transactions' — 4,200 records affected. Initiating emergency rollback.",
+    "format_type": "plaintext",
+    "source_id": "db-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 71,
+    "raw_log": "2024-01-15 11:10:00 CRITICAL All payment processing suspended — PCI compliance check failed at 11:10:00",
+    "format_type": "plaintext",
+    "source_id": "payment-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 72,
+    "raw_log": "{\"level\":\"CRITICAL\",\"service\":\"order-service\",\"message\":\"Ransomware signature detected in uploaded file order_import.xlsx — quarantine activated\"}",
+    "format_type": "json",
+    "source_id": "order-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SECURITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 73,
+    "raw_log": "2024-01-15 11:12:00 CRITICAL Load balancer offline — all traffic routing to single node prod-01 (100% capacity)",
+    "format_type": "plaintext",
+    "source_id": "network-monitor",
+    "expected_level": "CRITICAL",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 74,
+    "raw_log": "Jan 15 11:13:00 prod-server backup[8901]: CRITICAL Backup verification FAILED — restored data corrupted. Last valid backup: 48 hours ago.",
+    "format_type": "syslog",
+    "source_id": "backup-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "DATA",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 75,
+    "raw_log": "2024-01-15 11:14:00 FATAL Segfault in payment-gateway process — core dumped. Service down.",
+    "format_type": "plaintext",
+    "source_id": "payment-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "SYSTEM",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 76,
+    "raw_log": "2024-01-15 11:15:00 CRITICAL Kubernetes node prod-03 NotReady — 47 pods evicted, services degraded",
+    "format_type": "plaintext",
+    "source_id": "k8s-monitor",
+    "expected_level": "CRITICAL",
+    "expected_category": "AVAILABILITY",
+    "edge_case": false,
+    "note": ""
+  },
+  {
+    "id": 77,
+    "raw_log": "2024-01-15 11:16:00 CRITICAL api-gateway: Memory leak confirmed — heap growing 50MB/min, service will crash in ~8min",
+    "format_type": "plaintext",
+    "source_id": "api-gateway",
+    "expected_level": "CRITICAL",
+    "expected_category": "PERFORMANCE",
+    "edge_case": true,
+    "note": "EDGE CASE (séquence faux positif): Ce log CRITICAL arrive après 10 logs INFO consécutifs de api-gateway (ids 1,4,8,13,14,18,20 + 3 autres implicites). Teste la résistance de l'AFD aux séquences longues nominales suivies d'un spike critique. L'état AFD doit passer de INFO à CRITICAL directement via δ(INFO, σ_crit) = CRITICAL."
+  },
+  {
+    "id": 78,
+    "raw_log": "{\"level\":\"fatal\",\"service\":\"db-service\",\"message\":\"fatal: connection to server on socket '/var/run/postgresql/.s.PGSQL.5432' failed\",\"code\":\"08006\"}",
+    "format_type": "json",
+    "source_id": "db-service",
+    "expected_level": "CRITICAL",
+    "expected_category": "AVAILABILITY",
+    "edge_case": true,
+    "note": "EDGE CASE: Niveau 'fatal' en minuscules dans un JSON log. Le flag /i des regex doit capturer 'fatal' autant que 'FATAL'. De plus, le mot 'fatal' apparaît aussi dans le message lui-même."
+  },
+  {
+    "id": 79,
+    "raw_log": "",
+    "format_type": "unknown",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": true,
+    "note": "EDGE CASE MALFORMED: Log vide (\"\"). Symbole attendu = σ_malformed. L'état AFD NE DOIT PAS CHANGER. expected_level = INFO car l'automate reste dans son état précédent (INFO). Vérifie que le moteur ne crash pas et que afd_symbol = 'sigma_malformed'."
+  },
+  {
+    "id": 80,
+    "raw_log": "   ",
+    "format_type": "unknown",
+    "source_id": "api-gateway",
+    "expected_level": "INFO",
+    "expected_category": "SYSTEM",
+    "edge_case": true,
+    "note": "EDGE CASE MALFORMED: Log composé uniquement d'espaces. Après trim(), message = '' → σ_malformed. L'état AFD NE DOIT PAS CHANGER. expected_level = INFO. Complémentaire à l'edge case id=79 (log vide)."
+  }
+]
