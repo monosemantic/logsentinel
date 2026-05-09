@@ -155,17 +155,11 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1584,
+        -896,
         880
       ],
-      "id": "03450ef0-9e7a-40b9-9b7e-f38224c596f6",
-      "name": "Insert rows in a table",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+      "id": "0ece6fd9-edbe-46fd-ade0-87d3e1186dcf",
+      "name": "Insert rows in a table"
     },
     {
       "parameters": {
@@ -175,10 +169,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2256,
+        -1568,
         976
       ],
-      "id": "7a184452-80d9-4d66-8979-2d37d204f211",
+      "id": "071c49e1-6895-4106-a1e7-1599b5d100f6",
       "name": "Format Detector"
     },
     {
@@ -316,10 +310,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -2032,
+        -1344,
         928
       ],
-      "id": "d727d231-83c5-49af-8174-7b37d5709b37",
+      "id": "bd2358e6-fa03-4e39-aed5-f12ed2f5d429",
       "name": "Switch"
     },
     {
@@ -330,10 +324,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1808,
+        -1120,
         480
       ],
-      "id": "d3c58992-20fc-4aa3-8371-4905def9ae47",
+      "id": "c3479e02-f48b-433c-b691-241efa16771d",
       "name": "JSON Processor"
     },
     {
@@ -344,10 +338,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1808,
+        -1120,
         672
       ],
-      "id": "3d305802-4b7d-401d-b175-5d7617ea1fda",
+      "id": "03cac4a7-1934-4d7d-bdab-739c15e6a926",
       "name": "Syslog Processor"
     },
     {
@@ -358,10 +352,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1808,
+        -1120,
         864
       ],
-      "id": "65b5381b-ef27-4c44-8937-b2796240a646",
+      "id": "efe3ecab-dc86-43dd-97f6-db822f6f6c2e",
       "name": "Apache Processor"
     },
     {
@@ -372,10 +366,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1808,
+        -1120,
         1056
       ],
-      "id": "7d2af969-0534-423c-8c9e-5689f34fb54d",
+      "id": "05700416-1560-449c-8a32-9c05d8b4e340",
       "name": "Plaintext Processor"
     },
     {
@@ -386,10 +380,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1808,
+        -1120,
         1248
       ],
-      "id": "8481cbef-5159-4686-b362-a5862536f559",
+      "id": "6b4073df-80bd-4674-bb2d-58729f627783",
       "name": "Unknown Processor"
     },
     {
@@ -401,17 +395,11 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1360,
+        -672,
         880
       ],
-      "id": "37b71882-421c-400e-b28e-f69aacbbd820",
-      "name": "AFD State Read",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+      "id": "587e7ca7-120b-44e8-be7d-5c205dca864a",
+      "name": "AFD State Read"
     },
     {
       "parameters": {
@@ -421,10 +409,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1136,
+        -448,
         880
       ],
-      "id": "89122bdf-1f44-4b30-8064-42896547bae2",
+      "id": "6461c4c4-65ef-46c5-8287-38a3e2dc4d62",
       "name": "AFD Engine"
     },
     {
@@ -436,17 +424,11 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -912,
+        -224,
         784
       ],
-      "id": "bf380bd2-c94a-460f-9274-e133ea8ca2f5",
-      "name": "AFD State Write",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+      "id": "d53fa4dd-96e0-4691-b27e-f925fda00a2d",
+      "name": "AFD State Write"
     },
     {
       "parameters": {
@@ -457,17 +439,11 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -912,
+        -224,
         976
       ],
-      "id": "952da950-035a-4bee-b4e4-2a2fb39eb771",
-      "name": "Log State Write",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+      "id": "1af39269-4e5f-4f1c-a742-e29a5db465bd",
+      "name": "Log State Write"
     },
     {
       "parameters": {
@@ -580,10 +556,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -912,
+        -224,
         528
       ],
-      "id": "5e5acdf0-3cce-45bf-b9f7-7c5da55e81ad",
+      "id": "4c47b42d-4f0a-408d-9c02-6a9a672838ee",
       "name": "AFD State Switch Router"
     },
     {
@@ -598,18 +574,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        -688,
+        0,
         192
       ],
-      "id": "09e5bba3-b2f1-441a-9cee-2f77a6286d15",
+      "id": "eb9609a6-8d27-405c-a5c7-a495465f4c56",
       "name": "Send an Email",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
-      "credentials": {
-        "smtp": {
-          "id": "yak8bUgcgQjuncsb",
-          "name": "SMTP account"
-        }
-      }
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
@@ -623,18 +593,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        -688,
+        0,
         576
       ],
-      "id": "8b8bdc51-ad5a-420e-b50c-1a8e4ef444f6",
+      "id": "8d365d24-8e27-4154-87cf-048a284137c4",
       "name": "Send an Email1",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
-      "credentials": {
-        "smtp": {
-          "id": "yak8bUgcgQjuncsb",
-          "name": "SMTP account"
-        }
-      }
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
@@ -645,10 +609,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -688,
+        0,
         384
       ],
-      "id": "09a51ca4-5759-44ce-9d02-3164fe7440b3",
+      "id": "ebae0b69-adf8-4487-8bc8-f4641147e9ff",
       "name": "WARNING Message"
     },
     {
@@ -660,10 +624,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -688,
+        0,
         0
       ],
-      "id": "af5f994e-856b-4320-90d6-7a3a22a3e694",
+      "id": "79762da5-74c4-4ce8-a126-22d96f43b133",
       "name": "INFO Message"
     },
     {
@@ -675,10 +639,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -688,
+        0,
         768
       ],
-      "id": "a2d4bdb0-fba1-47e4-a2d0-91e47d945008",
+      "id": "c227d851-8939-4c92-ad85-1bb69bbc5bce",
       "name": "ERROR Message"
     },
     {
@@ -690,10 +654,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -688,
+        0,
         960
       ],
-      "id": "bad934a1-4a0f-4397-b4a7-05b5faee3236",
+      "id": "dc30af4a-8981-48c0-96c2-3fc818a38afa",
       "name": "CRITICAL Message"
     },
     {
@@ -707,10 +671,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -464,
+        224,
         464
       ],
-      "id": "d19eeb53-07d2-4060-956d-134721f9b2db",
+      "id": "0d275027-a336-4a6b-a237-71435686ad8b",
       "name": "Final Response"
     },
     {
@@ -723,10 +687,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -2480,
+        -1792,
         976
       ],
-      "id": "349760fd-a916-4206-9b04-4520904d8dd3",
+      "id": "5e04e5d5-375e-4532-88d1-64aab3232379",
       "name": "Webhook1",
       "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
     },
@@ -739,17 +703,11 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -688,
+        0,
         1152
       ],
-      "id": "78235abb-e3ed-434f-8a49-fd4beaa37567",
-      "name": "Get Recent Logs",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+      "id": "05e10f63-cc38-4bb7-852c-ea905d323aeb",
+      "name": "Get Recent Logs"
     },
     {
       "parameters": {
@@ -758,10 +716,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -464,
+        224,
         1152
       ],
-      "id": "10bea4d1-d40d-4ca9-8a3c-0b0b9610bc02",
+      "id": "fd8a4258-250b-4116-869c-9ab38a2a8aef",
       "name": "Format Recent Logs"
     },
     {
@@ -771,10 +729,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        432,
+        1120,
         1152
       ],
-      "id": "7e4464ea-0c12-4eed-84c3-074646574019",
+      "id": "1d3b3319-8c8e-45d0-b781-260f89e0ea79",
       "name": "Format Alert Message"
     },
     {
@@ -788,18 +746,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        656,
+        1344,
         1152
       ],
-      "id": "b8808211-1e95-49fe-80c6-a9c6846bc2d8",
+      "id": "2f7b8c25-2d40-479a-b6ab-180ffa5eb9da",
       "name": "Alert Email",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
-      "credentials": {
-        "smtp": {
-          "id": "yak8bUgcgQjuncsb",
-          "name": "SMTP account"
-        }
-      }
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
@@ -810,17 +762,11 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        656,
+        1344,
         1344
       ],
-      "id": "83231166-c9cc-4c43-9bea-5a9030d11823",
-      "name": "Reset ACK Time",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+      "id": "6dc95465-356a-4d66-9617-ff9192a69233",
+      "name": "Reset ACK Time"
     },
     {
       "parameters": {
@@ -851,520 +797,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        656,
+        1344,
         960
       ],
-      "id": "b14f6555-09fd-46a1-921b-96691a6f6dab",
-      "name": "Twilio WhatsApp Alert",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "4DAEcjoYUOfq0mtw",
-          "name": "Unnamed credential"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "/whatsapp-feedback",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        -2480,
-        2144
-      ],
-      "id": "0a69da21-0991-4edb-8f55-ef17807711c2",
-      "name": "WhatsApp Feedback Webhook",
-      "webhookId": "fb262572-5df0-4631-8114-2ce8c96ac0db"
-    },
-    {
-      "parameters": {
-        "jsCode": "// 1. Get WhatsApp data directly from the Webhook node\n// Replace 'WhatsApp Feedback Webhook' with the exact name of your webhook node\nconst webhookData = $('WhatsApp Feedback Webhook').item.json;\nconst body = webhookData.body?.Body?.trim()?.toUpperCase() || \"\";\nconst from = webhookData.body?.From;\n\n// 2. Get context data from the Postgres node (the current input)\nconst source_id = $json.source_id || null;\nconst afd_state = $json.afd_state || null;\nconst message = $json.message || null;\n\nlet result = {\n  type: \"UNKNOWN\",\n  new_state: afd_state,\n  raw: body,\n  from: from,\n  source_id: source_id,\n  afd_state: afd_state,\n  message: message\n};\n\n// 3. Command Logic\n// 3. Improved Command Logic using .startsWith()\nif (body.startsWith(\"ACK\")) {\n    result.type = \"ACK\";\n} \nelse if (body.startsWith(\"FALSE POSITIVE\")) {\n    result.type = \"FALSE_POSITIVE\";\n} \nelse if (body.startsWith(\"CORRIGER WARNING\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"WARNING\";\n} \nelse if (body.startsWith(\"CORRIGER ERROR\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"ERROR\";\n} \nelse if (body.startsWith(\"RESOLVED\")) {\n    result.type = \"RESOLVED\";\n} \nelse if (body.startsWith(\"STATUS\")) {\n    result.type = \"STATUS\";\n} \nelse if (body.startsWith(\"ESCALATE\")) {\n    result.type = \"ESCALATE\";\n} \nelse if (body.startsWith(\"HELP\")) {\n    result.type = \"HELP\";\n}\n\nreturn [{ json: result }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1808,
-        2144
-      ],
-      "id": "f4f63cdd-30b8-4654-bd40-57e2d102cadb",
-      "name": "Parse Feedback Command"
-    },
-    {
-      "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "ACK",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "281a8952-88b5-4e80-b040-bee34eaaaad0"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "ACK Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "ef17d727-271c-49bc-90f5-f9f6be3da846",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "FALSE_POSITIVE",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "FALSE_POSITIVE Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "13578fcd-a1e0-4756-a4e0-d65f6f43f4fb",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "CORRIGER",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "CORRIGER Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "469048e2-dafc-4890-8e63-14edfe983853",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "RESOLVED",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "RESOLVED Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "b5049b40-9760-4847-8431-3601f3feab9b",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "STATUS",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "STATUS Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "8b538c7e-c3bb-458b-95de-df043d6bcfa6",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "ESCALATE",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "ESCALATE Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "59311c52-9c8b-4085-95f0-132bc4a59089",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "HELP",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "HELP Handler"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.4,
-      "position": [
-        -1584,
-        2064
-      ],
-      "id": "078ea846-38cd-4076-89ff-77800442f679",
-      "name": "Feedback Router"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';\n\n\nINSERT INTO feedback_corrections (source_id, original_state, corrected_state, command_used)\nVALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', 'NOMINAL', 'FALSE_POSITIVE');",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -1360,
-        1760
-      ],
-      "id": "bfa918bc-67ab-4400-a6db-b5d490f42d58",
-      "name": "FALSE_POSITIVE Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "INSERT INTO feedback_corrections (source_id, corrected_state, corrected_at)\nVALUES (\n  '{{$json.source_id}}',\n  '{{$json.new_state}}',\n  NOW()\n);\n\nUPDATE afd_states \nSET \n    current_state = '{{ $json.new_state }}',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING current_state;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -1360,
-        1952
-      ],
-      "id": "43d281a6-dff8-4635-bd1e-874e631085a5",
-      "name": "CORRIGER Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    ack_time = COALESCE(ack_time, last_event_time),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING EXTRACT(EPOCH FROM (NOW() - last_event_time))::integer AS mttr_seconds;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -1360,
-        2144
-      ],
-      "id": "1e51612b-2e70-4a55-8c00-8cfcea4e7780",
-      "name": "RESOLVED Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n    source_id, \n    current_state, \n    last_event_time \nFROM afd_states \nORDER BY current_state DESC, last_event_time DESC;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -1360,
-        2336
-      ],
-      "id": "4c1b1d32-8a27-4bf7-9041-fe277293640b",
-      "name": "STATUS Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendBody": true,
-        "contentType": "form-urlencoded",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "From",
-              "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
-            },
-            {
-              "name": "To",
-              "value": "={{$env.TWILIO_WHATSAPP_ESCALATION}}"
-            },
-            {
-              "name": "Body",
-              "value": "={{ $json.message}}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        -912,
-        2144
-      ],
-      "id": "ba694356-0c82-48b6-9bf5-bc0d69f779a2",
-      "name": "Escalation Alert (Twilio)",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "4DAEcjoYUOfq0mtw",
-          "name": "Unnamed credential"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "UPDATE afd_states \nSET \n    ack_time = NOW(),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -1360,
-        1568
-      ],
-      "id": "a6d64bf2-9968-4f27-aa06-1531c09ed0e4",
-      "name": "ACK Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "(\n  -- First attempt: Find the specific service extracted from WhatsApp\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      1 as priority\n  FROM afd_states a\n  WHERE a.source_id = '{{ $json.extracted_service }}'\n)\nUNION ALL\n(\n  -- Fallback: If the above doesn't exist, get the most recent service overall\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      2 as priority\n  FROM afd_states a\n  ORDER BY a.last_event_time DESC\n  LIMIT 1\n)\nORDER BY priority ASC\nLIMIT 1;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -2032,
-        2144
-      ],
-      "id": "03c024d6-c6cd-4abb-b376-8493e5d9ed8f",
-      "name": "Fetch alert context",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"message\": \"*PRISE EN CHARGE ENREGISTREE*\\n\\nL'intervention humaine a bien été notée dans le système.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1136,
-        1568
-      ],
-      "id": "0ed4c96f-7a30-4034-988e-cb19eead4d58",
-      "name": "ACK Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"message\": \"*RECLASSIFICATION REUSSIE*\\n\\nLe système a enregistré cette erreur de classification.\\nL'état du service est repassé en NOMINAL.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1136,
-        1760
-      ],
-      "id": "76178d87-c784-44b8-9f15-cbe94f1ca3e0",
-      "name": "FALSE_POSITIVE Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"message\": \"*RECLASSIFICATION APPLIQUÉE*\\n\\nLe service a été reclassifié avec succès en *{{ $json.current_state }}*.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1136,
-        1952
-      ],
-      "id": "2e3847ed-fa0e-42a1-842c-a41201343f1e",
-      "name": "CORRIGER Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"message\": \"*INCIDENT RÉSOLU*\\n\\nLe service est repassé en état NOMINAL.\\n\\n*MTTR :* {{ Math.floor($json.mttr_seconds / 60) }} minutes.\"\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1136,
-        2144
-      ],
-      "id": "830052fd-eb66-4c0d-bf5c-c436ce091ce6",
-      "name": "RESOLVED Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={ \n  \"message\": \"*ESCALATION REQUEST*\\n*Service:* apache\\n*State:* CRITICAL\\n*Message:* 127.0.0.1 - - [15/Jan/2024:14:23:01 +0000] \\\"POST /api/checkout 500 124\\\" CRITICAL: Database connection pool exhausted\\n\\n*Immediate intervention required*\" \n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1136,
-        2528
-      ],
-      "id": "e97f4239-6d77-49b6-93ad-0fc9aca27df4",
-      "name": "ESCALATE Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"message\": \"GUIDE DES COMMANDES DISPONIBLES\\n\\n*ACK* : Confirmer la prise en charge de l'alerte.\\n\\n*FALSE POSITIVE* : Signaler une erreur de classification (l'état repassera en NOMINAL).\\n\\n*CORRIGER [ETAT]* : Forcer manuellement un nouvel état.\\nExemple : CORRIGER WARNING\\n\\n*RESOLVED* : Clôturer l'incident et calculer le temps de résolution (MTTR).\\n\\n*STATUS* : Obtenir l'état actuel de tous les services monitorés.\\n\\n*ESCALATE* : Transférer l'alerte à l'astreinte de niveau supérieur.\\n\\n*HELP* : Afficher ce menu d'aide.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1136,
-        2720
-      ],
-      "id": "0926dd44-705e-4f31-90c3-bf9ee034f341",
-      "name": "HELP Message"
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\nlet statusList = items.map(item => {\n  return `• *${item.json.source_id}*: ${item.json.current_state}`;\n}).join('\\n');\n\nreturn {\n  message: `État actuel des services :*\\n${statusList}`\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1136,
-        2336
-      ],
-      "id": "e8ac37aa-c65a-4a8c-a48c-0fd4a4ed1cbc",
-      "name": "STATUS Message"
-    },
-    {
-      "parameters": {
-        "jsCode": "// On récupère le texte avec la majuscule \"Body\"\nconst text = $input.item.json.body.Body; \n\nif (!text) {\n  return { extracted_service: \"unknown\" };\n}\n\n// On sépare les mots\nconst parts = text.split(\" \");\n\n/* Si l'admin écrit \"ESCALATE payment-api\" :\n  parts[0] = \"ESCALATE\"\n  parts[1] = \"payment-api\"\n*/\nconst service = parts[1] ? parts[1].toLowerCase() : \"all\"; \n\nreturn {\n  extracted_service: service\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2256,
-        2144
-      ],
-      "id": "4b2ae915-3694-4d09-af47-8d84ba0957a2",
-      "name": "Extract Service"
+      "id": "aab565e4-8ead-4185-97cf-84fd75df1b3b",
+      "name": "Twilio WhatsApp Alert"
     },
     {
       "parameters": {
@@ -1373,10 +810,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -240,
+        448,
         1152
       ],
-      "id": "fb0c58b8-af1a-423d-baea-75db9264bcb3",
+      "id": "61bd5dc7-57e9-42b7-9f2b-42341c9cccae",
       "name": "Build LLM Prompt"
     },
     {
@@ -1393,17 +830,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -16,
+        672,
         1152
       ],
-      "id": "9ea741ff-eb83-441f-bfc1-7cbcc0e739c3",
-      "name": "Groq API Call",
-      "credentials": {
-        "httpBearerAuth": {
-          "id": "ak4Nkc3Y40SNdBUM",
-          "name": "Bearer Auth account"
-        }
-      }
+      "id": "4d0bf512-307a-456b-8806-5bcdad8efb7e",
+      "name": "Groq API Call"
     },
     {
       "parameters": {
@@ -1412,10 +843,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        208,
+        896,
         1152
       ],
-      "id": "4d71b6b5-5331-4052-8450-b7a203a52607",
+      "id": "c068600b-a385-48b9-b098-497ee99fbd36",
       "name": "Parse LLM Response"
     }
   ],
@@ -1714,235 +1145,6 @@
         ]
       ]
     },
-    "WhatsApp Feedback Webhook": {
-      "main": [
-        [
-          {
-            "node": "Extract Service",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parse Feedback Command": {
-      "main": [
-        [
-          {
-            "node": "Feedback Router",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Feedback Router": {
-      "main": [
-        [
-          {
-            "node": "ACK Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "FALSE_POSITIVE Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "CORRIGER Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "RESOLVED Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "STATUS Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "ESCALATE Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "HELP Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch alert context": {
-      "main": [
-        [
-          {
-            "node": "Parse Feedback Command",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ACK Handler": {
-      "main": [
-        [
-          {
-            "node": "ACK Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "FALSE_POSITIVE Handler": {
-      "main": [
-        [
-          {
-            "node": "FALSE_POSITIVE Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "CORRIGER Handler": {
-      "main": [
-        [
-          {
-            "node": "CORRIGER Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "RESOLVED Handler": {
-      "main": [
-        [
-          {
-            "node": "RESOLVED Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "STATUS Handler": {
-      "main": [
-        [
-          {
-            "node": "STATUS Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ACK Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "FALSE_POSITIVE Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "CORRIGER Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "RESOLVED Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ESCALATE Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HELP Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "STATUS Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Service": {
-      "main": [
-        [
-          {
-            "node": "Fetch alert context",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Build LLM Prompt": {
       "main": [
         [
@@ -1982,11 +1184,10 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "f544831d-ad93-477e-ae3d-8f53b45761b0",
+  "versionId": "cc7e14a0-47fa-429a-a095-0b87ccdcbc1c",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "cec0fdf9ad402c6f327a3e127a496886f6a2287d720a12376d03789c2a708588"
+    "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
   },
-  "id": "FU9Qfh9nPteX7KPZ",
+  "id": "lENlBdSR0FEiGn7r",
   "tags": []
 }
