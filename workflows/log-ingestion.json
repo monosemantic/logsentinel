@@ -155,10 +155,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -848,
-        944
+        -1312,
+        512
       ],
-      "id": "9ef1fb73-5328-4294-a692-4dd2ae20c2bd",
+      "id": "6bd5adf6-0d72-4145-bda8-b7bc1965c2a2",
       "name": "Insert rows in a table",
       "credentials": {
         "postgres": {
@@ -175,10 +175,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1728,
-        944
+        -2192,
+        512
       ],
-      "id": "e1be7fbc-a738-402a-8ba1-4bf208b61644",
+      "id": "c6167c50-b3b2-4526-beb7-338093fca64a",
       "name": "Format Detector"
     },
     {
@@ -316,10 +316,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -1456,
-        896
+        -1920,
+        464
       ],
-      "id": "edef974d-2901-414b-a9d8-0cd1eb543211",
+      "id": "15fe5ad9-c2da-4f96-a3e0-a65d7a8809d4",
       "name": "Switch"
     },
     {
@@ -330,10 +330,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1104,
-        624
+        -1568,
+        192
       ],
-      "id": "fbf1a736-fd04-42b6-8c98-a12645e8dc15",
+      "id": "fad603a5-5bf7-440a-b02c-1cfc1102ad1a",
       "name": "JSON Processor"
     },
     {
@@ -344,10 +344,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1104,
-        784
+        -1568,
+        352
       ],
-      "id": "fe73c838-0829-4912-8036-1c776a3537c0",
+      "id": "bab7014a-582e-4f21-bdb4-b01656a8a7c3",
       "name": "Syslog Processor"
     },
     {
@@ -358,10 +358,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1104,
-        944
+        -1568,
+        512
       ],
-      "id": "b54a2265-76a2-428e-8021-1fb6cd2e5767",
+      "id": "5dbbdac9-5cb5-49fa-b146-503282d8a3f7",
       "name": "Apache Processor"
     },
     {
@@ -372,10 +372,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1104,
-        1120
+        -1568,
+        688
       ],
-      "id": "f56ccbc4-4b11-4ff8-a3e3-b2e07541f34b",
+      "id": "f3cfdb1d-8049-4fed-bf59-37664cb9f736",
       "name": "Plaintext Processor"
     },
     {
@@ -386,10 +386,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1104,
-        1296
+        -1568,
+        864
       ],
-      "id": "09ab3a3c-6afd-4fb0-8f95-6ae677d3bcf9",
+      "id": "8374586d-b53c-4cca-be68-ad8d524f8706",
       "name": "Unknown Processor"
     },
     {
@@ -401,10 +401,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -608,
-        944
+        -1072,
+        512
       ],
-      "id": "4dbdc39a-bbd5-4cd1-8c09-cdbb5bc0acfb",
+      "id": "b2b5096e-7f6f-4cd1-a774-31a6344530ac",
       "name": "AFD State Read",
       "credentials": {
         "postgres": {
@@ -421,10 +421,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -368,
-        944
+        -832,
+        512
       ],
-      "id": "11aee983-1ffd-4fba-8f20-5e17eedce6f3",
+      "id": "6c5230e6-fb20-4c3f-92eb-5675cb61a245",
       "name": "AFD Engine"
     },
     {
@@ -436,10 +436,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -144,
-        1264
+        -608,
+        832
       ],
-      "id": "8fd54eb8-c2c2-47b5-9c72-4ffb548c294a",
+      "id": "2852e1c2-1378-4577-af81-08ebb6e495f8",
       "name": "AFD State Write"
     },
     {
@@ -451,10 +451,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -144,
-        1504
+        -608,
+        1072
       ],
-      "id": "3fdcce1d-22ad-4bf8-9984-861c9434613b",
+      "id": "1bc3af41-cbed-454a-808f-247b30fa1d5a",
       "name": "Log State Write"
     },
     {
@@ -568,14 +568,16 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -112,
-        912
+        -576,
+        480
       ],
-      "id": "85ed9078-62e6-4605-9181-e51f48748e76",
+      "id": "5d4da384-dfd6-4fc7-b1bc-2d37b40bcc95",
       "name": "AFD State Switch Router"
     },
     {
       "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
         "subject": "=WARNING - {{$json.source_id}}",
         "emailFormat": "text",
         "text": "=Warning detected:\n{{$json.message}}\n\nState: WARNING\nTime: {{$now}}",
@@ -584,15 +586,17 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        464,
-        608
+        0,
+        176
       ],
-      "id": "d3778c02-171c-4c5c-b8d5-a1ba649a7b57",
+      "id": "b9c19fa2-3024-4ecf-b841-37b31a4df1a9",
       "name": "Send an Email",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
         "subject": "=ERROR - {{$json.source_id}}",
         "emailFormat": "text",
         "text": "=Error detected:\n{{$json.message}}\n\nPlease investigate immediately.",
@@ -601,10 +605,10 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        464,
-        1072
+        0,
+        640
       ],
-      "id": "d111ab80-3dbb-477f-b677-3fabd03b7bbe",
+      "id": "db920e8a-0e23-4f78-b9c2-7ddebeb74d26",
       "name": "Send an Email1",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
@@ -617,10 +621,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
-        768
+        0,
+        336
       ],
-      "id": "bd79d59d-850c-468a-9772-6280667725f9",
+      "id": "f1705a80-b404-40eb-926e-5dc7b7595e74",
       "name": "WARNING Message"
     },
     {
@@ -632,10 +636,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
-        432
+        0,
+        0
       ],
-      "id": "a378e9d2-8621-4bfb-9811-736b58d4c4f3",
+      "id": "884a4d4e-d52b-4513-acf5-1bd8d4ec32e0",
       "name": "INFO Message"
     },
     {
@@ -647,10 +651,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
-        1232
+        0,
+        800
       ],
-      "id": "2f3c179d-0296-48ef-b05f-742c1294b507",
+      "id": "c8bf64fd-1da3-4bd4-b710-52253fa0fd78",
       "name": "ERROR Message"
     },
     {
@@ -662,10 +666,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
-        1488
+        0,
+        1056
       ],
-      "id": "38096f72-c864-469a-803a-b8c335c9d939",
+      "id": "bfd99814-741f-4fa5-9cfa-8c2b6e0a1ab7",
       "name": "CRITICAL Message"
     },
     {
@@ -679,10 +683,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1216,
-        1040
+        752,
+        608
       ],
-      "id": "d8a19c8c-97d9-4c36-b990-f3c5d0fbb5b2",
+      "id": "49b5ba67-b03a-4330-85ee-6422b56df8a3",
       "name": "Final Response"
     },
     {
@@ -696,10 +700,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -2016,
-        944
+        -2480,
+        512
       ],
-      "id": "74f2b97c-bdfc-4f0a-b55e-b1db6884227c",
+      "id": "e1062552-aa69-4605-af67-02cad720efba",
       "name": "Webhook1",
       "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd",
       "credentials": {
@@ -718,10 +722,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        208,
-        1728
+        -256,
+        1296
       ],
-      "id": "1028cfb5-5af0-404d-a2c7-c5d4ea573f7b",
+      "id": "9d1972eb-e086-40ce-9e91-27159dbde2ed",
       "name": "Get Recent Logs",
       "credentials": {
         "postgres": {
@@ -737,10 +741,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        464,
-        1728
+        0,
+        1296
       ],
-      "id": "8baea8f1-1b5a-4432-8bf9-1e29f9f54800",
+      "id": "9e9dbe6e-931a-4e69-9290-28e1f49a7a76",
       "name": "Format Recent Logs"
     },
     {
@@ -750,11 +754,104 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        720,
-        1728
+        256,
+        1296
       ],
-      "id": "296c8e35-fa10-48c3-95a4-fa837629c61f",
+      "id": "17192c3a-1923-40a4-b87a-040b14af7245",
       "name": "LLM Groq "
+    },
+    {
+      "parameters": {
+        "jsCode": "const log = $input.first().json;\n\nconst actions = Array.isArray(log.actions_immediates)\n  ? log.actions_immediates\n  : [];\n\nconst timestamp = new Date().toISOString();\n\n/**\n * Format all actions\n */\nconst actionsText = actions.length\n  ? actions.map((a, i) => `${i + 1}. ${a}`).join('\\n')\n  : \"N/A\";\n\n/**\n * WhatsApp Message \n */\nconst whatsappMessage = `\nCRITICAL — ${log.source_id}\n\n${log.message?.slice(0, 200)}\n\nCause probable:\n${log.cause_probable}\n\nActions:\n${actionsText}\n\n${timestamp}\n\nReply:\nACK — Prise en charge\nFALSE POSITIVE — Faux positif\nCORRIGER WARNING — Reclassifier warning\nCORRIGER ERROR — Reclassifier error\nRESOLVED — Incident résolu\nSTATUS — État du système\nESCALATE — Escalader\nHELP — Aide\n`;\n\n/**\n * HTML Email (no emojis)\n */\nconst htmlMessage = `\n<h2>CRITICAL Alert</h2>\n\n<p><b>Service:</b> ${log.source_id}</p>\n\n<p><b>Message:</b><br>${log.message}</p>\n\n<p><b>Cause probable:</b><br>${log.cause_probable}</p>\n\n<p><b>Actions:</b></p>\n<ul>\n${actions.map(a => `<li>${a}</li>`).join('')}\n</ul>\n\n<p><b>Timestamp:</b> ${timestamp}</p>\n`;\n\nreturn [\n  {\n    json: {\n      ...log,\n      whatsappMessage,\n      htmlMessage,\n      alert_timestamp: timestamp\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        1296
+      ],
+      "id": "5f0b35c9-fd1b-4974-845c-4762e57a0599",
+      "name": "Format Alert Message"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
+        "subject": "=[CRITICAL] {{$json.source_id}} — {{$json.alert_timestamp}}",
+        "html": "={{$json.htmlMessage}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        736,
+        1296
+      ],
+      "id": "0b5b5a33-0685-4af8-9d39-2ab14dee7d89",
+      "name": "Alert Email",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE afd_states\nSET ack_time = NULL\nWHERE source_id = '{{$json.source_id}}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        752,
+        1488
+      ],
+      "id": "57ccbcab-e476-4c4d-a69f-fc01d34ab048",
+      "name": "Reset ACK Time",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+            },
+            {
+              "name": "To",
+              "value": "={{$env.TWILIO_WHATSAPP_TO}}"
+            },
+            {
+              "name": "Body",
+              "value": "={{$json.whatsappMessage}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        736,
+        1088
+      ],
+      "id": "c38f86af-cfff-4fee-8621-1eb9b3dd03a6",
+      "name": "Twilio WhatsApp Alert",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "nFNQQLi2HhozL6qX",
+          "name": "Unnamed credential"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -1033,7 +1130,34 @@
     },
     "LLM Groq ": {
       "main": [
-        []
+        [
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Alert Message": {
+      "main": [
+        [
+          {
+            "node": "Alert Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reset ACK Time",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twilio WhatsApp Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -1042,11 +1166,10 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "23df0869-7e60-4adc-aecf-020dcd343893",
+  "versionId": "7f73c00d-d1d7-4ab6-95b3-9120a8d72e10",
   "meta": {
-    "templateCredsSetupCompleted": true,
     "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
   },
-  "id": "AF8sF3Iey5x9o7y3",
+  "id": "bi2L67sU1Ymj4q04",
   "tags": []
 }
