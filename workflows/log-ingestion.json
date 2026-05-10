@@ -1,0 +1,1193 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "logs",
+          "mode": "list",
+          "cachedResultName": "logs"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "log_timestamp",
+              "displayName": "log_timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "level",
+              "displayName": "level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "raw_log",
+              "displayName": "raw_log",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "format_type",
+              "displayName": "format_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "afd_state",
+              "displayName": "afd_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "afd_symbol",
+              "displayName": "afd_symbol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "previous_state",
+              "displayName": "previous_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "llm_cache_hit",
+              "displayName": "llm_cache_hit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "classified_at",
+              "displayName": "classified_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -896,
+        880
+      ],
+      "id": "0ece6fd9-edbe-46fd-ade0-87d3e1186dcf",
+      "name": "Insert rows in a table"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const body = $json.body || $json;\n\nlet raw_log;\nlet source_id;\n\n// Si body est une string : Content-Type text/plain → le body EST le log\nif (typeof body === \"string\") {\n  raw_log   = body;\n  source_id = \"unknown\";\n} else {\n  // Content-Type application/json → body a les champs raw_log et source_id\n  raw_log   = body.raw_log   ?? null;\n  source_id = body.source_id || \"unknown\";\n}\n\nfunction detectFormat(log) {\n  if (!log || typeof log !== \"string\" || log.trim() === \"\") return \"unknown\";\n\n  // JSON : commence par {\n  if (log.trimStart().startsWith(\"{\")) return \"json\";\n\n  // Apache : commence par une IP suivie de \"METHOD\n  if (/^\\d+\\.\\d+\\.\\d+\\.\\d+.*\"(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)/.test(log)) return \"apache\";\n\n  // Syslog : Mois JJ HH:MM:SS hostname process[pid]:\n  if (/^[A-Z][a-z]{2}\\s+\\d{1,2}\\s+\\d{2}:\\d{2}:\\d{2}\\s+\\S+\\s+\\S+\\[/.test(log)) return \"syslog\";\n\n  // Plaintext : commence par une date YYYY-MM-DD\n  if (/^\\d{4}-\\d{2}-\\d{2}/.test(log)) return \"plaintext\";\n\n  return \"unknown\";\n}\n\nreturn {\n  raw_log,\n  source_id,\n  format_type: detectFormat(raw_log)\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1568,
+        976
+      ],
+      "id": "071c49e1-6895-4106-a1e7-1599b5d100f6",
+      "name": "Format Detector"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "json",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a567dbb2-09e4-4a0f-bb09-68436f7dd491"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JSON Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b10f9faa-df5a-4c60-81bc-8e9527ea522d",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "syslog",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Syslog Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "591c9d88-29f2-4a9b-b9e5-fc53137fac20",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "apache",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Apache Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7359ff2b-2af0-4189-9e0f-b713fa7eec3a",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "plaintext",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Plaintext Processor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0a645b9e-9940-4670-b75d-08b82fbf443d",
+                    "leftValue": "={{$json.format_type}}",
+                    "rightValue": "unknown",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Unknown Processor"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1344,
+        928
+      ],
+      "id": "bd2358e6-fa03-4e39-aed5-f12ed2f5d429",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const rawStr = $json.raw_log;\nconst bodySourceId = $json.source_id || \"unknown\";\n\nlet log = {};\ntry {\n  log = typeof rawStr === \"string\" ? JSON.parse(rawStr) : {};\n} catch(e) { log = {}; }\n\n// Préfixer le message avec le level pour que les regex le capturent\nconst level   = log.level || \"\";\nconst message = log.message || JSON.stringify(log);\nconst fullMessage = level ? `${level}: ${message}` : message;\n\nreturn {\n  source_id:     log.service || log.source_id || bodySourceId,\n  log_timestamp: log.timestamp || new Date().toISOString(),\n  raw_log:       rawStr,\n  message:       fullMessage,\n  format_type:   \"json\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        480
+      ],
+      "id": "c3479e02-f48b-433c-b691-241efa16771d",
+      "name": "JSON Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nconst match = typeof log === \"string\"\n  ? log.match(/^[A-Z][a-z]{2}\\s+\\d+\\s+\\d+:\\d+:\\d+\\s+\\S+\\s+(\\S+)\\[\\d+\\]:\\s+(.*)$/)\n  : null;\n\nreturn {\n  source_id: match?.[1] || $json.source_id || \"unknown\",\n  log_timestamp: new Date().toISOString(),\n  raw_log: log,\n  message: match?.[2] || log,\n  format_type: \"syslog\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        672
+      ],
+      "id": "03cac4a7-1934-4d7d-bdab-739c15e6a926",
+      "name": "Syslog Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nconst match = typeof log === \"string\"\n  ? log.match(/(\\d+\\.\\d+\\.\\d+\\.\\d+).*?\\[(.*?)\\]\\s+\"(.*?)\"\\s+\\d+\\s+\\d+(.*)/)\n  : null;\n\n// match[3] = la requête HTTP  (\"POST /api/checkout\")\n// match[4] = tout ce qui suit (CRITICAL: Database connection pool exhausted)\nconst requestPart  = match?.[3] || \"\";\nconst trailingPart = match?.[4]?.trim() || \"\";\n\nreturn {\n  source_id:     $json.source_id || \"apache\",\n  log_timestamp: match?.[2] || new Date().toISOString(),\n  raw_log:       log,\n  message:       trailingPart\n                   ? `${requestPart} ${trailingPart}`\n                   : (requestPart || log),\n  format_type:   \"apache\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        864
+      ],
+      "id": "efe3ecab-dc86-43dd-97f6-db822f6f6c2e",
+      "name": "Apache Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const log = $json.raw_log;\n\nconst parts = typeof log === \"string\" ? log.split(\" \") : [];\n\nreturn {\n  source_id: $json.source_id || \"unknown\",\n  log_timestamp: parts.slice(0, 2).join(\" \") || new Date().toISOString(),\n  raw_log: log,\n  message: parts.slice(2).join(\" \") || log,\n  format_type: \"text\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        1056
+      ],
+      "id": "05700416-1560-449c-8a32-9c05d8b4e340",
+      "name": "Plaintext Processor"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {\n  source_id: $json.source_id || \"unknown\",\n  log_timestamp: new Date().toISOString(),\n  raw_log: $json.raw_log,\n  message: $json.raw_log,\n  format_type: \"unknown\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        1248
+      ],
+      "id": "6b4073df-80bd-4674-bb2d-58729f627783",
+      "name": "Unknown Processor"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COALESCE(s.current_state, 'INFO') AS current_state, s.last_event_time FROM (SELECT 1) AS dummy LEFT JOIN afd_states s ON s.source_id = '{{ $json.source_id }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -672,
+        880
+      ],
+      "id": "587e7ca7-120b-44e8-be7d-5c205dca864a",
+      "name": "AFD State Read"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// WF1 - Code Node: AFD Engine + Regex Evaluation\n// Issue #5 | Branch: feat/05-wf1-afd-engine\n// LogSentinel - IA-01\n//\n// $json = output of \"AFD State Read\" (always 1 row, COALESCE LEFT JOIN)\n// $('Insert rows in a table').first().json = log row with id, source_id, message\n//\n// n8n mode: runOnceForEachItem\n// Phase 1 scope: ERROR_CASCADE, RECOVERY, cascade_count not implemented (Issue #13)\n\n\n// 0. ENV CONFIG\n// Requires N8N_BLOCK_ENV_ACCESS_IN_NODE=false in docker-compose (already set).\n\nconst TIMEOUT_WINDOW_SEC = parseInt($env.TIMEOUT_WINDOW ?? '300', 10);\nconst EFFECTIVE_TIMEOUT = Number.isFinite(TIMEOUT_WINDOW_SEC) && TIMEOUT_WINDOW_SEC > 0\n  ? TIMEOUT_WINDOW_SEC : 300;\n\n\n// 1. TRANSITION TABLE delta: Q x Sigma -> Q\n// Source: Issue #3, Section 3, 4x6 = 24 entries\n// Determinism: 1 output per (state, symbol) pair\n// Totality: all 24 entries defined\n// Monotonicity: delta(q, sigma_log) >= q except sigma_timeout (resets to INFO)\n// Absorption: delta(CRITICAL, sigma) = CRITICAL for all sigma != sigma_timeout\n\nconst TRANSITIONS = {\n  //           sigma_info    sigma_warn    sigma_error   sigma_crit    sigma_malformed  sigma_timeout\n  INFO:     { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'INFO',     sigma_timeout: 'INFO'     },\n  WARNING:  { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'WARNING',  sigma_timeout: 'INFO'     },\n  ERROR:    { sigma_info: 'WARNING',  sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'ERROR',    sigma_timeout: 'INFO'     },\n  CRITICAL: { sigma_info: 'CRITICAL', sigma_warn: 'CRITICAL', sigma_error: 'CRITICAL', sigma_crit: 'CRITICAL', sigma_malformed: 'CRITICAL', sigma_timeout: 'INFO'     },\n};\n\n// Note on delta(ERROR, sigma_info) = WARNING (not INFO):\n// Partial recovery - service responds again but we stay in WARNING.\n// Only sigma_timeout (prolonged silence) resets fully to INFO.\n\n\n// 2. REGEX PATTERNS in strict priority order\n// Priority: sigma_crit > sigma_error > sigma_warn > sigma_info > sigma_malformed\n// First match wins. sigma_malformed is the default (no regex). sigma_timeout is internal.\n\nconst REGEX_PATTERNS = [\n  {\n    symbol: 'sigma_crit',\n    // \\b prevents partial matches: \"uncritical\", \"non-fatal\" won't fire.\n    pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i,\n  },\n  {\n    symbol: 'sigma_error',\n    // HTTP 5xx via 5[0-9]{2}. Common exception class names included.\n    // Known false positive (Phase 1): 'GET /error-page 200' -> sigma_error because\n    // '/' is a non-word char so \\b fires before 'error' in the URL path.\n    // Issue #3 Section 5 edge case 1 was wrong on this. Fix in Phase 2 (Issue #4).\n    pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i,\n  },\n  {\n    symbol: 'sigma_warn',\n    // Negative lookahead TIMEOUT(?!_WINDOW): excludes \"TIMEOUT_WINDOW\" (internal config param).\n    pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i,\n  },\n  {\n    symbol: 'sigma_info',\n    // HTTP 2xx via 2[0-9]{2}.\n    pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i,\n  },\n  // sigma_malformed: no pattern, default in evaluateSymbol()\n  // sigma_timeout: internal temporal signal, never in REGEX_PATTERNS\n];\n\n\n// 3. PURE ENGINE FUNCTIONS\n\n/**\n * evaluateSymbol(message) -> symbol in Sigma\n * null/empty -> sigma_malformed before any regex. First match wins.\n */\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\n/**\n * applyTransition(currentState, symbol) -> newState\n * Unknown state falls back to INFO. Unknown symbol leaves state unchanged.\n */\nfunction applyTransition(currentState, symbol) {\n  const row = TRANSITIONS[currentState];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? currentState;\n}\n\n\n// 4. READ LOG DATA from the Insert node (carries id, source_id, message, etc.)\nconst logObject = $('Insert rows in a table').first().json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst now       = new Date();\n\n\n// 5. READ CURRENT AFD STATE from $json (= \"AFD State Read\" output)\n// \"AFD State Read\" uses COALESCE with a LEFT JOIN so it always returns exactly 1 row.\n// New service: current_state = 'INFO', last_event_time = null\nconst stateRow = $json;\n\nlet currentState  = 'INFO';\nlet lastEventTime = now;\nlet isNewService  = true;\n\nif (stateRow?.current_state) {\n  // Normalize legacy 'NOMINAL' (schema.sql default from Phase 0) -> 'INFO' (Phase 1 q0)\n  currentState = (stateRow.current_state === 'NOMINAL') ? 'INFO' : stateRow.current_state;\n  if (!TRANSITIONS[currentState]) currentState = 'INFO';\n\n  if (stateRow.last_event_time) {\n    lastEventTime = new Date(stateRow.last_event_time);\n    isNewService  = false;\n    // last_event_time is null for new services (COALESCE returned INFO but no real row)\n  }\n}\n\n\n// 6. TEMPORAL RESET (sigma_timeout)\n// If no log received for TIMEOUT_WINDOW seconds: apply delta(q, sigma_timeout) first,\n// then delta(result, sigma_log). New services skip this (no last_event_time to compare).\n\nconst elapsedMs  = now - lastEventTime;\nconst elapsedSec = elapsedMs / 1000;\n\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n}\n\n\n// 7. SYMBOL EVALUATION AND TRANSITION\n\nconst symbol        = evaluateSymbol(message);\nconst newState      = applyTransition(stateAfterTimeout, symbol);\nconst previousState = currentState; // state before any transition (audit trail)\n\n\n// 8. RETURN ENRICHED OBJECT\n// \"AFD State Write\" node (after this) runs:\n//   INSERT INTO afd_states ... ON CONFLICT DO UPDATE using $json.afd_state etc.\n// \"Log State Write\" node (after this) runs:\n//   UPDATE logs SET afd_state, afd_symbol, previous_state WHERE id = $json.id\n\nreturn {\n  ...logObject,           // all fields from Insert node (including id)\n  afd_symbol:      symbol,\n  afd_state:       newState,\n  previous_state:  previousState,\n  source_id:       sourceId,\n  is_new_service:  isNewService,\n  timeout_applied: timeoutApplied,\n  elapsed_sec:     Math.round(elapsedSec),\n  timeout_window:  EFFECTIVE_TIMEOUT,\n  engine_ts:       now.toISOString(),\n  // Not in Phase 1: cascade_count, cascade_start_time, ERROR_CASCADE, RECOVERY (Issue #13)\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        880
+      ],
+      "id": "6461c4c4-65ef-46c5-8287-38a3e2dc4d62",
+      "name": "AFD Engine"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO afd_states (source_id, current_state, previous_state, last_symbol, last_event_time, updated_at) VALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', '{{ $json.previous_state }}', '{{ $json.afd_symbol }}', NOW(), NOW()) ON CONFLICT (source_id) DO UPDATE SET current_state = EXCLUDED.current_state, previous_state = EXCLUDED.previous_state, last_symbol = EXCLUDED.last_symbol, last_event_time = EXCLUDED.last_event_time, updated_at = EXCLUDED.updated_at",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -224,
+        784
+      ],
+      "id": "d53fa4dd-96e0-4691-b27e-f925fda00a2d",
+      "name": "AFD State Write"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE logs SET afd_state = '{{ $json.afd_state }}', afd_symbol = '{{ $json.afd_symbol }}', previous_state = '{{ $json.previous_state }}' WHERE id = {{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -224,
+        976
+      ],
+      "id": "1af39269-4e5f-4f1c-a742-e29a5db465bd",
+      "name": "Log State Write"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ab6ff2e0-ca5f-4b91-8970-f46690fb1d74",
+                    "leftValue": "={{ ['INFO', 'NOMINAL'].includes($json.afd_state) }}",
+                    "rightValue": "true",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "INFO Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "710fdff7-1a07-4f1a-aeea-f9404a85c721",
+                    "leftValue": "={{ ['WARNING', 'DEGRADED'].includes($json.afd_state) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WARNING Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "22be804b-0965-4e3a-adca-ab0d690c5965",
+                    "leftValue": "={{$json.afd_state}}",
+                    "rightValue": "ERROR",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ERROR Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ff408d4f-2f53-4e9a-bbfc-7d9bfa22e67d",
+                    "leftValue": "={{ ['CRITICAL', 'ERROR_CASCADE'].includes($json.afd_state) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CRITICAL Handler"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        528
+      ],
+      "id": "4c47b42d-4f0a-408d-9c02-6a9a672838ee",
+      "name": "AFD State Switch Router"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
+        "subject": "=WARNING - {{$json.source_id}}",
+        "emailFormat": "text",
+        "text": "=Warning detected:\n{{$json.message}}\n\nState: WARNING\nTime: {{$now}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "eb9609a6-8d27-405c-a5c7-a495465f4c56",
+      "name": "Send an Email",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
+        "subject": "=ERROR - {{$json.source_id}}",
+        "emailFormat": "text",
+        "text": "=Error detected:\n{{$json.message}}\n\nPlease investigate immediately.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        576
+      ],
+      "id": "8d365d24-8e27-4154-87cf-048a284137c4",
+      "name": "Send an Email1",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"WARNING\",\n  \"message\": \"email_sent\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        384
+      ],
+      "id": "ebae0b69-adf8-4487-8bc8-f4641147e9ff",
+      "name": "WARNING Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"INFO\",\n  \"message\": \"processed\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "79762da5-74c4-4ce8-a126-22d96f43b133",
+      "name": "INFO Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"ERROR\",\n  \"message\": \"email_sent\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        768
+      ],
+      "id": "c227d851-8939-4c92-ad85-1bb69bbc5bce",
+      "name": "ERROR Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"CRITICAL\",\n  \"message\": \"sent_to_llm\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        960
+      ],
+      "id": "dc30af4a-8981-48c0-96c2-3fc818a38afa",
+      "name": "CRITICAL Message"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"{{$json.status}}\",\n  \"message\": \"{{$json.message}}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        224,
+        464
+      ],
+      "id": "0d275027-a336-4a6b-a237-71435686ad8b",
+      "name": "Final Response"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "logs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1792,
+        976
+      ],
+      "id": "5e04e5d5-375e-4532-88d1-64aab3232379",
+      "name": "Webhook1",
+      "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT message \nFROM logs WHERE source_id = '{{ $json.source_id }}'\nORDER BY log_timestamp DESC\nLIMIT 5;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        1152
+      ],
+      "id": "05e10f63-cc38-4bb7-852c-ea905d323aeb",
+      "name": "Get Recent Logs"
+    },
+    {
+      "parameters": {
+        "jsCode": "const originalLog = $('AFD Engine').first().json;\nconst rows = $input.all();\nconst recent_logs = rows.map(r => r.json.message);\n\nreturn [{\n  json: {\n    ...originalLog,\n    recent_logs\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        1152
+      ],
+      "id": "fd8a4258-250b-4116-869c-9ab38a2a8aef",
+      "name": "Format Recent Logs"
+    },
+    {
+      "parameters": {
+        "jsCode": "const log = $input.first().json;\n\nconst actions = Array.isArray(log.actions_immediates)\n  ? log.actions_immediates\n  : [];\n\nconst timestamp = new Date().toISOString();\n\n/**\n * Format all actions\n */\nconst actionsText = actions.length\n  ? actions.map((a, i) => `${i + 1}. ${a}`).join('\\n')\n  : \"N/A\";\n\n/**\n * WhatsApp Message \n */\nconst whatsappMessage = `\nCRITICAL — ${log.source_id}\n\n${log.message?.slice(0, 200)}\n\nCause probable:\n${log.cause_probable}\n\nActions:\n${actionsText}\n\n${timestamp}\n\nReply:\nACK — Prise en charge\nFALSE POSITIVE — Faux positif\nCORRIGER WARNING — Reclassifier warning\nCORRIGER ERROR — Reclassifier error\nRESOLVED — Incident résolu\nSTATUS — État du système\nESCALATE — Escalader\nHELP — Aide\n`;\n\n/**\n * HTML Email (no emojis)\n */\nconst htmlMessage = `\n<h2>CRITICAL Alert</h2>\n\n<p><b>Service:</b> ${log.source_id}</p>\n\n<p><b>Message:</b><br>${log.message}</p>\n\n<p><b>Cause probable:</b><br>${log.cause_probable}</p>\n\n<p><b>Actions:</b></p>\n<ul>\n${actions.map(a => `<li>${a}</li>`).join('')}\n</ul>\n\n<p><b>Timestamp:</b> ${timestamp}</p>\n`;\n\nreturn [\n  {\n    json: {\n      ...log,\n      whatsappMessage,\n      htmlMessage,\n      alert_timestamp: timestamp\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1152
+      ],
+      "id": "1d3b3319-8c8e-45d0-b781-260f89e0ea79",
+      "name": "Format Alert Message"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
+        "subject": "=[CRITICAL] {{$json.source_id}} — {{$json.alert_timestamp}}",
+        "html": "={{$json.htmlMessage}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1344,
+        1152
+      ],
+      "id": "2f7b8c25-2d40-479a-b6ab-180ffa5eb9da",
+      "name": "Alert Email",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE afd_states\nSET ack_time = NULL\nWHERE source_id = '{{$json.source_id}}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1344,
+        1344
+      ],
+      "id": "6dc95465-356a-4d66-9617-ff9192a69233",
+      "name": "Reset ACK Time"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+            },
+            {
+              "name": "To",
+              "value": "={{$env.TWILIO_WHATSAPP_ADMIN}}"
+            },
+            {
+              "name": "Body",
+              "value": "={{$json.whatsappMessage}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1344,
+        960
+      ],
+      "id": "aab565e4-8ead-4185-97cf-84fd75df1b3b",
+      "name": "Twilio WhatsApp Alert"
+    },
+    {
+      "parameters": {
+        "jsCode": "const log = $input.first().json;\n\nconst userPrompt = `Tu es un ingénieur SRE expert en monitoring.\nUn log CRITICAL a été détecté dans le service \"${log.source_id}\".\nLog : ${log.message}\nCatégorie : ${log.category || 'SYSTEM'}\nHistorique récent :\n${JSON.stringify(log.recent_logs || [])}\n\nRéponds UNIQUEMENT en JSON valide, sans texte avant ou après :\n{\n  \"cause_probable\": \"...\",\n  \"actions_immediates\": [\"action 1\", \"action 2\", \"action 3\"],\n  \"escalade_si\": \"...\",\n  \"severite_estimee\": \"HIGH\"\n}\nMaximum 150 mots.`;\n\nreturn [{\n  json: {\n    ...log,\n    llm_payload: {\n      model: $env.GROQ_MODEL ?? 'llama-3.1-8b-instant',\n      messages: [{ role: 'user', content: userPrompt }],\n      max_tokens: 300,\n      temperature: 0.3,\n      response_format: { type: \"json_object\" }\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        1152
+      ],
+      "id": "61bd5dc7-57e9-42b7-9f2b-42341c9cccae",
+      "name": "Build LLM Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.GROQ_API_URL}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.llm_payload}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        1152
+      ],
+      "id": "4d0bf512-307a-456b-8806-5bcdad8efb7e",
+      "name": "Groq API Call"
+    },
+    {
+      "parameters": {
+        "jsCode": "const log = $('Build LLM Prompt').first().json;\n\nconst staticFallbacks = {\n  SECURITY:     'Vérifier les logs d\\'accès, bloquer l\\'IP source, notifier l\\'équipe sécurité.',\n  PERFORMANCE:  'Vérifier CPU/RAM/disque, identifier le processus fautif, redémarrer si nécessaire.',\n  AVAILABILITY: 'Vérifier la connectivité réseau, l\\'état du service et de ses dépendances.',\n  DATA:         'Vérifier l\\'intégrité des données, stopper les écritures, alerter l\\'équipe DBA.',\n  NETWORK:      'Vérifier la connectivité, les règles firewall, et les DNS.',\n  SYSTEM:       'Vérifier les ressources système, les logs kernel, et l\\'espace disque.'\n};\n\nfunction staticResponse(category) {\n  return {\n    cause_probable:     'LLM indisponible — réponse statique',\n    actions_immediates: [staticFallbacks[category] || 'Analyser les logs et escalader.'],\n    escalade_si:        'Si le problème persiste plus de 10 minutes',\n    severite_estimee:   'CRITICAL',\n    llm_source:         'static'\n  };\n}\n\n// $json ici = réponse du HTTP Request node (ou objet erreur si \"Continue on Fail\")\nconst httpResult = $json;\n\n// Si le nœud HTTP a échoué, $json contiendra un champ \"error\"\nif (httpResult.error || !httpResult.choices) {\n  return [{ json: { ...log, ...staticResponse(log.category) } }];\n}\n\ntry {\n  const rawText  = httpResult.choices[0].message.content.trim();\n  const parsed   = JSON.parse(rawText);\n\n  return [{\n    json: {\n      ...log,\n      cause_probable:     parsed.cause_probable,\n      actions_immediates: parsed.actions_immediates,\n      escalade_si:        parsed.escalade_si,\n      severite_estimee:   parsed.severite_estimee,\n      llm_source:         'groq'\n    }\n  }];\n} catch (e) {\n  return [{ json: { ...log, ...staticResponse(log.category) } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1152
+      ],
+      "id": "c068600b-a385-48b9-b098-497ee99fbd36",
+      "name": "Parse LLM Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Format Detector": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "JSON Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Syslog Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Apache Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plaintext Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unknown Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Syslog Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apache Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plaintext Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unknown Processor": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "AFD State Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AFD State Read": {
+      "main": [
+        [
+          {
+            "node": "AFD Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AFD Engine": {
+      "main": [
+        [
+          {
+            "node": "AFD State Write",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log State Write",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AFD State Switch Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AFD State Switch Router": {
+      "main": [
+        [
+          {
+            "node": "INFO Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WARNING Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ERROR Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Recent Logs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CRITICAL Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "INFO Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WARNING Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ERROR Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRITICAL Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Format Detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Recent Logs": {
+      "main": [
+        [
+          {
+            "node": "Format Recent Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Recent Logs": {
+      "main": [
+        [
+          {
+            "node": "Build LLM Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Alert Message": {
+      "main": [
+        [
+          {
+            "node": "Alert Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reset ACK Time",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twilio WhatsApp Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build LLM Prompt": {
+      "main": [
+        [
+          {
+            "node": "Groq API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq API Call": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM Response": {
+      "main": [
+        [
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "cc7e14a0-47fa-429a-a095-0b87ccdcbc1c",
+  "meta": {
+    "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
+  },
+  "id": "lENlBdSR0FEiGn7r",
+  "tags": []
+}
