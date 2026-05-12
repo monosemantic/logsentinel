@@ -155,15 +155,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -400,
+        -896,
         880
       ],
-      "id": "e1e1a678-9fbf-472e-8777-f8fc8a5bd976",
+      "id": "0ece6fd9-edbe-46fd-ade0-87d3e1186dcf",
       "name": "Insert rows in a table",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -175,10 +175,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1072,
+        -1568,
         976
       ],
-      "id": "774933c1-35ce-4237-8990-3d1e48909365",
+      "id": "071c49e1-6895-4106-a1e7-1599b5d100f6",
       "name": "Format Detector"
     },
     {
@@ -316,10 +316,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -848,
+        -1344,
         928
       ],
-      "id": "38ff8416-69d6-49b0-8830-ec3d6d3b95a8",
+      "id": "bd2358e6-fa03-4e39-aed5-f12ed2f5d429",
       "name": "Switch"
     },
     {
@@ -330,10 +330,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -624,
-        560
+        -1120,
+        480
       ],
-      "id": "17daf8e8-8e7b-40c3-be36-430b92d6cc3b",
+      "id": "c3479e02-f48b-433c-b691-241efa16771d",
       "name": "JSON Processor"
     },
     {
@@ -344,10 +344,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -624,
-        752
+        -1120,
+        672
       ],
-      "id": "fd0d4c77-684b-444b-8b9c-d88db8a8d6da",
+      "id": "03cac4a7-1934-4d7d-bdab-739c15e6a926",
       "name": "Syslog Processor"
     },
     {
@@ -358,10 +358,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -624,
-        944
+        -1120,
+        864
       ],
-      "id": "9e414e8d-6704-4998-a210-23f715509cda",
+      "id": "efe3ecab-dc86-43dd-97f6-db822f6f6c2e",
       "name": "Apache Processor"
     },
     {
@@ -372,10 +372,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -624,
-        1136
+        -1120,
+        1056
       ],
-      "id": "2c1d1ec9-16c4-4564-9db9-e5b85ff31972",
+      "id": "05700416-1560-449c-8a32-9c05d8b4e340",
       "name": "Plaintext Processor"
     },
     {
@@ -386,65 +386,65 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -624,
-        1328
+        -1120,
+        1248
       ],
-      "id": "0847a755-452e-4ee8-93f8-c81ec01cc974",
+      "id": "6b4073df-80bd-4674-bb2d-58729f627783",
       "name": "Unknown Processor"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT\n  COALESCE(s.current_state, 'INFO')   AS current_state,\n  COALESCE(s.cascade_count, 0)        AS cascade_count,\n  s.last_event_time IS NULL           AS is_new_service,\n  COALESCE(\n    EXTRACT(EPOCH FROM (NOW() - s.last_event_time))::int,\n    999999\n  )                                   AS elapsed_since_last_sec,\n  COALESCE(\n    EXTRACT(EPOCH FROM (NOW() - s.cascade_start_time))::int,\n    999999\n  )                                   AS cascade_elapsed_sec\nFROM (SELECT 1) AS dummy\nLEFT JOIN afd_states s\n  ON s.source_id = '{{ $json.source_id }}'\n AND '{{ $json.source_id }}' <> ''",
+        "query": "SELECT COALESCE(s.current_state, 'INFO') AS current_state, s.last_event_time FROM (SELECT 1) AS dummy LEFT JOIN afd_states s ON s.source_id = '{{ $json.source_id }}'",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -176,
+        -672,
         880
       ],
-      "id": "6b2712f9-a6dd-45b5-9706-b3f0515d9bd9",
+      "id": "587e7ca7-120b-44e8-be7d-5c205dca864a",
       "name": "AFD State Read",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// 0. CONFIG\nconst TIMEOUT_WINDOW_SEC  = parseInt($env.TIMEOUT_WINDOW    ?? '300', 10);\nconst CASCADE_THRESHOLD   = parseInt($env.CASCADE_THRESHOLD ?? '3',   10);\nconst CASCADE_WINDOW_SEC  = parseInt($env.CASCADE_WINDOW    ?? '60',  10);\n\nconst EFFECTIVE_TIMEOUT   = Number.isFinite(TIMEOUT_WINDOW_SEC)  && TIMEOUT_WINDOW_SEC  > 0 ? TIMEOUT_WINDOW_SEC  : 300;\nconst EFFECTIVE_THRESHOLD = Number.isFinite(CASCADE_THRESHOLD)   && CASCADE_THRESHOLD   > 0 ? CASCADE_THRESHOLD   : 3;\nconst EFFECTIVE_CASCADE   = Number.isFinite(CASCADE_WINDOW_SEC)  && CASCADE_WINDOW_SEC  > 0 ? CASCADE_WINDOW_SEC  : 60;\n\n\n// 1. TRANSITION TABLE 6×6 (Issue #12)\nconst TRANSITIONS = {\n  INFO:          { sigma_info:'INFO',     sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'INFO',      sigma_malformed:'INFO',          sigma_timeout:'INFO'  },\n  WARNING:       { sigma_info:'INFO',     sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'WARNING',   sigma_malformed:'WARNING',       sigma_timeout:'INFO'  },\n  ERROR:         { sigma_info:'WARNING',  sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'ERROR',     sigma_malformed:'ERROR',         sigma_timeout:'INFO'  },\n  ERROR_CASCADE: { sigma_info:'WARNING',  sigma_warn:'ERROR',    sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'ERROR',     sigma_malformed:'ERROR_CASCADE', sigma_timeout:'INFO'  },\n  CRITICAL:      { sigma_info:'CRITICAL', sigma_warn:'CRITICAL', sigma_error:'CRITICAL', sigma_crit:'CRITICAL', sigma_ack:'RECOVERY',  sigma_malformed:'CRITICAL',      sigma_timeout:'INFO'  },\n  RECOVERY:      { sigma_info:'INFO',     sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'RECOVERY',  sigma_malformed:'RECOVERY',      sigma_timeout:'INFO'  },\n};\n\n// 2. REGEX PATTERNS\nconst REGEX_PATTERNS = [\n  { symbol: 'sigma_crit',  pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i },\n  { symbol: 'sigma_error', pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i },\n  { symbol: 'sigma_warn',  pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i },\n  { symbol: 'sigma_info',  pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i },\n];\nconst ACK_PATTERN = /\\b(__AFD_ACK__)\\b/;\n\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  if (ACK_PATTERN.test(message)) return 'sigma_ack';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\nfunction applyTransition(state, symbol) {\n  const row = TRANSITIONS[state];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? state;\n}\n\n\n// 3. READ LOG\nconst logObject = $('Insert rows in a table').item.json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst logId     = logObject.id        ?? null;\nconst now       = new Date();\n\n\n// 4. READ AFD STATE\n// All elapsed-time values are now computed inside PostgreSQL (NOW() - stored_time)\n// so the n8n / PostgreSQL clock skew never affects the logic.\nconst stateRow = $json;\n\nlet rawState = stateRow?.current_state ?? 'INFO';\nif (rawState === 'NOMINAL')  rawState = 'INFO';\nif (rawState === 'DEGRADED') rawState = 'WARNING';\nlet currentState = TRANSITIONS[rawState] ? rawState : 'INFO';\n\nconst isNewService      = stateRow?.is_new_service !== false;   // true when no prior row\nconst cascadeCount      = parseInt(stateRow?.cascade_count ?? '0', 10) || 0;\nconst elapsedSec        = Number(stateRow?.elapsed_since_last_sec ?? 999999);\nconst cascadeElapsedSec = Number(stateRow?.cascade_elapsed_sec   ?? 999999);\n\n\n// 5. TEMPORAL RESET (sigma_timeout)\n// Uses SQL-computed elapsedSec — no cross-clock comparison.\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\nlet newCascadeCount   = cascadeCount;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n  newCascadeCount   = 0;\n}\n\n\n// 6. SYMBOL EVALUATION AND TRANSITION WITH CASCADE WINDOW\n// cascadeElapsedSec is also SQL-computed — no cross-clock comparison.\nconst symbol      = evaluateSymbol(message);\nconst rawNewState = applyTransition(stateAfterTimeout, symbol);\n\nlet newState      = rawNewState;\n// cascade_reset tells AFD State Write how to update cascade_start_time:\n//   'reset_now'  → start fresh window   → PostgreSQL NOW()\n//   'reset_null' → leave error territory → NULL\n//   'keep'       → stay in window        → preserve existing value\nlet cascade_reset = 'keep';\n\nif (rawNewState === 'ERROR') {\n  if (cascadeElapsedSec > EFFECTIVE_CASCADE) {\n    newCascadeCount = 1;\n    cascade_reset   = 'reset_now';\n    newState        = 'ERROR';\n  } else {\n    newCascadeCount = cascadeCount + 1;\n    cascade_reset   = 'keep';\n    if (newCascadeCount >= EFFECTIVE_THRESHOLD) {\n      newState = 'ERROR_CASCADE';\n    }\n  }\n} else if (rawNewState === 'ERROR_CASCADE') {\n  newCascadeCount = cascadeCount + 1;\n  cascade_reset   = 'keep';\n} else {\n  if (currentState === 'ERROR' || currentState === 'ERROR_CASCADE') {\n    newCascadeCount = 0;\n    cascade_reset   = 'reset_null';\n  }\n}\n\nconst previousState = currentState;\n\n\n// 7. OUTPUT\nreturn {\n  ...logObject,\n  afd_symbol:     symbol,\n  afd_state:      newState,\n  previous_state: previousState,\n  source_id:      sourceId,\n  id:             logId,\n  cascade_count:  newCascadeCount,\n  cascade_reset:  cascade_reset,\n  is_new_service:   isNewService,\n  timeout_applied:  timeoutApplied,\n  elapsed_sec:      Math.round(elapsedSec),\n  cascade_elapsed:  Math.round(cascadeElapsedSec),\n  cascade_threshold: EFFECTIVE_THRESHOLD,\n  cascade_window:   EFFECTIVE_CASCADE,\n  engine_ts:        now.toISOString(),\n  engine_version:   'v2',\n};"
+        "jsCode": "// WF1 - Code Node: AFD Engine + Regex Evaluation\n// Issue #5 | Branch: feat/05-wf1-afd-engine\n// LogSentinel - IA-01\n//\n// $json = output of \"AFD State Read\" (always 1 row, COALESCE LEFT JOIN)\n// $('Insert rows in a table').first().json = log row with id, source_id, message\n//\n// n8n mode: runOnceForEachItem\n// Phase 1 scope: ERROR_CASCADE, RECOVERY, cascade_count not implemented (Issue #13)\n\n\n// 0. ENV CONFIG\n// Requires N8N_BLOCK_ENV_ACCESS_IN_NODE=false in docker-compose (already set).\n\nconst TIMEOUT_WINDOW_SEC = parseInt($env.TIMEOUT_WINDOW ?? '300', 10);\nconst EFFECTIVE_TIMEOUT = Number.isFinite(TIMEOUT_WINDOW_SEC) && TIMEOUT_WINDOW_SEC > 0\n  ? TIMEOUT_WINDOW_SEC : 300;\n\n\n// 1. TRANSITION TABLE delta: Q x Sigma -> Q\n// Source: Issue #3, Section 3, 4x6 = 24 entries\n// Determinism: 1 output per (state, symbol) pair\n// Totality: all 24 entries defined\n// Monotonicity: delta(q, sigma_log) >= q except sigma_timeout (resets to INFO)\n// Absorption: delta(CRITICAL, sigma) = CRITICAL for all sigma != sigma_timeout\n\nconst TRANSITIONS = {\n  //           sigma_info    sigma_warn    sigma_error   sigma_crit    sigma_malformed  sigma_timeout\n  INFO:     { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'INFO',     sigma_timeout: 'INFO'     },\n  WARNING:  { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'WARNING',  sigma_timeout: 'INFO'     },\n  ERROR:    { sigma_info: 'WARNING',  sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'ERROR',    sigma_timeout: 'INFO'     },\n  CRITICAL: { sigma_info: 'CRITICAL', sigma_warn: 'CRITICAL', sigma_error: 'CRITICAL', sigma_crit: 'CRITICAL', sigma_malformed: 'CRITICAL', sigma_timeout: 'INFO'     },\n};\n\n// Note on delta(ERROR, sigma_info) = WARNING (not INFO):\n// Partial recovery - service responds again but we stay in WARNING.\n// Only sigma_timeout (prolonged silence) resets fully to INFO.\n\n\n// 2. REGEX PATTERNS in strict priority order\n// Priority: sigma_crit > sigma_error > sigma_warn > sigma_info > sigma_malformed\n// First match wins. sigma_malformed is the default (no regex). sigma_timeout is internal.\n\nconst REGEX_PATTERNS = [\n  {\n    symbol: 'sigma_crit',\n    // \\b prevents partial matches: \"uncritical\", \"non-fatal\" won't fire.\n    pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i,\n  },\n  {\n    symbol: 'sigma_error',\n    // HTTP 5xx via 5[0-9]{2}. Common exception class names included.\n    // Known false positive (Phase 1): 'GET /error-page 200' -> sigma_error because\n    // '/' is a non-word char so \\b fires before 'error' in the URL path.\n    // Issue #3 Section 5 edge case 1 was wrong on this. Fix in Phase 2 (Issue #4).\n    pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i,\n  },\n  {\n    symbol: 'sigma_warn',\n    // Negative lookahead TIMEOUT(?!_WINDOW): excludes \"TIMEOUT_WINDOW\" (internal config param).\n    pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i,\n  },\n  {\n    symbol: 'sigma_info',\n    // HTTP 2xx via 2[0-9]{2}.\n    pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i,\n  },\n  // sigma_malformed: no pattern, default in evaluateSymbol()\n  // sigma_timeout: internal temporal signal, never in REGEX_PATTERNS\n];\n\n\n// 3. PURE ENGINE FUNCTIONS\n\n/**\n * evaluateSymbol(message) -> symbol in Sigma\n * null/empty -> sigma_malformed before any regex. First match wins.\n */\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\n/**\n * applyTransition(currentState, symbol) -> newState\n * Unknown state falls back to INFO. Unknown symbol leaves state unchanged.\n */\nfunction applyTransition(currentState, symbol) {\n  const row = TRANSITIONS[currentState];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? currentState;\n}\n\n\n// 4. READ LOG DATA from the Insert node (carries id, source_id, message, etc.)\nconst logObject = $('Insert rows in a table').first().json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst now       = new Date();\n\n\n// 5. READ CURRENT AFD STATE from $json (= \"AFD State Read\" output)\n// \"AFD State Read\" uses COALESCE with a LEFT JOIN so it always returns exactly 1 row.\n// New service: current_state = 'INFO', last_event_time = null\nconst stateRow = $json;\n\nlet currentState  = 'INFO';\nlet lastEventTime = now;\nlet isNewService  = true;\n\nif (stateRow?.current_state) {\n  // Normalize legacy 'NOMINAL' (schema.sql default from Phase 0) -> 'INFO' (Phase 1 q0)\n  currentState = (stateRow.current_state === 'NOMINAL') ? 'INFO' : stateRow.current_state;\n  if (!TRANSITIONS[currentState]) currentState = 'INFO';\n\n  if (stateRow.last_event_time) {\n    lastEventTime = new Date(stateRow.last_event_time);\n    isNewService  = false;\n    // last_event_time is null for new services (COALESCE returned INFO but no real row)\n  }\n}\n\n\n// 6. TEMPORAL RESET (sigma_timeout)\n// If no log received for TIMEOUT_WINDOW seconds: apply delta(q, sigma_timeout) first,\n// then delta(result, sigma_log). New services skip this (no last_event_time to compare).\n\nconst elapsedMs  = now - lastEventTime;\nconst elapsedSec = elapsedMs / 1000;\n\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n}\n\n\n// 7. SYMBOL EVALUATION AND TRANSITION\n\nconst symbol        = evaluateSymbol(message);\nconst newState      = applyTransition(stateAfterTimeout, symbol);\nconst previousState = currentState; // state before any transition (audit trail)\n\n\n// 8. RETURN ENRICHED OBJECT\n// \"AFD State Write\" node (after this) runs:\n//   INSERT INTO afd_states ... ON CONFLICT DO UPDATE using $json.afd_state etc.\n// \"Log State Write\" node (after this) runs:\n//   UPDATE logs SET afd_state, afd_symbol, previous_state WHERE id = $json.id\n\nreturn {\n  ...logObject,           // all fields from Insert node (including id)\n  afd_symbol:      symbol,\n  afd_state:       newState,\n  previous_state:  previousState,\n  source_id:       sourceId,\n  is_new_service:  isNewService,\n  timeout_applied: timeoutApplied,\n  elapsed_sec:     Math.round(elapsedSec),\n  timeout_window:  EFFECTIVE_TIMEOUT,\n  engine_ts:       now.toISOString(),\n  // Not in Phase 1: cascade_count, cascade_start_time, ERROR_CASCADE, RECOVERY (Issue #13)\n};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        48,
+        -448,
         880
       ],
-      "id": "86627acb-568c-489c-b435-0447685150dc",
+      "id": "6461c4c4-65ef-46c5-8287-38a3e2dc4d62",
       "name": "AFD Engine"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO afd_states (\n  source_id, current_state, previous_state, last_symbol,\n  last_event_time, cascade_count, cascade_start_time, updated_at\n)\nVALUES (\n  '{{ $json.source_id }}',\n  '{{ $json.afd_state }}',\n  '{{ $json.previous_state }}',\n  '{{ $json.afd_symbol }}',\n  NOW(),\n  {{ $json.cascade_count }},\n  CASE '{{ $json.cascade_reset }}'\n    WHEN 'reset_now' THEN NOW()\n    ELSE NULL\n  END,\n  NOW()\n)\nON CONFLICT (source_id) DO UPDATE SET\n  current_state      = EXCLUDED.current_state,\n  previous_state     = EXCLUDED.previous_state,\n  last_symbol        = EXCLUDED.last_symbol,\n  last_event_time    = NOW(),\n  cascade_count      = EXCLUDED.cascade_count,\n  cascade_start_time = CASE '{{ $json.cascade_reset }}'\n    WHEN 'reset_now'  THEN NOW()\n    WHEN 'reset_null' THEN NULL\n    ELSE afd_states.cascade_start_time\n  END,\n  updated_at         = NOW()",
+        "query": "INSERT INTO afd_states (source_id, current_state, previous_state, last_symbol, last_event_time, updated_at) VALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', '{{ $json.previous_state }}', '{{ $json.afd_symbol }}', NOW(), NOW()) ON CONFLICT (source_id) DO UPDATE SET current_state = EXCLUDED.current_state, previous_state = EXCLUDED.previous_state, last_symbol = EXCLUDED.last_symbol, last_event_time = EXCLUDED.last_event_time, updated_at = EXCLUDED.updated_at",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        272,
+        -224,
         784
       ],
-      "id": "a77b06ce-344b-423f-aaee-357c77535084",
+      "id": "d53fa4dd-96e0-4691-b27e-f925fda00a2d",
       "name": "AFD State Write",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -457,15 +457,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        272,
+        -224,
         976
       ],
-      "id": "3e3d39f8-99e0-4e7e-9a11-f6bbffcb1397",
+      "id": "1af39269-4e5f-4f1c-a742-e29a5db465bd",
       "name": "Log State Write",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -558,30 +558,6 @@
                 },
                 "conditions": [
                   {
-                    "id": "46d43c5b-b766-4bf2-867c-06beaa2db19e",
-                    "leftValue": "={{ $json.afd_state }}",
-                    "rightValue": "RECOVERY",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "RECOVERY Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
                     "id": "ff408d4f-2f53-4e9a-bbfc-7d9bfa22e67d",
                     "leftValue": "={{ ['CRITICAL', 'ERROR_CASCADE'].includes($json.afd_state) }}",
                     "rightValue": "",
@@ -604,10 +580,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        272,
-        496
+        -224,
+        528
       ],
-      "id": "07f1bd53-3c9e-4e1a-b770-720e4d3d1cc8",
+      "id": "4c47b42d-4f0a-408d-9c02-6a9a672838ee",
       "name": "AFD State Switch Router"
     },
     {
@@ -622,12 +598,43 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        496,
-        80
+        0,
+        192
       ],
-      "id": "505aee7d-74c7-4322-aae8-7ee1b9e6a9cf",
+      "id": "eb9609a6-8d27-405c-a5c7-a495465f4c56",
       "name": "Send an Email",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
+      "credentials": {
+        "smtp": {
+          "id": "xsaeTmjErAVMeeAL",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.SMTP_FROM}}",
+        "toEmail": "={{$env.SMTP_TO}}",
+        "subject": "=ERROR - {{$json.source_id}}",
+        "emailFormat": "text",
+        "text": "=Error detected:\n{{$json.message}}\n\nPlease investigate immediately.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        576
+      ],
+      "id": "8d365d24-8e27-4154-87cf-048a284137c4",
+      "name": "Send an Email1",
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
+      "credentials": {
+        "smtp": {
+          "id": "xsaeTmjErAVMeeAL",
+          "name": "SMTP account"
+        }
+      }
     },
     {
       "parameters": {
@@ -638,10 +645,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        272
+        0,
+        384
       ],
-      "id": "6c68d25f-77a5-45e2-bf25-7246af6231b8",
+      "id": "ebae0b69-adf8-4487-8bc8-f4641147e9ff",
       "name": "WARNING Message"
     },
     {
@@ -653,10 +660,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        -112
+        0,
+        0
       ],
-      "id": "b016eb3c-a81f-42bf-872c-811a8243b4bc",
+      "id": "79762da5-74c4-4ce8-a126-22d96f43b133",
       "name": "INFO Message"
     },
     {
@@ -668,10 +675,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        656
+        0,
+        768
       ],
-      "id": "05eebd99-cddf-4180-b99b-f000fb12e7af",
+      "id": "c227d851-8939-4c92-ad85-1bb69bbc5bce",
       "name": "ERROR Message"
     },
     {
@@ -683,10 +690,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        848
+        0,
+        960
       ],
-      "id": "1221517f-2004-46f0-bdaf-841a04f1f5c1",
+      "id": "dc30af4a-8981-48c0-96c2-3fc818a38afa",
       "name": "CRITICAL Message"
     },
     {
@@ -700,11 +707,28 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        720,
-        544
+        224,
+        464
       ],
-      "id": "97ab1c9d-5948-4e04-9f5f-509ef737b19d",
+      "id": "0d275027-a336-4a6b-a237-71435686ad8b",
       "name": "Final Response"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "logs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1792,
+        976
+      ],
+      "id": "5e04e5d5-375e-4532-88d1-64aab3232379",
+      "name": "Webhook1",
+      "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
     },
     {
       "parameters": {
@@ -715,15 +739,16 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        496,
-        1232
+        464,
+        1648
       ],
-      "id": "0cc4e924-9fdb-45fb-b6f1-4aaa783d7304",
+      "id": "05e10f63-cc38-4bb7-852c-ea905d323aeb",
       "name": "Get Recent Logs",
+      "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -734,23 +759,23 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        720,
-        1232
+        688,
+        1648
       ],
-      "id": "8493ad01-7b28-49ac-9907-eba597219ecc",
+      "id": "fd8a4258-250b-4116-869c-9ab38a2a8aef",
       "name": "Format Recent Logs"
     },
     {
       "parameters": {
-        "jsCode": "const log = $input.first().json;\n\nconst actions = Array.isArray(log.actions_immediates)\n  ? log.actions_immediates\n  : [];\n\nconst timestamp = new Date().toISOString();\n\n/**\n * Format all actions\n */\nconst actionsText = actions.length\n  ? actions.map((a, i) => `${i + 1}. ${a}`).join('\\n')\n  : \"N/A\";\n\n/**\n * WhatsApp Message \n */\nconst whatsappMessage = `\nCRITICAL — ${log.source_id}\n\n${log.message?.slice(0, 200)}\n\nCause probable:\n${log.cause_probable}\n\nActions:\n${actionsText}\n\n${timestamp}\n\nReply:\nACK — Prise en charge\nFALSE POSITIVE — Faux positif\nCORRIGER WARNING — Reclassifier warning\nCORRIGER ERROR — Reclassifier error\nRESOLVED — Incident résolu\nSTATUS — État du système\nESCALATE — Escalader\nHELP — Aide\n`;\n\n/**\n * HTML Email (no emojis)\n */\nconst htmlMessage = `\n<h2>CRITICAL Alert</h2>\n\n<p><b>Service:</b> ${log.source_id}</p>\n\n<p><b>Message:</b><br>${log.message}</p>\n\n<p><b>Cause probable:</b><br>${log.cause_probable}</p>\n\n<p><b>Actions:</b></p>\n<ul>\n${actions.map(a => `<li>${a}</li>`).join('')}\n</ul>\n\n<p><b>Timestamp:</b> ${timestamp}</p>\n`;\n\nreturn [\n  {\n    json: {\n      ...log,\n      whatsappMessage,\n      htmlMessage,\n      alert_timestamp: timestamp\n    }\n  }\n];"
+        "jsCode": "const log = $input.first().json;\n\nconst actions = Array.isArray(log.actions_immediates)\n  ? log.actions_immediates\n  : [];\n\nconst timestamp = new Date().toISOString();\n\n/**\n * Format all actions\n */\nconst actionsText = actions.length\n  ? actions.map((a, i) => `${i + 1}. ${a}`).join('\\n')\n  : \"N/A\";\n\n/**\n * WhatsApp Message \n */\nconst whatsappMessage = `\nCRITICAL — ${log.source_id}\n\n${log.message?.slice(0, 200)}\n\nCause probable:\n${log.cause_probable}\n\nActions:\n${actionsText}\n\n${timestamp}\n\nReply:\nACK — Prise en charge\nFALSE-POSITIVE — Faux positif\nCORRIGER-WARNING — Reclassifier warning\nCORRIGER-ERROR — Reclassifier error\nRESOLVED — Incident résolu\nSTATUS — État du système\nESCALATE — Escalader\nHELP — Aide\n`;\n\n/**\n * HTML Email (no emojis)\n */\nconst htmlMessage = `\n<h2>CRITICAL Alert</h2>\n\n<p><b>Service:</b> ${log.source_id}</p>\n\n<p><b>Message:</b><br>${log.message}</p>\n\n<p><b>Cause probable:</b><br>${log.cause_probable}</p>\n\n<p><b>Actions:</b></p>\n<ul>\n${actions.map(a => `<li>${a}</li>`).join('')}\n</ul>\n\n<p><b>Timestamp:</b> ${timestamp}</p>\n`;\n\nreturn [\n  {\n    json: {\n      ...log,\n      whatsappMessage,\n      htmlMessage,\n      alert_timestamp: timestamp\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2448,
-        1232
+        1888,
+        1648
       ],
-      "id": "9747e310-06ea-4e7e-a677-ec0f6fe22592",
+      "id": "1d3b3319-8c8e-45d0-b781-260f89e0ea79",
       "name": "Format Alert Message"
     },
     {
@@ -764,12 +789,18 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        2672,
-        1232
+        2224,
+        1648
       ],
-      "id": "90d25511-5703-49d2-8ad9-78656b82001b",
+      "id": "2f7b8c25-2d40-479a-b6ab-180ffa5eb9da",
       "name": "Alert Email",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
+      "credentials": {
+        "smtp": {
+          "id": "xsaeTmjErAVMeeAL",
+          "name": "SMTP account"
+        }
+      }
     },
     {
       "parameters": {
@@ -780,15 +811,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        2672,
-        1424
+        2224,
+        1840
       ],
-      "id": "662b2944-1494-4747-a726-bbc932a89e29",
+      "id": "6dc95465-356a-4d66-9617-ff9192a69233",
       "name": "Reset ACK Time",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -821,24 +852,108 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2672,
-        1040
+        2224,
+        1456
       ],
-      "id": "245b39f4-9f36-464e-af21-14fcfe4ae72e",
-      "name": "Twilio WhatsApp Alert"
+      "id": "aab565e4-8ead-4185-97cf-84fd75df1b3b",
+      "name": "Twilio WhatsApp Alert",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "nFNQQLi2HhozL6qX",
+          "name": "Unnamed credential"
+        }
+      }
     },
     {
       "parameters": {
-        "jsCode": "const log = $('Build LLM Cache Key').first().json;\n\nconst userPrompt = `Tu es un ingénieur SRE expert en monitoring.\nUn log CRITICAL a été détecté dans le service \"${log.source_id}\".\nLog : ${log.message}\nCatégorie : ${log.category || 'SYSTEM'}\nHistorique récent :\n${JSON.stringify(log.recent_logs || [])}\n\nRéponds UNIQUEMENT en JSON valide, sans texte avant ou après :\n{\n  \"cause_probable\": \"...\",\n  \"actions_immediates\": [\"action 1\", \"action 2\", \"action 3\"],\n  \"escalade_si\": \"...\",\n  \"severite_estimee\": \"HIGH\"\n}\nMaximum 150 mots.`;\n\nreturn [{\n  json: {\n    ...log,\n    llm_payload: {\n      model: $env.GROQ_MODEL ?? 'llama-3.1-8b-instant',\n      messages: [{ role: 'user', content: userPrompt }],\n      max_tokens: 300,\n      temperature: 0.3,\n      response_format: { type: \"json_object\" }\n    }\n  }\n}];"
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*)::int AS critical_count\nFROM afd_states\nWHERE current_state = 'CRITICAL';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -64,
+        1264
+      ],
+      "id": "b6bf6736-0b15-46c4-83e8-90b5ab19c839",
+      "name": "Count Critical Services",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d1b82296-d5eb-4508-acdf-863762ba3966",
+              "leftValue": "={{$json.critical_count >= 2}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        1264
+      ],
+      "id": "ba126454-0f76-41d5-8435-dd687b8e35fe",
+      "name": "System Wide Critical?",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    source_id,\n    current_state,\n    last_event_time\nFROM afd_states\nWHERE current_state = 'CRITICAL'\nORDER BY last_event_time DESC;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        448,
+        1248
+      ],
+      "id": "5373cebc-a7c3-40a5-8f6c-b5e1186e1487",
+      "name": "Get All Critical Services",
+      "credentials": {
+        "postgres": {
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const services = $input.all().map(item => ({\n  source_id: item.json.source_id,\n  state: item.json.current_state,\n  last_event_time: item.json.last_event_time\n}));\n\nconst prompt = `\nYou are an expert SRE incident correlation engine.\n\nMultiple services are simultaneously in CRITICAL state.\n\nAnalyze possible correlations and shared root causes.\n\nServices:\n${JSON.stringify(services, null, 2)}\n\nRespond ONLY in JSON:\n{\n  \"global_incident\": true,\n  \"possible_root_cause\": \"...\",\n  \"recommended_action\": \"...\",\n  \"severity\": \"HIGH\"\n}\n`;\n\nreturn [{\n  json: {\n    services,\n    llm_payload: {\n      model: $env.GROQ_MODEL ?? 'llama-3.1-8b-instant',\n      messages: [\n        {\n          role: 'user',\n          content: prompt\n        }\n      ],\n      temperature: 0.2,\n      max_tokens: 250,\n      response_format: {\n        type: \"json_object\"\n      }\n    }\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1568,
-        1232
+        688,
+        1248
       ],
-      "id": "71c6c127-9a09-4b69-816d-8cdc820f3836",
-      "name": "Build LLM Prompt"
+      "id": "705670a1-ad6f-487f-91f9-71519d6f3ed8",
+      "name": "Build Correlation Prompt"
     },
     {
       "parameters": {
@@ -854,77 +969,45 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1792,
-        1232
+        928,
+        1248
       ],
-      "id": "816c7212-499f-4ef2-b261-a947fe17f26a",
-      "name": "Groq API Call",
+      "id": "e34818fa-8cf1-4fbc-9647-41d60ada99b8",
+      "name": "Groq Correlation Call",
       "credentials": {
         "httpBearerAuth": {
-          "id": "EKbvdgDtwRJi3nYQ",
-          "name": "Groq Bearer Auth"
+          "id": "cfsT0gadKYY8U1p2",
+          "name": "Bearer Auth account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const log = $('Build LLM Prompt').first().json;\n\nconst staticFallbacks = {\n  SECURITY:     'Vérifier les logs d\\'accès, bloquer l\\'IP source, notifier l\\'équipe sécurité.',\n  PERFORMANCE:  'Vérifier CPU/RAM/disque, identifier le processus fautif, redémarrer si nécessaire.',\n  AVAILABILITY: 'Vérifier la connectivité réseau, l\\'état du service et de ses dépendances.',\n  DATA:         'Vérifier l\\'intégrité des données, stopper les écritures, alerter l\\'équipe DBA.',\n  NETWORK:      'Vérifier la connectivité, les règles firewall, et les DNS.',\n  SYSTEM:       'Vérifier les ressources système, les logs kernel, et l\\'espace disque.'\n};\n\nfunction staticResponse(category) {\n  return {\n    cause_probable:     'LLM indisponible — réponse statique',\n    actions_immediates: [staticFallbacks[category] || 'Analyser les logs et escalader.'],\n    escalade_si:        'Si le problème persiste plus de 10 minutes',\n    severite_estimee:   'CRITICAL',\n    llm_source:         'static'\n  };\n}\n\n// $json ici = réponse du HTTP Request node (ou objet erreur si \"Continue on Fail\")\nconst httpResult = $json;\n\n// Si le nœud HTTP a échoué, $json contiendra un champ \"error\"\nif (httpResult.error || !httpResult.choices) {\n  return [{ json: { ...log, ...staticResponse(log.category) } }];\n}\n\ntry {\n  const rawText  = httpResult.choices[0].message.content.trim();\n  const parsed   = JSON.parse(rawText);\n\n  return [{\n    json: {\n      ...log,\n      cause_probable:     parsed.cause_probable,\n      actions_immediates: parsed.actions_immediates,\n      escalade_si:        parsed.escalade_si,\n      severite_estimee:   parsed.severite_estimee,\n      llm_source:         'groq'\n    }\n  }];\n} catch (e) {\n  return [{ json: { ...log, ...staticResponse(log.category) } }];\n}"
+        "jsCode": "const httpResult = $json;\n\nif (httpResult.error || !httpResult.choices) {\n  return [{\n    json: {\n      global_incident: true,\n      possible_root_cause: 'Unable to determine root cause',\n      recommended_action: 'Manual investigation required',\n      severity: 'HIGH',\n      llm_source: 'fallback'\n    }\n  }];\n}\n\ntry {\n  const rawText = httpResult.choices[0].message.content.trim();\n  const parsed = JSON.parse(rawText);\n\n  return [{\n    json: {\n      global_incident: parsed.global_incident ?? true,\n      possible_root_cause: parsed.possible_root_cause,\n      recommended_action: parsed.recommended_action,\n      severity: parsed.severity ?? 'HIGH',\n      llm_source: 'groq'\n    }\n  }];\n} catch (e) {\n  return [{\n    json: {\n      global_incident: true,\n      possible_root_cause: 'Correlation parsing failed',\n      recommended_action: 'Investigate all affected services',\n      severity: 'HIGH',\n      llm_source: 'fallback'\n    }\n  }];\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2016,
-        1232
+        1200,
+        1248
       ],
-      "id": "642b7c64-4432-4046-b93c-a0f15a81937c",
-      "name": "Parse LLM Response"
-    },
-    {
-      "parameters": {
-        "fromEmail": "={{$env.SMTP_FROM}}",
-        "toEmail": "={{$env.SMTP_TO}}",
-        "subject": "=ERROR - {{$json.source_id}}",
-        "emailFormat": "text",
-        "text": "=Error detected:\n{{$json.message}}\n\nPlease investigate immediately.",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2.1,
-      "position": [
-        496,
-        464
-      ],
-      "id": "37369491-badf-4e32-a134-ffe04c9061ee",
-      "name": "Send an Email1",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
+      "id": "eaba0b09-ee20-406f-9b31-4b500e647f0b",
+      "name": "Parse Correlation Response"
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "{\n  \"status\": \"RECOVERY\", \n  \"message\": \"monitoring_post_incident\" \n}",
+        "jsonOutput": "={\n  \"whatsappMessage\": \"SYSTEM-WIDE CRITICAL\\n\\nMultiple services are simultaneously failing.\\n\\nPossible root cause:\\n{{$json.possible_root_cause}}\\n\\nRecommended action:\\n{{$json.recommended_action}}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        1040
+        1456,
+        1248
       ],
-      "id": "e0646e93-7790-417d-87a5-9e361e1b5f21",
-      "name": "RECOVERY Message"
-    },
-    {
-      "parameters": {
-        "jsCode": "function simpleHash(input) {\n  let hash1 = 0x811c9dc5;\n  let hash2 = 0x01000193;\n\n  for (let i = 0; i < input.length; i++) {\n    const char = input.charCodeAt(i);\n\n    hash1 ^= char;\n    hash1 = Math.imul(hash1, 16777619);\n\n    hash2 ^= char;\n    hash2 = Math.imul(hash2, 2166136261);\n  }\n\n  const part1 = (hash1 >>> 0).toString(16).padStart(8, '0');\n  const part2 = (hash2 >>> 0).toString(16).padStart(8, '0');\n\n  return (part1 + part2 + part1 + part2 + part1 + part2 + part1 + part2).substring(0, 64);\n}\n\nreturn items.map(item => {\n  const log = item.json;\n\n  const message = String(log.message ?? log.raw_log ?? '');\n\n  const category = String(log.category ?? 'SYSTEM').toUpperCase();\n\n  const afdState = String(log.afd_state ?? 'CRITICAL').toUpperCase();\n\n  const normalizedMessage = message\n    .toLowerCase()\n    .replace(/\\d{4}-\\d{2}-\\d{2}t?\\s?\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?z?/gi, '<ts>')\n    .replace(/\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}/g, '<ts>')\n    .replace(/\\b\\d{1,3}(\\.\\d{1,3}){3}\\b/g, '<ip>')\n    .replace(/:\\d{4,5}\\b/g, ':<port>')\n    .replace(/\\s+/g, ' ')\n    .trim()\n    .substring(0, 256);\n\n  const hashInput = `${normalizedMessage}|${category}|${afdState}`;\n  const messageHash = simpleHash(hashInput);\n\n  return {\n    json: {\n      ...log,\n      category: category,\n      afd_state: afdState,\n      normalized_message: normalizedMessage,\n      message_hash: messageHash,\n      llm_cache_hit: false\n    }\n  };\n});"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        928,
-        1232
-      ],
-      "id": "ad6ad0c5-8dc5-463a-acff-a500312699db",
-      "name": "Build LLM Cache Key"
+      "id": "8b9097fb-20e6-47ea-95cb-86235237f78e",
+      "name": "System Wide Alert Message"
     },
     {
       "parameters": {
@@ -935,15 +1018,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1136,
-        1232
+        608,
+        2224
       ],
-      "id": "e87b3902-548a-4e52-93da-e2df9e084749",
+      "id": "9ee3fc93-9427-4273-a000-9b67823fcd42",
       "name": "Check LLM Cache",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -975,10 +1058,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1344,
-        1232
+        816,
+        2224
       ],
-      "id": "a5fdb1ab-c710-4a79-92b3-47029b2bca45",
+      "id": "c045f1c6-e442-4c0e-8117-ec830f39f9f5",
       "name": "Cache Found?"
     },
     {
@@ -988,10 +1071,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1504,
-        960
+        976,
+        1952
       ],
-      "id": "76c97737-fff4-4325-ba46-548ea129d6cb",
+      "id": "60612993-a373-4377-8026-6220ecd969a2",
       "name": "Use Cached LLM Response"
     },
     {
@@ -1003,15 +1086,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1696,
-        960
+        1168,
+        1952
       ],
-      "id": "d34ff503-e856-4728-8384-3827479160bb",
+      "id": "1f2c407f-1843-4473-a900-d63594d1f0a4",
       "name": "Update LLM Cache Hit",
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
@@ -1024,34 +1107,83 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        2224,
-        1232
+        1696,
+        2240
       ],
-      "id": "9de254bc-6780-4546-863e-ffd4fe9deccf",
+      "id": "bb6b8c84-3de9-4806-99d2-16a6fcc7355d",
       "name": "Store LLM Cache",
+      "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "1vWfHxZxkqyYymJ6",
-          "name": "LogSentinel PostgreSQL"
+          "id": "ppKqF1hEUn1tlvXf",
+          "name": "Postgres account"
         }
       }
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "logs",
-        "responseMode": "responseNode",
+        "jsCode": "const log = $('Build LLM Prompt').first().json;\n\nconst staticFallbacks = {\n  SECURITY:     'Vérifier les logs d\\'accès, bloquer l\\'IP source, notifier l\\'équipe sécurité.',\n  PERFORMANCE:  'Vérifier CPU/RAM/disque, identifier le processus fautif, redémarrer si nécessaire.',\n  AVAILABILITY: 'Vérifier la connectivité réseau, l\\'état du service et de ses dépendances.',\n  DATA:         'Vérifier l\\'intégrité des données, stopper les écritures, alerter l\\'équipe DBA.',\n  NETWORK:      'Vérifier la connectivité, les règles firewall, et les DNS.',\n  SYSTEM:       'Vérifier les ressources système, les logs kernel, et l\\'espace disque.'\n};\n\nfunction staticResponse(category) {\n  return {\n    cause_probable:     'LLM indisponible — réponse statique',\n    actions_immediates: [staticFallbacks[category] || 'Analyser les logs et escalader.'],\n    escalade_si:        'Si le problème persiste plus de 10 minutes',\n    severite_estimee:   'CRITICAL',\n    llm_source:         'static'\n  };\n}\n\n// $json ici = réponse du HTTP Request node (ou objet erreur si \"Continue on Fail\")\nconst httpResult = $json;\n\n// Si le nœud HTTP a échoué, $json contiendra un champ \"error\"\nif (httpResult.error || !httpResult.choices) {\n  return [{ json: { ...log, ...staticResponse(log.category) } }];\n}\n\ntry {\n  const rawText  = httpResult.choices[0].message.content.trim();\n  const parsed   = JSON.parse(rawText);\n\n  return [{\n    json: {\n      ...log,\n      cause_probable:     parsed.cause_probable,\n      actions_immediates: parsed.actions_immediates,\n      escalade_si:        parsed.escalade_si,\n      severite_estimee:   parsed.severite_estimee,\n      llm_source:         'groq'\n    }\n  }];\n} catch (e) {\n  return [{ json: { ...log, ...staticResponse(log.category) } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        2240
+      ],
+      "id": "3205b284-7807-4967-9029-30cadb657a0a",
+      "name": "Parse LLM Response1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function simpleHash(input) {\n  let hash1 = 0x811c9dc5;\n  let hash2 = 0x01000193;\n\n  for (let i = 0; i < input.length; i++) {\n    const char = input.charCodeAt(i);\n\n    hash1 ^= char;\n    hash1 = Math.imul(hash1, 16777619);\n\n    hash2 ^= char;\n    hash2 = Math.imul(hash2, 2166136261);\n  }\n\n  const part1 = (hash1 >>> 0).toString(16).padStart(8, '0');\n  const part2 = (hash2 >>> 0).toString(16).padStart(8, '0');\n\n  return (part1 + part2 + part1 + part2 + part1 + part2 + part1 + part2).substring(0, 64);\n}\n\nreturn items.map(item => {\n  const log = item.json;\n\n  const message = String(log.message ?? log.raw_log ?? '');\n\n  const category = String(log.category ?? 'SYSTEM').toUpperCase();\n\n  const afdState = String(log.afd_state ?? 'CRITICAL').toUpperCase();\n\n  const normalizedMessage = message\n    .toLowerCase()\n    .replace(/\\d{4}-\\d{2}-\\d{2}t?\\s?\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?z?/gi, '<ts>')\n    .replace(/\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}/g, '<ts>')\n    .replace(/\\b\\d{1,3}(\\.\\d{1,3}){3}\\b/g, '<ip>')\n    .replace(/:\\d{4,5}\\b/g, ':<port>')\n    .replace(/\\s+/g, ' ')\n    .trim()\n    .substring(0, 256);\n\n  const hashInput = `${normalizedMessage}|${category}|${afdState}`;\n  const messageHash = simpleHash(hashInput);\n\n  return {\n    json: {\n      ...log,\n      category: category,\n      afd_state: afdState,\n      normalized_message: normalizedMessage,\n      message_hash: messageHash,\n      llm_cache_hit: false\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        1648
+      ],
+      "id": "1c05941e-622a-48d9-b9e1-d8e2762ad648",
+      "name": "Build LLM Cache Key"
+    },
+    {
+      "parameters": {
+        "jsCode": "const log = $('Build LLM Cache Key').first().json;\n\nconst userPrompt = `Tu es un ingénieur SRE expert en monitoring.\nUn log CRITICAL a été détecté dans le service \"${log.source_id}\".\nLog : ${log.message}\nCatégorie : ${log.category || 'SYSTEM'}\nHistorique récent :\n${JSON.stringify(log.recent_logs || [])}\n\nRéponds UNIQUEMENT en JSON valide, sans texte avant ou après :\n{\n  \"cause_probable\": \"...\",\n  \"actions_immediates\": [\"action 1\", \"action 2\", \"action 3\"],\n  \"escalade_si\": \"...\",\n  \"severite_estimee\": \"HIGH\"\n}\nMaximum 150 mots.`;\n\nreturn [{\n  json: {\n    ...log,\n    llm_payload: {\n      model: $env.GROQ_MODEL ?? 'llama-3.1-8b-instant',\n      messages: [{ role: 'user', content: userPrompt }],\n      max_tokens: 300,\n      temperature: 0.3,\n      response_format: { type: \"json_object\" }\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        2240
+      ],
+      "id": "0bc8f75c-cac2-45a0-a7de-8b77b6d68b87",
+      "name": "Build LLM Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.GROQ_API_URL}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.llm_payload}}",
         "options": {}
       },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
       "position": [
-        -1296,
-        976
+        1264,
+        2240
       ],
-      "id": "2697a334-f836-4792-a720-1b98dd6c8378",
-      "name": "Webhook1",
-      "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
+      "id": "2236b722-7b12-48ac-950c-4d068a3759b8",
+      "name": "Groq API Call",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "cfsT0gadKYY8U1p2",
+          "name": "Bearer Auth account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -1239,19 +1371,12 @@
         ],
         [
           {
-            "node": "RECOVERY Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Get Recent Logs",
+            "node": "CRITICAL Message",
             "type": "main",
             "index": 0
           },
           {
-            "node": "CRITICAL Message",
+            "node": "Count Critical Services",
             "type": "main",
             "index": 0
           }
@@ -1302,6 +1427,17 @@
         ]
       ]
     },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Format Detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Get Recent Logs": {
       "main": [
         [
@@ -1345,55 +1481,89 @@
         ]
       ]
     },
-    "Build LLM Prompt": {
+    "Count Critical Services": {
       "main": [
         [
           {
-            "node": "Groq API Call",
+            "node": "System Wide Critical?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Groq API Call": {
+    "System Wide Critical?": {
       "main": [
         [
           {
-            "node": "Parse LLM Response",
+            "node": "Get All Critical Services",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Recent Logs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Recent Logs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parse LLM Response": {
+    "Get All Critical Services": {
       "main": [
         [
           {
-            "node": "Store LLM Cache",
+            "node": "Build Correlation Prompt",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "RECOVERY Message": {
+    "Build Correlation Prompt": {
       "main": [
         [
           {
-            "node": "Final Response",
+            "node": "Groq Correlation Call",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build LLM Cache Key": {
+    "Groq Correlation Call": {
       "main": [
         [
           {
-            "node": "Check LLM Cache",
+            "node": "Parse Correlation Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Correlation Response": {
+      "main": [
+        [
+          {
+            "node": "System Wide Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "System Wide Alert Message": {
+      "main": [
+        [
+          {
+            "node": "Twilio WhatsApp Alert",
             "type": "main",
             "index": 0
           }
@@ -1436,37 +1606,68 @@
             "node": "Update LLM Cache Hit",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM Response1": {
+      "main": [
+        [
+          {
+            "node": "Store LLM Cache",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
     "Store LLM Cache": {
       "main": [
-        [
-          {
-            "node": "Format Alert Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Update LLM Cache Hit": {
       "main": [
+        []
+      ]
+    },
+    "Build LLM Cache Key": {
+      "main": [
         [
           {
-            "node": "Format Alert Message",
+            "node": "Check LLM Cache",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Webhook1": {
+    "Build LLM Prompt": {
       "main": [
         [
           {
-            "node": "Format Detector",
+            "node": "Groq API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq API Call": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM Response1",
             "type": "main",
             "index": 0
           }
@@ -1479,10 +1680,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "9e10aac6-dda3-4abb-aa60-c1db5e46f7b1",
+  "versionId": "c3964e00-79fa-4e3c-bde2-9bbfeb3c05f8",
   "meta": {
-    "instanceId": "d9e0bc7400300a401fa17cf68b72305e6d21de1431c42c6f3e6f4b6fc7ce79fd"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
   },
-  "id": "nRyjJ3cihCPssP91",
+  "id": "lENlBdSR0FEiGn7r",
   "tags": []
 }
