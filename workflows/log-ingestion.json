@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "LogSentinel Workflow",
   "nodes": [
     {
       "parameters": {
@@ -155,15 +155,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -896,
-        992
+        -400,
+        880
       ],
-      "id": "16afbc92-8566-4680-97ec-3b003773d923",
+      "id": "e1e1a678-9fbf-472e-8777-f8fc8a5bd976",
       "name": "Insert rows in a table",
       "credentials": {
         "postgres": {
-          "id": "nfpFHuBjkrDPl751",
-          "name": "Postgres account"
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
         }
       }
     },
@@ -175,10 +175,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1568,
-        1088
+        -1072,
+        976
       ],
-      "id": "475921b7-135b-4c17-83d6-201c24a934ed",
+      "id": "774933c1-35ce-4237-8990-3d1e48909365",
       "name": "Format Detector"
     },
     {
@@ -316,10 +316,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -1344,
-        1040
+        -848,
+        928
       ],
-      "id": "c79fe767-2ec5-4077-bda4-fe88e81e5ad3",
+      "id": "38ff8416-69d6-49b0-8830-ec3d6d3b95a8",
       "name": "Switch"
     },
     {
@@ -330,10 +330,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        672
+        -624,
+        560
       ],
-      "id": "60ded742-640c-48a6-a33e-9d0635089396",
+      "id": "17daf8e8-8e7b-40c3-be36-430b92d6cc3b",
       "name": "JSON Processor"
     },
     {
@@ -344,10 +344,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        864
+        -624,
+        752
       ],
-      "id": "aa548b72-8ae7-490e-afae-33364729fbbc",
+      "id": "fd0d4c77-684b-444b-8b9c-d88db8a8d6da",
       "name": "Syslog Processor"
     },
     {
@@ -358,10 +358,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        1056
+        -624,
+        944
       ],
-      "id": "2bd30d26-3302-4995-bf2d-4f0ab693ce80",
+      "id": "9e414e8d-6704-4998-a210-23f715509cda",
       "name": "Apache Processor"
     },
     {
@@ -372,10 +372,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        1248
+        -624,
+        1136
       ],
-      "id": "d87b39e8-a34e-48a6-95cc-a8969126cfa1",
+      "id": "2c1d1ec9-16c4-4564-9db9-e5b85ff31972",
       "name": "Plaintext Processor"
     },
     {
@@ -386,10 +386,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        1440
+        -624,
+        1328
       ],
-      "id": "2b209911-4f36-4297-8bd3-c24be7eba872",
+      "id": "0847a755-452e-4ee8-93f8-c81ec01cc974",
       "name": "Unknown Processor"
     },
     {
@@ -401,15 +401,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -672,
-        992
+        -176,
+        880
       ],
-      "id": "a7af5096-2c8d-4b8f-b22b-4148e5759d17",
+      "id": "6b2712f9-a6dd-45b5-9706-b3f0515d9bd9",
       "name": "AFD State Read",
       "credentials": {
         "postgres": {
-          "id": "nfpFHuBjkrDPl751",
-          "name": "Postgres account"
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
         }
       }
     },
@@ -421,10 +421,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -448,
-        992
+        48,
+        880
       ],
-      "id": "518a9912-6c99-431c-b86b-32aa2cd59edc",
+      "id": "86627acb-568c-489c-b435-0447685150dc",
       "name": "AFD Engine"
     },
     {
@@ -436,15 +436,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -224,
-        896
+        272,
+        784
       ],
-      "id": "c78d35a2-70c1-4147-988c-0a327a4f0469",
+      "id": "a77b06ce-344b-423f-aaee-357c77535084",
       "name": "AFD State Write",
       "credentials": {
         "postgres": {
-          "id": "nfpFHuBjkrDPl751",
-          "name": "Postgres account"
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
         }
       }
     },
@@ -457,15 +457,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -224,
-        1088
+        272,
+        976
       ],
-      "id": "66396da3-0030-4459-aac5-8c81598d3b32",
+      "id": "3e3d39f8-99e0-4e7e-9a11-f6bbffcb1397",
       "name": "Log State Write",
       "credentials": {
         "postgres": {
-          "id": "nfpFHuBjkrDPl751",
-          "name": "Postgres account"
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
         }
       }
     },
@@ -604,10 +604,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -224,
-        608
+        272,
+        496
       ],
-      "id": "b5548ea9-70af-4abd-9b44-05396629c915",
+      "id": "07f1bd53-3c9e-4e1a-b770-720e4d3d1cc8",
       "name": "AFD State Switch Router"
     },
     {
@@ -622,18 +622,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        0,
-        192
+        496,
+        80
       ],
-      "id": "1604aa42-69ff-4b13-89c7-e7372f770ab0",
+      "id": "505aee7d-74c7-4322-aae8-7ee1b9e6a9cf",
       "name": "Send an Email",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
-      "credentials": {
-        "smtp": {
-          "id": "HZ4ykWGX2Lk64qkQ",
-          "name": "SMTP account"
-        }
-      }
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
@@ -644,10 +638,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        384
+        496,
+        272
       ],
-      "id": "37a95bdf-285c-4ef1-9c38-64845f632e5b",
+      "id": "6c68d25f-77a5-45e2-bf25-7246af6231b8",
       "name": "WARNING Message"
     },
     {
@@ -659,10 +653,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        0
+        496,
+        -112
       ],
-      "id": "e6b6ea17-b51c-498c-9ba7-97315ffef4b3",
+      "id": "b016eb3c-a81f-42bf-872c-811a8243b4bc",
       "name": "INFO Message"
     },
     {
@@ -674,10 +668,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        768
+        496,
+        656
       ],
-      "id": "f51ab939-4549-47b0-8a7c-91fd17a80b1f",
+      "id": "05eebd99-cddf-4180-b99b-f000fb12e7af",
       "name": "ERROR Message"
     },
     {
@@ -689,10 +683,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        960
+        496,
+        848
       ],
-      "id": "adaa104f-34ab-4a04-8ac3-6ed1ba9f9f38",
+      "id": "1221517f-2004-46f0-bdaf-841a04f1f5c1",
       "name": "CRITICAL Message"
     },
     {
@@ -706,28 +700,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        224,
-        656
+        720,
+        544
       ],
-      "id": "7e052f5f-6599-41a0-9d04-734fcc692a26",
+      "id": "97ab1c9d-5948-4e04-9f5f-509ef737b19d",
       "name": "Final Response"
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "logs",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        -1792,
-        1088
-      ],
-      "id": "4a046adb-5eb5-42f6-9a46-56b96ccd0582",
-      "name": "Webhook1",
-      "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
     },
     {
       "parameters": {
@@ -738,15 +715,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        0,
-        1344
+        496,
+        1232
       ],
-      "id": "34166114-7eb5-4972-8dfe-85270ca8104d",
+      "id": "0cc4e924-9fdb-45fb-b6f1-4aaa783d7304",
       "name": "Get Recent Logs",
       "credentials": {
         "postgres": {
-          "id": "nfpFHuBjkrDPl751",
-          "name": "Postgres account"
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
         }
       }
     },
@@ -757,10 +734,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        1344
+        720,
+        1232
       ],
-      "id": "59d7735f-00cd-49c8-89d8-52e9b51eea98",
+      "id": "8493ad01-7b28-49ac-9907-eba597219ecc",
       "name": "Format Recent Logs"
     },
     {
@@ -770,10 +747,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        1344
+        2448,
+        1232
       ],
-      "id": "26217a09-44f0-44a2-be68-0ef5a37948d3",
+      "id": "9747e310-06ea-4e7e-a677-ec0f6fe22592",
       "name": "Format Alert Message"
     },
     {
@@ -787,18 +764,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1344,
-        1344
+        2672,
+        1232
       ],
-      "id": "a12e2eef-1305-4217-89df-8ec2ead3b882",
+      "id": "90d25511-5703-49d2-8ad9-78656b82001b",
       "name": "Alert Email",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
-      "credentials": {
-        "smtp": {
-          "id": "HZ4ykWGX2Lk64qkQ",
-          "name": "SMTP account"
-        }
-      }
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
@@ -809,15 +780,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1344,
-        1536
+        2672,
+        1424
       ],
-      "id": "4f5da6a7-0de9-4357-94ad-7ece892c6f5e",
+      "id": "662b2944-1494-4747-a726-bbc932a89e29",
       "name": "Reset ACK Time",
       "credentials": {
         "postgres": {
-          "id": "nfpFHuBjkrDPl751",
-          "name": "Postgres account"
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
         }
       }
     },
@@ -850,29 +821,23 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1344,
-        1152
+        2672,
+        1040
       ],
-      "id": "58c5e497-d581-4966-985d-ef2c5b32d259",
-      "name": "Twilio WhatsApp Alert",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "CWeWIvKiHuGZeewK",
-          "name": "Unnamed credential"
-        }
-      }
+      "id": "245b39f4-9f36-464e-af21-14fcfe4ae72e",
+      "name": "Twilio WhatsApp Alert"
     },
     {
       "parameters": {
-        "jsCode": "const log = $input.first().json;\n\nconst userPrompt = `Tu es un ingénieur SRE expert en monitoring.\nUn log CRITICAL a été détecté dans le service \"${log.source_id}\".\nLog : ${log.message}\nCatégorie : ${log.category || 'SYSTEM'}\nHistorique récent :\n${JSON.stringify(log.recent_logs || [])}\n\nRéponds UNIQUEMENT en JSON valide, sans texte avant ou après :\n{\n  \"cause_probable\": \"...\",\n  \"actions_immediates\": [\"action 1\", \"action 2\", \"action 3\"],\n  \"escalade_si\": \"...\",\n  \"severite_estimee\": \"HIGH\"\n}\nMaximum 150 mots.`;\n\nreturn [{\n  json: {\n    ...log,\n    llm_payload: {\n      model: $env.GROQ_MODEL ?? 'llama-3.1-8b-instant',\n      messages: [{ role: 'user', content: userPrompt }],\n      max_tokens: 300,\n      temperature: 0.3,\n      response_format: { type: \"json_object\" }\n    }\n  }\n}];"
+        "jsCode": "const log = $('Build LLM Cache Key').first().json;\n\nconst userPrompt = `Tu es un ingénieur SRE expert en monitoring.\nUn log CRITICAL a été détecté dans le service \"${log.source_id}\".\nLog : ${log.message}\nCatégorie : ${log.category || 'SYSTEM'}\nHistorique récent :\n${JSON.stringify(log.recent_logs || [])}\n\nRéponds UNIQUEMENT en JSON valide, sans texte avant ou après :\n{\n  \"cause_probable\": \"...\",\n  \"actions_immediates\": [\"action 1\", \"action 2\", \"action 3\"],\n  \"escalade_si\": \"...\",\n  \"severite_estimee\": \"HIGH\"\n}\nMaximum 150 mots.`;\n\nreturn [{\n  json: {\n    ...log,\n    llm_payload: {\n      model: $env.GROQ_MODEL ?? 'llama-3.1-8b-instant',\n      messages: [{ role: 'user', content: userPrompt }],\n      max_tokens: 300,\n      temperature: 0.3,\n      response_format: { type: \"json_object\" }\n    }\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        448,
-        1344
+        1568,
+        1232
       ],
-      "id": "5d451687-2e4c-4ff2-a644-74f95cf6983a",
+      "id": "71c6c127-9a09-4b69-816d-8cdc820f3836",
       "name": "Build LLM Prompt"
     },
     {
@@ -889,15 +854,15 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        672,
-        1344
+        1792,
+        1232
       ],
-      "id": "8ec0744d-88ba-44d4-87ab-98b52aab50ee",
+      "id": "816c7212-499f-4ef2-b261-a947fe17f26a",
       "name": "Groq API Call",
       "credentials": {
         "httpBearerAuth": {
-          "id": "iprK9yIrmvNmjond",
-          "name": "Bearer Auth account"
+          "id": "EKbvdgDtwRJi3nYQ",
+          "name": "Groq Bearer Auth"
         }
       }
     },
@@ -908,10 +873,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        896,
-        1344
+        2016,
+        1232
       ],
-      "id": "2d09be6b-23d2-43b3-a32a-c2c49085c08f",
+      "id": "642b7c64-4432-4046-b93c-a0f15a81937c",
       "name": "Parse LLM Response"
     },
     {
@@ -926,18 +891,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        0,
-        576
+        496,
+        464
       ],
-      "id": "a1f3fa73-be46-4385-94db-08926506be3b",
+      "id": "37369491-badf-4e32-a134-ffe04c9061ee",
       "name": "Send an Email1",
-      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
-      "credentials": {
-        "smtp": {
-          "id": "HZ4ykWGX2Lk64qkQ",
-          "name": "SMTP account"
-        }
-      }
+      "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f"
     },
     {
       "parameters": {
@@ -948,11 +907,151 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        1152
+        496,
+        1040
       ],
-      "id": "8e10a686-d9cc-4e29-a939-f43f8c78c1c5",
+      "id": "e0646e93-7790-417d-87a5-9e361e1b5f21",
       "name": "RECOVERY Message"
+    },
+    {
+      "parameters": {
+        "jsCode": "function simpleHash(input) {\n  let hash1 = 0x811c9dc5;\n  let hash2 = 0x01000193;\n\n  for (let i = 0; i < input.length; i++) {\n    const char = input.charCodeAt(i);\n\n    hash1 ^= char;\n    hash1 = Math.imul(hash1, 16777619);\n\n    hash2 ^= char;\n    hash2 = Math.imul(hash2, 2166136261);\n  }\n\n  const part1 = (hash1 >>> 0).toString(16).padStart(8, '0');\n  const part2 = (hash2 >>> 0).toString(16).padStart(8, '0');\n\n  return (part1 + part2 + part1 + part2 + part1 + part2 + part1 + part2).substring(0, 64);\n}\n\nreturn items.map(item => {\n  const log = item.json;\n\n  const message = String(log.message ?? log.raw_log ?? '');\n\n  const category = String(log.category ?? 'SYSTEM').toUpperCase();\n\n  const afdState = String(log.afd_state ?? 'CRITICAL').toUpperCase();\n\n  const normalizedMessage = message\n    .toLowerCase()\n    .replace(/\\d{4}-\\d{2}-\\d{2}t?\\s?\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?z?/gi, '<ts>')\n    .replace(/\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}/g, '<ts>')\n    .replace(/\\b\\d{1,3}(\\.\\d{1,3}){3}\\b/g, '<ip>')\n    .replace(/:\\d{4,5}\\b/g, ':<port>')\n    .replace(/\\s+/g, ' ')\n    .trim()\n    .substring(0, 256);\n\n  const hashInput = `${normalizedMessage}|${category}|${afdState}`;\n  const messageHash = simpleHash(hashInput);\n\n  return {\n    json: {\n      ...log,\n      category: category,\n      afd_state: afdState,\n      normalized_message: normalizedMessage,\n      message_hash: messageHash,\n      llm_cache_hit: false\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        1232
+      ],
+      "id": "ad6ad0c5-8dc5-463a-acff-a500312699db",
+      "name": "Build LLM Cache Key"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    EXISTS (\n        SELECT 1\n        FROM llm_cache\n        WHERE message_hash = '{{ $json.message_hash }}'\n    ) AS cache_found,\n    (\n        SELECT response_text\n        FROM llm_cache\n        WHERE message_hash = '{{ $json.message_hash }}'\n        LIMIT 1\n    ) AS response_text,\n    (\n        SELECT llm_source\n        FROM llm_cache\n        WHERE message_hash = '{{ $json.message_hash }}'\n        LIMIT 1\n    ) AS llm_source,\n    (\n        SELECT hit_count\n        FROM llm_cache\n        WHERE message_hash = '{{ $json.message_hash }}'\n        LIMIT 1\n    ) AS hit_count;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1136,
+        1232
+      ],
+      "id": "e87b3902-548a-4e52-93da-e2df9e084749",
+      "name": "Check LLM Cache",
+      "credentials": {
+        "postgres": {
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "83cd8edb-9bc2-4e12-922e-60adb18e763c",
+              "leftValue": "={{ $json.response_text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        1232
+      ],
+      "id": "a5fdb1ab-c710-4a79-92b3-47029b2bca45",
+      "name": "Cache Found?"
+    },
+    {
+      "parameters": {
+        "jsCode": "const originalLog = $('Build LLM Cache Key').first().json;\nconst cacheRow = $input.first().json;\n\nlet response;\n\ntry {\n  response = JSON.parse(cacheRow.response_text);\n} catch (e) {\n  response = {\n    cause_probable: cacheRow.response_text,\n    actions_immediates: ['Vérifier le service concerné et consulter les logs récents.'],\n    escalade_si: 'Si le problème persiste',\n    severite_estimee: 'CRITICAL'\n  };\n}\n\nreturn [{\n  json: {\n    ...originalLog,\n    ...response,\n    llm_source: cacheRow.llm_source || 'cache',\n    llm_cache_hit: true\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        960
+      ],
+      "id": "76c97737-fff4-4325-ba46-548ea129d6cb",
+      "name": "Use Cached LLM Response"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE llm_cache\nSET\n    hit_count = hit_count + 1,\n    last_hit_at = NOW()\nWHERE message_hash = '{{ $json.message_hash }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1696,
+        960
+      ],
+      "id": "d34ff503-e856-4728-8384-3827479160bb",
+      "name": "Update LLM Cache Hit",
+      "credentials": {
+        "postgres": {
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO llm_cache (\n    message_hash,\n    category,\n    afd_state,\n    response_text,\n    llm_source,\n    created_at,\n    last_hit_at,\n    hit_count\n)\nVALUES (\n    '{{ $json.message_hash }}',\n    '{{ $json.category }}',\n    '{{ $json.afd_state }}',\n    '{{ JSON.stringify({\n        cause_probable: $json.cause_probable,\n        actions_immediates: $json.actions_immediates,\n        escalade_si: $json.escalade_si,\n        severite_estimee: $json.severite_estimee\n    }).replace(/'/g, \"''\") }}',\n    '{{ $json.llm_source }}',\n    NOW(),\n    NOW(),\n    1\n)\nON CONFLICT (message_hash)\nDO UPDATE SET\n    last_hit_at = NOW(),\n    hit_count = llm_cache.hit_count + 1;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2224,
+        1232
+      ],
+      "id": "9de254bc-6780-4546-863e-ffd4fe9deccf",
+      "name": "Store LLM Cache",
+      "credentials": {
+        "postgres": {
+          "id": "1vWfHxZxkqyYymJ6",
+          "name": "LogSentinel PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "logs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1296,
+        976
+      ],
+      "id": "2697a334-f836-4792-a720-1b98dd6c8378",
+      "name": "Webhook1",
+      "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
     }
   ],
   "pinData": {},
@@ -1203,17 +1302,6 @@
         ]
       ]
     },
-    "Webhook1": {
-      "main": [
-        [
-          {
-            "node": "Format Detector",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get Recent Logs": {
       "main": [
         [
@@ -1229,7 +1317,7 @@
       "main": [
         [
           {
-            "node": "Build LLM Prompt",
+            "node": "Build LLM Cache Key",
             "type": "main",
             "index": 0
           }
@@ -1283,7 +1371,7 @@
       "main": [
         [
           {
-            "node": "Format Alert Message",
+            "node": "Store LLM Cache",
             "type": "main",
             "index": 0
           }
@@ -1300,6 +1388,90 @@
           }
         ]
       ]
+    },
+    "Build LLM Cache Key": {
+      "main": [
+        [
+          {
+            "node": "Check LLM Cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check LLM Cache": {
+      "main": [
+        [
+          {
+            "node": "Cache Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cache Found?": {
+      "main": [
+        [
+          {
+            "node": "Use Cached LLM Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build LLM Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Use Cached LLM Response": {
+      "main": [
+        [
+          {
+            "node": "Update LLM Cache Hit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store LLM Cache": {
+      "main": [
+        [
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update LLM Cache Hit": {
+      "main": [
+        [
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Format Detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1307,11 +1479,10 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "efad971e-c270-4705-bca8-ec3caa0efcf4",
+  "versionId": "9e10aac6-dda3-4abb-aa60-c1db5e46f7b1",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "cec0fdf9ad402c6f327a3e127a496886f6a2287d720a12376d03789c2a708588"
+    "instanceId": "d9e0bc7400300a401fa17cf68b72305e6d21de1431c42c6f3e6f4b6fc7ce79fd"
   },
-  "id": "cLFqCbfUlew7fyVM",
+  "id": "nRyjJ3cihCPssP91",
   "tags": []
 }
