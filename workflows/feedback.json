@@ -1,752 +1,791 @@
 {
-  "name": "Feedback workflow",
-  "nodes": [
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "/whatsapp-feedback",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        -1120,
-        576
-      ],
-      "id": "8abeebcb-43aa-4fa4-8517-5ba44f2e84fd",
-      "name": "WhatsApp Feedback Webhook",
-      "webhookId": "fb262572-5df0-4631-8114-2ce8c96ac0db"
-    },
-    {
-      "parameters": {
-        "jsCode": "// 1. Get WhatsApp data directly from the Webhook node\n// Replace 'WhatsApp Feedback Webhook' with the exact name of your webhook node\nconst webhookData = $('WhatsApp Feedback Webhook').item.json;\nconst body = webhookData.body?.Body?.trim()?.toUpperCase() || \"\";\nconst from = webhookData.body?.From;\n\n// 2. Get context data from the Postgres node (the current input)\nconst source_id = $json.source_id || null;\nconst afd_state = $json.afd_state || null;\nconst message = $json.message || null;\n\nlet result = {\n  type: \"UNKNOWN\",\n  new_state: afd_state,\n  raw: body,\n  from: from,\n  source_id: source_id,\n  afd_state: afd_state,\n  message: message\n};\n\n// 3. Command Logic\n// 3. Improved Command Logic using .startsWith()\nif (body.startsWith(\"ACK\")) {\n    result.type = \"ACK\";\n} \nelse if (body.startsWith(\"FALSE POSITIVE\")) {\n    result.type = \"FALSE_POSITIVE\";\n} \nelse if (body.startsWith(\"CORRIGER WARNING\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"WARNING\";\n} \nelse if (body.startsWith(\"CORRIGER ERROR\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"ERROR\";\n} \nelse if (body.startsWith(\"RESOLVED\")) {\n    result.type = \"RESOLVED\";\n} \nelse if (body.startsWith(\"STATUS\")) {\n    result.type = \"STATUS\";\n} \nelse if (body.startsWith(\"ESCALATE\")) {\n    result.type = \"ESCALATE\";\n} \nelse if (body.startsWith(\"HELP\")) {\n    result.type = \"HELP\";\n}\n\nreturn [{ json: result }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -448,
-        576
-      ],
-      "id": "666ffb38-1c67-4e17-8dbf-1c7e555b7902",
-      "name": "Parse Feedback Command"
-    },
-    {
-      "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "ACK",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "281a8952-88b5-4e80-b040-bee34eaaaad0"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "ACK Handler"
+    "name": "Feedback Workflow",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "/whatsapp-feedback",
+                "options": {}
             },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "ef17d727-271c-49bc-90f5-f9f6be3da846",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "FALSE_POSITIVE",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "FALSE_POSITIVE Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "13578fcd-a1e0-4756-a4e0-d65f6f43f4fb",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "CORRIGER",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "CORRIGER Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "469048e2-dafc-4890-8e63-14edfe983853",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "RESOLVED",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "RESOLVED Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "b5049b40-9760-4847-8431-3601f3feab9b",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "STATUS",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "STATUS Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "8b538c7e-c3bb-458b-95de-df043d6bcfa6",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "ESCALATE",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "ESCALATE Handler"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "59311c52-9c8b-4085-95f0-132bc4a59089",
-                    "leftValue": "={{$json.type}}",
-                    "rightValue": "HELP",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "HELP Handler"
-            }
-          ]
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2.1,
+            "position": [
+                -880,
+                496
+            ],
+            "id": "3fcf0813-0fd5-47d7-b38d-cc1775ca4943",
+            "name": "WhatsApp Feedback Webhook",
+            "webhookId": "fb262572-5df0-4631-8114-2ce8c96ac0db"
         },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.4,
-      "position": [
-        -224,
-        496
-      ],
-      "id": "0c7f4c0f-6ef6-4a2f-93a2-0241889356ba",
-      "name": "Feedback Router"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';\n\n\nINSERT INTO feedback_corrections (source_id, original_state, corrected_state, command_used)\nVALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', 'NOMINAL', 'FALSE_POSITIVE');",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        0,
-        192
-      ],
-      "id": "593d08ff-64f6-4806-9d49-46f2117bec6a",
-      "name": "FALSE_POSITIVE Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "INSERT INTO feedback_corrections (source_id, corrected_state, corrected_at)\nVALUES (\n  '{{$json.source_id}}',\n  '{{$json.new_state}}',\n  NOW()\n);\n\nUPDATE afd_states \nSET \n    current_state = '{{ $json.new_state }}',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING current_state;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        0,
-        384
-      ],
-      "id": "ffecaa87-8ca4-414a-ad4e-4a3514af6ad7",
-      "name": "CORRIGER Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    ack_time = COALESCE(ack_time, last_event_time),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING EXTRACT(EPOCH FROM (NOW() - last_event_time))::integer AS mttr_seconds;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        0,
-        576
-      ],
-      "id": "814b8423-0060-4fb9-9f3d-f9428b95e2d5",
-      "name": "RESOLVED Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n    source_id, \n    current_state, \n    last_event_time \nFROM afd_states \nORDER BY current_state DESC, last_event_time DESC;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        0,
-        768
-      ],
-      "id": "6f32369e-78e0-46f4-8997-02e424a491d2",
-      "name": "STATUS Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendBody": true,
-        "contentType": "form-urlencoded",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "From",
-              "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+        {
+            "parameters": {
+                "jsCode": "// 1. Get WhatsApp data directly from the Webhook node\n// Replace 'WhatsApp Feedback Webhook' with the exact name of your webhook node\nconst webhookData = $('WhatsApp Feedback Webhook').item.json;\nconst body = webhookData.body?.Body?.trim()?.toUpperCase() || \"\";\nconst from = webhookData.body?.From;\n\n// 2. Get context data from the Postgres node (the current input)\nconst source_id = $json.source_id || null;\nconst afd_state = $json.afd_state || null;\nconst message = $json.message || null;\n\nlet result = {\n  type: \"UNKNOWN\",\n  new_state: afd_state,\n  raw: body,\n  from: from,\n  source_id: source_id,\n  afd_state: afd_state,\n  message: message\n};\n\n// 3. Command Logic\n// 3. Improved Command Logic using .startsWith()\nif (body.startsWith(\"ACK\")) {\n    result.type = \"ACK\";\n} \nelse if (body.startsWith(\"FALSE-POSITIVE\")) {\n    result.type = \"FALSE_POSITIVE\";\n} \nelse if (body.startsWith(\"CORRIGER-WARNING\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"WARNING\";\n} \nelse if (body.startsWith(\"CORRIGER-ERROR\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"ERROR\";\n} \nelse if (body.startsWith(\"RESOLVED\")) {\n    result.type = \"RESOLVED\";\n} \nelse if (body.startsWith(\"STATUS\")) {\n    result.type = \"STATUS\";\n} \nelse if (body.startsWith(\"ESCALATE\")) {\n    result.type = \"ESCALATE\";\n} \nelse if (body.startsWith(\"HELP\")) {\n    result.type = \"HELP\";\n}\n\nreturn [{ json: result }];"
             },
-            {
-              "name": "To",
-              "value": "={{$env.TWILIO_WHATSAPP_ESCALATION}}"
-            },
-            {
-              "name": "Body",
-              "value": "={{ $json.message}}"
-            }
-          ]
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                -208,
+                496
+            ],
+            "id": "28b2ce78-5b16-4870-b91b-15f3442344b6",
+            "name": "Parse Feedback Command"
         },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        448,
-        576
-      ],
-      "id": "577fd02a-6722-45d8-98f1-8367ee55e25d",
-      "name": "Escalation Alert (Twilio)",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "4DAEcjoYUOfq0mtw",
-          "name": "Unnamed credential"
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "ACK",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        },
+                                        "id": "281a8952-88b5-4e80-b040-bee34eaaaad0"
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "ACK Handler"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "id": "ef17d727-271c-49bc-90f5-f9f6be3da846",
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "FALSE_POSITIVE",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals",
+                                            "name": "filter.operator.equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "FALSE_POSITIVE Handler"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "id": "13578fcd-a1e0-4756-a4e0-d65f6f43f4fb",
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "CORRIGER",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals",
+                                            "name": "filter.operator.equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "CORRIGER Handler"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "id": "469048e2-dafc-4890-8e63-14edfe983853",
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "RESOLVED",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals",
+                                            "name": "filter.operator.equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "RESOLVED Handler"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "id": "b5049b40-9760-4847-8431-3601f3feab9b",
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "STATUS",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals",
+                                            "name": "filter.operator.equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "STATUS Handler"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "id": "8b538c7e-c3bb-458b-95de-df043d6bcfa6",
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "ESCALATE",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals",
+                                            "name": "filter.operator.equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "ESCALATE Handler"
+                        },
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict",
+                                    "version": 3
+                                },
+                                "conditions": [
+                                    {
+                                        "id": "59311c52-9c8b-4085-95f0-132bc4a59089",
+                                        "leftValue": "={{$json.type}}",
+                                        "rightValue": "HELP",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals",
+                                            "name": "filter.operator.equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            },
+                            "renameOutput": true,
+                            "outputKey": "HELP Handler"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3.4,
+            "position": [
+                -48,
+                416
+            ],
+            "id": "84c2e38f-9f8e-4dbc-b0bb-1e8416d25d08",
+            "name": "Feedback Router"
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';\n\n\nINSERT INTO feedback_corrections (source_id, original_state, corrected_state, command_used)\nVALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', 'NOMINAL', 'FALSE_POSITIVE');",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                240,
+                112
+            ],
+            "id": "50b0faab-3156-4c1c-a7c0-f95e44faf93e",
+            "name": "FALSE_POSITIVE Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "INSERT INTO feedback_corrections (source_id, corrected_state, corrected_at)\nVALUES (\n  '{{$json.source_id}}',\n  '{{$json.new_state}}',\n  NOW()\n);\n\nUPDATE afd_states \nSET \n    current_state = '{{ $json.new_state }}',\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING current_state;",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                240,
+                304
+            ],
+            "id": "6a6bcd11-4fbd-496e-b316-772096128aa2",
+            "name": "CORRIGER Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "\nUPDATE afd_states \nSET \n    current_state = 'NOMINAL',\n    ack_time = COALESCE(ack_time, last_event_time),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}'\nRETURNING EXTRACT(EPOCH FROM (NOW() - last_event_time))::integer AS mttr_seconds;",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                240,
+                496
+            ],
+            "id": "322b877a-364c-43d9-ae38-3986eb094988",
+            "name": "RESOLVED Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT \n    source_id,\n    current_state,\n    TO_CHAR(last_event_time, 'HH24:MI:SS') AS last_update\nFROM afd_states\nORDER BY last_event_time DESC;",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                240,
+                688
+            ],
+            "id": "1b20716e-cd55-46f8-a446-afe0440f3003",
+            "name": "STATUS Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "UPDATE afd_states \nSET \n    ack_time = NOW(),\n    updated_at = NOW()\nWHERE source_id = '{{ $json.source_id }}';",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                240,
+                -80
+            ],
+            "id": "bf80453a-d4b4-4553-989d-3679dac74870",
+            "name": "ACK Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "(\n  -- First attempt: Find the specific service extracted from WhatsApp\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      1 as priority\n  FROM afd_states a\n  WHERE a.source_id = '{{ $json.extracted_service }}'\n)\nUNION ALL\n(\n  -- Fallback: If the above doesn't exist, get the most recent service overall\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      2 as priority\n  FROM afd_states a\n  ORDER BY a.last_event_time DESC\n  LIMIT 1\n)\nORDER BY priority ASC\nLIMIT 1;",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                -432,
+                496
+            ],
+            "id": "45ff5bb5-4d8f-42b4-8538-77ef9ce0d8ae",
+            "name": "Fetch alert context",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "{\n  \"message\": \"*PRISE EN CHARGE ENREGISTREE*\\n\\nL'intervention humaine a bien été notée dans le système.\"\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                464,
+                -80
+            ],
+            "id": "e61799de-987e-40ae-818a-92baf5fb3126",
+            "name": "ACK Message"
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "{\n  \"message\": \"*RECLASSIFICATION REUSSIE*\\n\\nLe système a enregistré cette erreur de classification.\\nL'état du service est repassé en NOMINAL.\"\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                464,
+                112
+            ],
+            "id": "d6c0ebc0-bace-4b4c-8eca-07a32bad3c0c",
+            "name": "FALSE_POSITIVE Message"
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "={\n  \"message\": \"*RECLASSIFICATION APPLIQUÉE*\\n\\nLe service a été reclassifié avec succès en *{{ $json.current_state }}*.\"\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                464,
+                304
+            ],
+            "id": "3825eb92-0a2d-4737-8798-d11bdde66e77",
+            "name": "CORRIGER Message"
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "={\n  \"message\": \"*INCIDENT RÉSOLU*\\n\\nLe service est repassé en état NOMINAL.\\n\\n*MTTR :* {{ Math.floor($json.mttr_seconds / 60) }} minutes.\"\n}\n",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                464,
+                496
+            ],
+            "id": "c9a6877e-1c2a-4e55-9f27-d9117a95cbab",
+            "name": "RESOLVED Message"
+        },
+        {
+            "parameters": {
+                "mode": "raw",
+                "jsonOutput": "{\n  \"message\": \"GUIDE DES COMMANDES DISPONIBLES\\n\\n*ACK* : Confirmer la prise en charge de l'alerte.\\n\\n*FALSE- POSITIVE* : Signaler une erreur de classification (l'état repassera en NOMINAL).\\n\\n*CORRIGER-[ETAT]* : Forcer manuellement un nouvel état.\\nExemple : CORRIGER-WARNING\\n\\n*RESOLVED* : Clôturer l'incident et calculer le temps de résolution (MTTR).\\n\\n*STATUS* : Obtenir l'état actuel de tous les services monitorés.\\n\\n*ESCALATE* : Transférer l'alerte à l'astreinte de niveau supérieur.\\n\\n*HELP* : Afficher ce menu d'aide.\"\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                464,
+                1072
+            ],
+            "id": "ff61c00b-42e5-4630-bdbc-1e968fd4e039",
+            "name": "HELP Message"
+        },
+        {
+            "parameters": {
+                "jsCode": "const items = $input.all();\n\nfunction getEmoji(state) {\n  switch(state) {\n    case \"NOMINAL\":\n      return \"✅\";\n    case \"WARNING\":\n      return \"⚠️\";\n    case \"ERROR\":\n      return \"🟡\";\n    case \"CRITICAL\":\n      return \"🔴\";\n    default:\n      return \"❓\";\n  }\n}\n\nlet lines = items.map(item => {\n  return `├ ${item.json.source_id.padEnd(15)} : ${getEmoji(item.json.current_state)} ${item.json.current_state}`;\n});\n\nconst lastUpdate = items[0]?.json?.last_update || \"unknown\";\n\nreturn [{\n  json: {\n    message:\n`📊 *État du système*\n\n${lines.join(\"\\n\")}\n\nDernière mise à jour : ${lastUpdate}`\n  }\n}];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                464,
+                688
+            ],
+            "id": "9cf00f6a-16c0-49ce-990f-8d23844e23b3",
+            "name": "STATUS Message"
+        },
+        {
+            "parameters": {
+                "jsCode": "// On récupère le texte avec la majuscule \"Body\"\nconst text = $input.item.json.body.Body; \n\nif (!text) {\n  return { extracted_service: \"unknown\" };\n}\n\n// On sépare les mots\nconst parts = text.split(\" \");\n\n\nconst service = parts[1] ? parts[1].toLowerCase() : \"all\"; \n\nreturn {\n  extracted_service: service\n};"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                -656,
+                496
+            ],
+            "id": "d8775a29-f177-4478-a04b-01029b6c3441",
+            "name": "Extract Service"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpBasicAuth",
+                "sendBody": true,
+                "contentType": "form-urlencoded",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "From",
+                            "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+                        },
+                        {
+                            "name": "To",
+                            "value": "={{$env.TWILIO_WHATSAPP_ADMIN}}"
+                        },
+                        {
+                            "name": "Body",
+                            "value": "={{ $json.message}}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.4,
+            "position": [
+                768,
+                496
+            ],
+            "id": "14fbbcf7-5a09-4778-952c-49da5e9bb165",
+            "name": "Send WhatsApp Reply",
+            "credentials": {
+                "httpBasicAuth": {
+                    "id": "nFNQQLi2HhozL6qX",
+                    "name": "Unnamed credential"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    source_id: $json.source_id,\n    message: $json.message,\n    response:\n`Escalade envoyée pour ${$json.source_id}.`\n  }\n}];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                464,
+                912
+            ],
+            "id": "f51836d3-2641-427c-ace7-e52aff5cf144",
+            "name": "ESCALATE Message"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpBasicAuth",
+                "sendBody": true,
+                "contentType": "form-urlencoded",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "From",
+                            "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+                        },
+                        {
+                            "name": "To",
+                            "value": "={{$env.TWILIO_WHATSAPP_ESCALATION}}"
+                        },
+                        {
+                            "name": "Body",
+                            "value": "={{ `ESCALADE : ${$json.source_id} est en CRITICAL.  Message: ${$json.message}  Prise en charge requise immédiatement.` }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.4,
+            "position": [
+                768,
+                816
+            ],
+            "id": "7f9af046-61bb-448f-890c-8e02589e07d0",
+            "name": "Send Escalation Reply",
+            "credentials": {
+                "httpBasicAuth": {
+                    "id": "nFNQQLi2HhozL6qX",
+                    "name": "Unnamed credential"
+                }
+            }
         }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "UPDATE afd_states \nSET \n  current_state = 'RECOVERY',\n  ack_time      = NOW(),\n  updated_at    = NOW()\nWHERE source_id = '{{ $json.source_id }}';",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        0,
-        0
-      ],
-      "id": "f9d8eaef-eb3b-41d3-84ad-f20753c72802",
-      "name": "ACK Handler",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
+    ],
+    "pinData": {},
+    "connections": {
+        "WhatsApp Feedback Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Extract Service",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Feedback Command": {
+            "main": [
+                [
+                    {
+                        "node": "Feedback Router",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Feedback Router": {
+            "main": [
+                [
+                    {
+                        "node": "ACK Handler",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "FALSE_POSITIVE Handler",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "CORRIGER Handler",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "RESOLVED Handler",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "STATUS Handler",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "ESCALATE Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "HELP Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "FALSE_POSITIVE Handler": {
+            "main": [
+                [
+                    {
+                        "node": "FALSE_POSITIVE Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CORRIGER Handler": {
+            "main": [
+                [
+                    {
+                        "node": "CORRIGER Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "RESOLVED Handler": {
+            "main": [
+                [
+                    {
+                        "node": "RESOLVED Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "STATUS Handler": {
+            "main": [
+                [
+                    {
+                        "node": "STATUS Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "ACK Handler": {
+            "main": [
+                [
+                    {
+                        "node": "ACK Message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Fetch alert context": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Feedback Command",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "ACK Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "FALSE_POSITIVE Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "CORRIGER Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "RESOLVED Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HELP Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "STATUS Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send WhatsApp Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract Service": {
+            "main": [
+                [
+                    {
+                        "node": "Fetch alert context",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "ESCALATE Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send Escalation Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
         }
-      }
     },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "(\n  -- First attempt: Find the specific service extracted from WhatsApp\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      1 as priority\n  FROM afd_states a\n  WHERE a.source_id = '{{ $json.extracted_service }}'\n)\nUNION ALL\n(\n  -- Fallback: If the above doesn't exist, get the most recent service overall\n  SELECT \n      a.source_id, \n      a.current_state AS afd_state,\n      (SELECT message FROM logs l WHERE l.source_id = a.source_id ORDER BY classified_at DESC LIMIT 1) AS message,\n      2 as priority\n  FROM afd_states a\n  ORDER BY a.last_event_time DESC\n  LIMIT 1\n)\nORDER BY priority ASC\nLIMIT 1;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -672,
-        576
-      ],
-      "id": "1c83d988-bc6a-4f0a-bf1b-23e0e7165562",
-      "name": "Fetch alert context",
-      "credentials": {
-        "postgres": {
-          "id": "OrJNfZC22BeBnYuu",
-          "name": "Postgres account"
-        }
-      }
+    "active": false,
+    "settings": {
+        "executionOrder": "v1",
+        "binaryMode": "separate"
     },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"message\": \"*PRISE EN CHARGE ENREGISTREE*\\n\\nL'intervention humaine a bien été notée dans le système.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        224,
-        0
-      ],
-      "id": "11467652-9fa8-4b3f-98fc-d5b7059f1e14",
-      "name": "ACK Message"
+    "versionId": "b81d0fef-bb13-4486-a2b2-65bd7df236a6",
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
     },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"message\": \"*RECLASSIFICATION REUSSIE*\\n\\nLe système a enregistré cette erreur de classification.\\nL'état du service est repassé en NOMINAL.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        224,
-        192
-      ],
-      "id": "24d20752-0753-4ca9-a6c0-7a0ee76b127e",
-      "name": "FALSE_POSITIVE Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"message\": \"*RECLASSIFICATION APPLIQUÉE*\\n\\nLe service a été reclassifié avec succès en *{{ $json.current_state }}*.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        224,
-        384
-      ],
-      "id": "3a6359a6-e74b-4430-b4ff-2b97a0257e47",
-      "name": "CORRIGER Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"message\": \"*INCIDENT RÉSOLU*\\n\\nLe service est repassé en état NOMINAL.\\n\\n*MTTR :* {{ Math.floor($json.mttr_seconds / 60) }} minutes.\"\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        224,
-        576
-      ],
-      "id": "a7e8d802-0e3a-4886-9c48-21e451fa7db8",
-      "name": "RESOLVED Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={ \n  \"message\": \"*ESCALATION REQUEST*\\n*Service:* apache\\n*State:* CRITICAL\\n*Message:* 127.0.0.1 - - [15/Jan/2024:14:23:01 +0000] \\\"POST /api/checkout 500 124\\\" CRITICAL: Database connection pool exhausted\\n\\n*Immediate intervention required*\" \n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        224,
-        960
-      ],
-      "id": "8d976006-bb83-4649-913d-a822affba8ed",
-      "name": "ESCALATE Message"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"message\": \"GUIDE DES COMMANDES DISPONIBLES\\n\\n*ACK* : Confirmer la prise en charge de l'alerte.\\n\\n*FALSE POSITIVE* : Signaler une erreur de classification (l'état repassera en NOMINAL).\\n\\n*CORRIGER [ETAT]* : Forcer manuellement un nouvel état.\\nExemple : CORRIGER WARNING\\n\\n*RESOLVED* : Clôturer l'incident et calculer le temps de résolution (MTTR).\\n\\n*STATUS* : Obtenir l'état actuel de tous les services monitorés.\\n\\n*ESCALATE* : Transférer l'alerte à l'astreinte de niveau supérieur.\\n\\n*HELP* : Afficher ce menu d'aide.\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        224,
-        1152
-      ],
-      "id": "444f3f06-5167-4d2e-88a2-fb3a12f9a81c",
-      "name": "HELP Message"
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\nlet statusList = items.map(item => {\n  return `• *${item.json.source_id}*: ${item.json.current_state}`;\n}).join('\\n');\n\nreturn {\n  message: `État actuel des services :*\\n${statusList}`\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        224,
-        768
-      ],
-      "id": "f426723d-fb36-42e0-b904-0a1cb164c0df",
-      "name": "STATUS Message"
-    },
-    {
-      "parameters": {
-        "jsCode": "// On récupère le texte avec la majuscule \"Body\"\nconst text = $input.item.json.body.Body; \n\nif (!text) {\n  return { extracted_service: \"unknown\" };\n}\n\n// On sépare les mots\nconst parts = text.split(\" \");\n\n/* Si l'admin écrit \"ESCALATE payment-api\" :\n  parts[0] = \"ESCALATE\"\n  parts[1] = \"payment-api\"\n*/\nconst service = parts[1] ? parts[1].toLowerCase() : \"all\"; \n\nreturn {\n  extracted_service: service\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -896,
-        576
-      ],
-      "id": "e34e4402-e9df-45f6-b25e-2f8e2d431f88",
-      "name": "Extract Service"
-    }
-  ],
-  "pinData": {},
-  "connections": {
-    "WhatsApp Feedback Webhook": {
-      "main": [
-        [
-          {
-            "node": "Extract Service",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parse Feedback Command": {
-      "main": [
-        [
-          {
-            "node": "Feedback Router",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Feedback Router": {
-      "main": [
-        [
-          {
-            "node": "ACK Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "FALSE_POSITIVE Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "CORRIGER Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "RESOLVED Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "STATUS Handler",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "ESCALATE Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "HELP Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "FALSE_POSITIVE Handler": {
-      "main": [
-        [
-          {
-            "node": "FALSE_POSITIVE Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "CORRIGER Handler": {
-      "main": [
-        [
-          {
-            "node": "CORRIGER Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "RESOLVED Handler": {
-      "main": [
-        [
-          {
-            "node": "RESOLVED Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "STATUS Handler": {
-      "main": [
-        [
-          {
-            "node": "STATUS Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ACK Handler": {
-      "main": [
-        [
-          {
-            "node": "ACK Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch alert context": {
-      "main": [
-        [
-          {
-            "node": "Parse Feedback Command",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ACK Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "FALSE_POSITIVE Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "CORRIGER Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "RESOLVED Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ESCALATE Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HELP Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "STATUS Message": {
-      "main": [
-        [
-          {
-            "node": "Escalation Alert (Twilio)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Service": {
-      "main": [
-        [
-          {
-            "node": "Fetch alert context",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1",
-    "binaryMode": "separate"
-  },
-  "versionId": "680a44b0-c4a1-42cb-b0aa-d0cb368d32b5",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "cec0fdf9ad402c6f327a3e127a496886f6a2287d720a12376d03789c2a708588"
-  },
-  "id": "lfVTlb2ezHJDt5yP",
-  "tags": []
+    "id": "PCMX9uiPMyIde27A",
+    "tags": []
 }
