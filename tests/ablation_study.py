@@ -1,11 +1,11 @@
 import json, re, time, os, hmac, hashlib, requests
 from collections import defaultdict
 
-DATASET_PATH   = "tests/dataset_80logs.json"
+DATASET_PATH   = "dataset_80logs.json"
 WEBHOOK_URL    = os.getenv("WEBHOOK_URL", "http://localhost:5678")
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "change_me")
 CLASSES        = ["INFO", "WARNING", "ERROR", "CRITICAL"]
-RESULTS_DIR    = "tests/results"
+RESULTS_DIR    = "results"
 
 with open(DATASET_PATH) as f:
     dataset = json.load(f)
