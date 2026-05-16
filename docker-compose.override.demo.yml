@@ -1,0 +1,23 @@
+services:
+  ngrok:
+    image: ngrok/ngrok:alpine
+    container_name: logsentinel-ngrok
+    restart: unless-stopped
+    command: "http n8n:5678 --log=stdout"
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    ports:
+      - "4040:4040"
+    depends_on:
+      n8n:
+        condition: service_healthy
+    networks:
+      - logsentinel-net
+
+  # Override n8n to accept the ngrok URL as a trusted webhook origin.
+  # WEBHOOK_URL is now set to the ngrok tunnel, which means n8n will generate
+  # webhook URLs pointing at the public internet. Do NOT change N8N_HOST here
+  # (n8n still binds on localhost:5678 inside Docker), only WEBHOOK_URL changes.
+  n8n:
+    environment:
+      WEBHOOK_URL: ${NGROK_URL:-http://localhost:5678}
