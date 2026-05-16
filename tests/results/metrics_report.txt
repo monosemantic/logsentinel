@@ -1,7 +1,0 @@
-Accuracy  : 96.25%
-Macro F1  : 0.9630
-
-INFO: Precision=1.0000 Recall=0.9500 F1=0.9744
-WARNING: Precision=1.0000 Recall=0.9000 F1=0.9474
-ERROR: Precision=0.8696 Recall=1.0000 F1=0.9302
-CRITICAL: Precision=1.0000 Recall=1.0000 F1=1.0000
