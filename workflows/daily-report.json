@@ -1,0 +1,365 @@
+{
+    "name": "Daily Report",
+    "nodes": [
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {
+                            "field": "cronExpression",
+                            "expression": "0 8 * * *"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.3,
+            "position": [
+                -240,
+                224
+            ],
+            "id": "ab57d0e3-3bfe-4114-984d-6cf7517c4c5d",
+            "name": "Schedule Trigger"
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT\n  afd_state,\n  COUNT(*) as count\nFROM logs\nWHERE classified_at > NOW() - INTERVAL '24 hours'\nGROUP BY afd_state\nORDER BY count DESC;",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                -16,
+                224
+            ],
+            "id": "ba98beee-a213-4425-a182-9f1af3cec453",
+            "name": "Stats Volume",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Récupérer les données de chaque nœud\nlet volumeData = [], mttrData = {}, patternsData = [];\n\ntry { volumeData   = $('Stats Volume').all().map(i => i.json); } catch(e) {}\ntry { mttrData     = $('Stats MTTR+Faux Positifs').first().json; } catch(e) {}\ntry { patternsData = $('Top 5 Patterns').all().map(i => i.json); } catch(e) {}\n\n// Volume par état\nconst volume = { INFO: 0, WARNING: 0, ERROR: 0, ERROR_CASCADE: 0, CRITICAL: 0, RECOVERY: 0 };\nfor (const row of volumeData) {\n  if (row.afd_state) volume[row.afd_state] = parseInt(row.count) || 0;\n}\n\nconst totalLogs = Object.values(volume).reduce((a, b) => a + b, 0);\n\n// Top patterns\nconst topPatterns = patternsData.length > 0\n  ? patternsData\n      .slice(0, 5)\n      .map((p, i) => `${i + 1}. ${(p.message || 'N/A').substring(0, 60)} (${p.occurrences || 0}x)`)\n      .join('\\n')\n  : 'Aucun pattern critique détecté';\n\nconst statsJson = JSON.stringify({\n  total_logs: totalLogs,\n  volume,\n  mttr_minutes: mttrData.mttr_minutes || 'N/A',\n  false_positive_rate: mttrData.false_positive_rate || 0,\n  top_patterns: patternsData.slice(0, 3).map(p => p.message || '')\n});\n\nconst today = new Date().toLocaleDateString('fr-FR', {\n  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'\n});\n\nreturn [{\n  json: {\n    volume,\n    totalLogs,\n    mttr_minutes:        mttrData.mttr_minutes || 'N/A',\n    false_positive_rate: mttrData.false_positive_rate || 0,\n    topPatterns,\n    statsJson,\n    today\n  }\n}];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                224,
+                224
+            ],
+            "id": "737cbc37-3646-4c6e-b9b5-67553808a0ee",
+            "name": "Merge des résultats"
+        },
+        {
+            "parameters": {
+                "jsCode": "\nconst data = $input.first().json;\nconst today = new Date().toLocaleDateString('fr-FR', {\n  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'\n});\n\nconst rawStats = $('Merge des résultats').first().json;\n\nconst whatsappMarkdown = `📈 *Rapport LogSentinel — ${today}*\n\n*Volume 24h :*\n• INFO : ${rawStats.volume.INFO || 0}\n• WARNING : ${rawStats.volume.WARNING || 0} ⚠️\n• ERROR : ${rawStats.volume.ERROR || 0} 🔴\n• CRITICAL : ${rawStats.volume.CRITICAL || 0} 🔥\n\n*Performance :*\n• MTTR moyen : ${rawStats.mttr_minutes} min\n• Faux positifs : ${rawStats.false_positive_rate}%\n\n*Top patterns :*\n${rawStats.topPatterns}\n\n*Analyse IA :*\n${data.summary}\n\n*Recommandation :*\n${data.recommendation}`;\n \nconst htmlEmail = `\n<h2>Rapport Quotidien LogSentinel</h2>\n\n<p><b>Date:</b> ${today}</p>\n<p><b>Statut Global:</b> ${data.status}</p>\n\n<h3>Volume Réparti (24h)</h3>\n<ul>\n  <li><b>INFO:</b> ${rawStats.volume.INFO || 0}</li>\n  <li><b>WARNING:</b> ${rawStats.volume.WARNING || 0}</li>\n  <li><b>ERROR:</b> ${rawStats.volume.ERROR || 0}</li>\n  <li><b>CRITICAL:</b> ${rawStats.volume.CRITICAL || 0}</li>\n</ul>\n\n<h3>Indicateurs de Performance</h3>\n<ul>\n  <li><b>MTTR Moyen:</b> ${rawStats.mttr_minutes} min</li>\n  <li><b>Taux Faux Positifs:</b> ${rawStats.false_positive_rate}%</li>\n</ul>\n\n<h3>Top Patterns Critiques</h3>\n<pre>${rawStats.topPatterns}</pre>\n\n<h3>Synthèse Opérationnelle</h3>\n<p>${data.summary}</p>\n\n<h3>Recommandation</h3>\n<p>${data.recommendation}</p>\n`;\n\n// 3. Output both variables for downstream nodes\nreturn [{\n  json: {\n    whatsappMarkdown,\n    htmlEmail\n  }\n}];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1152,
+                224
+            ],
+            "id": "cbaa75de-25f5-425e-a6e1-079a2344fced",
+            "name": "Synthèse LLM Groq"
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT\n  ROUND(AVG(mttr_seconds)/60, 1) AS mttr_minutes,\n  ROUND(\n    SUM(CASE WHEN command_used = 'FALSE_POSITIVE' THEN 1 ELSE 0 END)::numeric\n    / NULLIF(COUNT(*), 0) * 100, 1\n  ) AS false_positive_rate\nFROM feedback_corrections\nWHERE corrected_at > NOW() - INTERVAL '24 hours';",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                0,
+                0
+            ],
+            "id": "3faa7b17-e1fb-4612-b38d-eab26a1a9620",
+            "name": "Stats MTTR+Faux Positifs",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT message, COUNT(*) as occurrences\nFROM logs\nWHERE afd_state IN ('ERROR', 'CRITICAL', 'ERROR_CASCADE')\nAND classified_at > NOW() - INTERVAL '24 hours'\nGROUP BY message\nORDER BY occurrences DESC\nLIMIT 5;",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 2.6,
+            "position": [
+                0,
+                464
+            ],
+            "id": "eb0cef70-1b43-42a4-b2b0-ac129f5c0fc4",
+            "name": "Top 5 Patterns",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "fromEmail": "={{$env.SMTP_FROM}}",
+                "toEmail": "={{$env.SMTP_TO}}",
+                "subject": "[LogSentinel] Rapport quotidien\n",
+                "html": "={{ $json.htmlEmail}}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.emailSend",
+            "typeVersion": 2.1,
+            "position": [
+                1456,
+                384
+            ],
+            "id": "5ff8b4d7-df91-4000-8fbe-a093d2e48600",
+            "name": "Email Rapport",
+            "webhookId": "ae65f84a-7edc-48c1-bb09-1db5dedf2df6",
+            "credentials": {
+                "smtp": {
+                    "id": "xsaeTmjErAVMeeAL",
+                    "name": "SMTP account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpBasicAuth",
+                "sendBody": true,
+                "contentType": "form-urlencoded",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "From",
+                            "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+                        },
+                        {
+                            "name": "To",
+                            "value": "={{$env.TWILIO_WHATSAPP_ADMIN}}"
+                        },
+                        {
+                            "name": "Body",
+                            "value": "={{$json.whatsappMarkdown}}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.4,
+            "position": [
+                1440,
+                48
+            ],
+            "id": "9f4c8fcf-480f-4f90-a729-484ae398bdd9",
+            "name": "Twilio WhatsApp Alert",
+            "credentials": {
+                "httpBasicAuth": {
+                    "id": "nFNQQLi2HhozL6qX",
+                    "name": "Unnamed credential"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{$env.GROQ_API_URL}}",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpBearerAuth",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={{ $json.groq_body }}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.4,
+            "position": [
+                688,
+                224
+            ],
+            "id": "991d8827-5df6-4a27-8ab6-d16a26e54565",
+            "name": "Groq API Call",
+            "credentials": {
+                "httpBearerAuth": {
+                    "id": "cfsT0gadKYY8U1p2",
+                    "name": "Bearer Auth account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const stats = $input.first().json;\n\nlet severity = 'HEALTHY';\n\nif ((stats.volume?.CRITICAL || 0) > 0) {\n  severity = 'CRITICAL';\n} else if (\n  (stats.volume?.WARNING || 0) > 5 ||\n  (stats.volume?.ERROR || 0) > 10\n) {\n  severity = 'WARNING';\n}\n\nconst metrics = {\n  severity,\n  total_logs: stats.totalLogs,\n\n  volume: {\n    INFO: stats.volume?.INFO || 0,\n    WARNING: stats.volume?.WARNING || 0,\n    ERROR: stats.volume?.ERROR || 0,\n    ERROR_CASCADE: stats.volume?.ERROR_CASCADE || 0,\n    CRITICAL: stats.volume?.CRITICAL || 0,\n    RECOVERY: stats.volume?.RECOVERY || 0\n  },\n\n  mttr_minutes: stats.mttr_minutes || 'N/A',\n\n  false_positive_rate: stats.false_positive_rate || 0,\n\n  top_patterns: stats.topPatterns || 'Aucun pattern'\n};\n\nconst userPrompt = `\nAnalyse les statistiques suivantes des dernières 24h:\n\n${JSON.stringify(metrics, null, 2)}\n\nRetourne UNIQUEMENT un JSON valide:\n{\n  \"summary\": \"\",\n  \"recommendation\": \"\",\n  \"status\": \"HEALTHY|WARNING|CRITICAL\"\n}\n`;\n\nreturn [\n  {\n    json: {\n      metrics,\n      severity,\n      today : stats.today,\n      groq_body: {\n        model: $env.GROQ_MODEL,\n        messages: [\n          {\n            role: \"system\",\n            content:\n              \"Tu es un ingénieur SRE senior spécialisé en observabilité.\"\n          },\n          {\n            role: \"user\",\n            content: userPrompt\n          }\n        ],\n        temperature: 0.2\n      }\n    }\n  }\n];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                448,
+                224
+            ],
+            "id": "f418f53e-4c11-4636-87b4-55e221632364",
+            "name": "Build Prompt"
+        },
+        {
+            "parameters": {
+                "jsCode": "const groq = $input.first().json;\n\n// 1. Extract raw content\nlet content = groq.choices?.[0]?.message?.content || \"\";\n\n// 2. Remove code blocks if present\ncontent = content\n  .replace(/```json/g, \"\")\n  .replace(/```/g, \"\")\n  .trim();\n\n// 3. Try to extract JSON object inside text\nconst jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n\nlet parsed;\n\ntry {\n  if (jsonMatch) {\n    parsed = JSON.parse(jsonMatch[0]);\n  } else {\n    throw new Error(\"No JSON found\");\n  }\n} catch (e) {\n\n  // fallback safe output\n  parsed = {\n    summary: \"Le système est globalement stable.\",\n    recommendation: \"Aucune action urgente requise.\",\n    status: \"HEALTHY\"\n  };\n}\n\n// 4. Normalize fields (safety layer)\nconst result = {\n  summary: parsed.summary || \"Résumé indisponible.\",\n  recommendation: parsed.recommendation || \"Aucune recommandation.\",\n  status: parsed.status || \"HEALTHY\"\n};\n\nreturn [\n  {\n    json: {\n      ...groq,\n      ...result\n    }\n  }\n];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                928,
+                224
+            ],
+            "id": "b198d821-61d6-4544-9844-fa8a0d243b53",
+            "name": "Parse AI Response"
+        }
+    ],
+    "pinData": {},
+    "connections": {
+        "Schedule Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Stats MTTR+Faux Positifs",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Stats Volume",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Top 5 Patterns",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Stats Volume": {
+            "main": [
+                [
+                    {
+                        "node": "Merge des résultats",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Merge des résultats": {
+            "main": [
+                [
+                    {
+                        "node": "Build Prompt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Synthèse LLM Groq": {
+            "main": [
+                [
+                    {
+                        "node": "Twilio WhatsApp Alert",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Email Rapport",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Stats MTTR+Faux Positifs": {
+            "main": [
+                [
+                    {
+                        "node": "Merge des résultats",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Top 5 Patterns": {
+            "main": [
+                [
+                    {
+                        "node": "Merge des résultats",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Twilio WhatsApp Alert": {
+            "main": [
+                []
+            ]
+        },
+        "Groq API Call": {
+            "main": [
+                [
+                    {
+                        "node": "Parse AI Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Build Prompt": {
+            "main": [
+                [
+                    {
+                        "node": "Groq API Call",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse AI Response": {
+            "main": [
+                [
+                    {
+                        "node": "Synthèse LLM Groq",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {
+        "executionOrder": "v1",
+        "binaryMode": "separate"
+    },
+    "versionId": "a5f1c4d7-d68a-4fc0-b184-5638c8dc3842",
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
+    },
+    "id": "HZFt6AhXjiDTBP3V",
+    "tags": []
+}
