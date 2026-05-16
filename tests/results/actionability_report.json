@@ -3,11 +3,11 @@
   "title": "LLM Actionability Evaluation",
   "summary": {
     "num_logs_evaluated": 10,
-    "groq_avg_actionability_score": 9.2,
+    "groq_avg_actionability_score": 9.1,
     "static_avg_actionability_score": 10,
     "groq_actionability_rate": 1.0,
     "static_actionability_rate": 1.0,
-    "groq_avg_latency_ms": 688.25
+    "groq_avg_latency_ms": 633.44
   },
   "rubric": {
     "cause_probable": "2 points",
@@ -24,22 +24,20 @@
       "category": "PERFORMANCE",
       "raw_log": "2024-01-15 08:14:00 CRITICAL api-gateway: Memory exhaustion detected — heap 100%, GC overhead limit exceeded, JVM will crash",
       "groq_response": {
-        "cause_probable": "Une mémoire insuffisante du serveur ou une configuration JVM inadéquate",
+        "cause_probable": "Une mémoire insuffisante a probablement provoqué une saturation de la mémoire du heap, entraînant une défaillance du GC et un crash du JVM.",
         "actions_immediates": [
-          "Augmenter la mémoire RAM attribuée au serveur",
-          "Réduire la taille de la heap JVM en modifiant le fichier de configuration",
-          "Redémarrer le service api-gateway avec des paramètres JVM optimisés"
+          "Redémarrer le service api-gateway pour reprendre la charge",
+          "Augmenter la mémoire allouée au service api-gateway",
+          "Analyser les logs pour identifier les causes profondes de la saturation de la mémoire"
         ],
-        "escalade_si": "Le service api-gateway reste indisponible après les actions immédiates",
+        "escalade_si": "Le service api-gateway ne redémarre pas automatiquement ou si la saturation de la mémoire se reproduit après redémarrage",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 1595.49,
+      "groq_latency_ms": 746.3,
       "groq_score": {
-        "score": 9,
+        "score": 10,
         "is_actionable": true,
-        "reasons": [
-          "only one concrete action"
-        ]
+        "reasons": []
       },
       "static_response": {
         "cause_probable": "Saturation ou dégradation des ressources.",
@@ -63,16 +61,16 @@
       "category": "SYSTEM",
       "raw_log": "2024-01-15 08:15:00 FATAL Segmentation fault in auth-service (SIGSEGV at 0x00007f) — service terminated, restarting...",
       "groq_response": {
-        "cause_probable": "Une segmentation fault due à un SIGSEGV a été détectée dans le service auth-service.",
+        "cause_probable": "Une segmentation fault (SIGSEGV) a été détectée dans le service auth-service, ce qui a entraîné sa terminaison.",
         "actions_immediates": [
           "Redémarrer le service auth-service",
-          "Vérifier les logs du service auth-service pour identifier la cause de la segmentation fault",
-          "Examiner les mémoires allouées pour détecter une fuite de mémoire"
+          "Vérifier les journaux de débogage pour identifier la cause de la segmentation fault",
+          "Analyser les dumps de mémoire pour identifier les problèmes de mémoire"
         ],
-        "escalade_si": "Le service auth-service ne se redémarre pas automatiquement ou si la segmentation fault se reproduit après redémarrage",
+        "escalade_si": "Si le service auth-service ne se redémarre pas automatiquement ou si les problèmes persistent après analyse, contacter l'équipe de support technique",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 617.74,
+      "groq_latency_ms": 507.48,
       "groq_score": {
         "score": 10,
         "is_actionable": true,
@@ -102,18 +100,20 @@
       "groq_response": {
         "cause_probable": "Perte de connectivité avec le serveur principal de la base de données.",
         "actions_immediates": [
-          "Vérifier la connectivité réseau vers le serveur principal de la base de données.",
-          "Exécuter un check de santé sur le serveur principal de la base de données.",
-          "Redémarrer le service de base de données si nécessaire."
+          "Vérifier les connexions réseau vers le serveur principal de la base de données.",
+          "Exécuter un scan de port pour s'assurer que le port de la base de données est ouvert.",
+          "Rebooter le serveur principal de la base de données pour essayer de rétablir la connectivité."
         ],
-        "escalade_si": "Le problème persiste après avoir exécuté les actions immédiates ou si la perte de connectivité est généralisée.",
+        "escalade_si": "La connectivité n'est pas rétablie après les actions immédiates, ou si la perte de connectivité est généralisée à plusieurs serveurs.",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 511.84,
+      "groq_latency_ms": 494.82,
       "groq_score": {
-        "score": 10,
+        "score": 9,
         "is_actionable": true,
-        "reasons": []
+        "reasons": [
+          "only one concrete action"
+        ]
       },
       "static_response": {
         "cause_probable": "Indisponibilité du service ou d'une dépendance.",
@@ -137,16 +137,16 @@
       "category": "SECURITY",
       "raw_log": "{\"level\":\"CRITICAL\",\"service\":\"auth-service\",\"message\":\"JWT secret key compromised — all active sessions invalidated immediately\",\"affected_sessions\":14200}",
       "groq_response": {
-        "cause_probable": "La clé secrète JWT a été compromise, ce qui a invalidé immédiatement 14 200 sessions actives.",
+        "cause_probable": "Le secret clé JWT a été compromis, permettant à des attaquants de générer des jetons d'accès valides.",
         "actions_immediates": [
-          "Arrêter le service auth-service pour empêcher toute nouvelle attaque.",
-          "Changer immédiatement la clé secrète JWT et mettre à jour les configurations de tous les services utilisant cette clé.",
-          "Exécuter un scan de vulnérabilités sur le service auth-service pour détecter d'éventuelles failles."
+          "Arrêter immédiatement le service auth-service pour empêcher toute nouvelle attaque.",
+          "Recharger les configurations de sécurité pour réinitialiser le secret clé JWT.",
+          "Alerte les équipes de sécurité pour qu'elles puissent prendre des mesures supplémentaires pour protéger les sessions actives."
         ],
-        "escalade_si": "Si les actions immédiates ne résolvent pas le problème, contacter l'équipe de sécurité et la direction pour déterminer les mesures à prendre.",
+        "escalade_si": "Si les actions immédiates ne résolvent pas la situation, escalader l'incident vers l'équipe de sécurité pour qu'elle puisse prendre des mesures plus approfondies.",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 623.86,
+      "groq_latency_ms": 470.67,
       "groq_score": {
         "score": 8,
         "is_actionable": true,
@@ -176,16 +176,16 @@
       "category": "SYSTEM",
       "raw_log": "Jan 15 11:02:00 prod-server kernel: PANIC: unable to mount root filesystem on /dev/sda1 — system halting",
       "groq_response": {
-        "cause_probable": "Problème de montage du système de fichiers racine sur /dev/sda1",
+        "cause_probable": "Problème de montage du système de fichiers racine sur le disque /dev/sda1",
         "actions_immediates": [
-          "Redémarrer le serveur en mode rescue pour accéder au système de fichiers",
-          "Vérifier les connexions de disque et les partitions pour détecter les erreurs",
-          "Exécuter un scan de disque pour détecter les problèmes de détection de disque"
+          "Redémarrer le serveur en mode rescue pour accéder au système en lecture seule",
+          "Vérifier les connexions réseau et les paramètres de configuration réseau",
+          "Examiner les journaux système pour rechercher d'autres erreurs ou avertissements"
         ],
-        "escalade_si": "Le problème persiste après les actions immédiates ou si le système est inaccessible",
+        "escalade_si": "Le problème persiste après redémarrage en mode rescue ou si des données sont en danger",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 613.36,
+      "groq_latency_ms": 441.75,
       "groq_score": {
         "score": 10,
         "is_actionable": true,
@@ -213,16 +213,16 @@
       "category": "AVAILABILITY",
       "raw_log": "2024-01-15 11:03:00 FATAL Application crash detected — core dump saved to /var/crash/app_20240115_110300.core",
       "groq_response": {
-        "cause_probable": "Une erreur critique a été détectée dans l'application API-Gateway, entraînant un crash et un dump de core.",
+        "cause_probable": "Un crash de l'application a été détecté, ce qui pourrait être dû à une erreur de configuration, un bug ou une défaillance matérielle.",
         "actions_immediates": [
-          "Redémarrer l'application API-Gateway",
-          "Analyser le dump de core pour identifier la cause de l'erreur",
-          "Vérifier les logs système pour des erreurs potentielles liées à la mémoire ou au disque"
+          "Redémarrer le service api-gateway",
+          "Analyser le core dump pour identifier la cause du crash",
+          "Vérifier les journaux de l'application pour des erreurs précédentes"
         ],
-        "escalade_si": "Si le redémarrage de l'application ne résout pas le problème, contacter l'équipe de développement pour une analyse plus approfondie",
+        "escalade_si": "Si le service reste en panne après les actions immédiates, contacter l'équipe de développement pour une analyse plus approfondie.",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 511.33,
+      "groq_latency_ms": 477.74,
       "groq_score": {
         "score": 10,
         "is_actionable": true,
@@ -250,21 +250,21 @@
       "category": "SECURITY",
       "raw_log": "2024-01-15 11:04:00 CRITICAL DDoS attack detected: 50,000 requests/second from 200 distinct IPs — activating DDoS mitigation",
       "groq_response": {
-        "cause_probable": "Une attaque DDoS massive a été détectée, générant 50 000 requêtes par seconde depuis 200 adresses IP distinctes.",
+        "cause_probable": "DDoS attack détecté, 50 000 requêtes par seconde provenant de 200 IP distinctes",
         "actions_immediates": [
-          "Activer la règle de blocage automatique pour les adresses IP suspectes",
-          "Augmenter la capacité de traitement du WAF pour absorber l'impact de l'attaque",
-          "Notifier l'équipe de sécurité pour une intervention immédiate"
+          "Activer la règle de blocage IP pour les 200 IP suspectes",
+          "Augmenter la capacité de traitement du WAF pour absorber la charge",
+          "Alerte les équipes de sécurité pour une analyse approfondie"
         ],
-        "escalade_si": "L'attaque persiste après 15 minutes ou si la charge sur le système dépasse 75% de sa capacité maximale",
+        "escalade_si": "L'attaque DDoS persiste après 30 minutes ou atteint 100 000 requêtes par seconde",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 619.79,
+      "groq_latency_ms": 757.21,
       "groq_score": {
-        "score": 9,
+        "score": 8,
         "is_actionable": true,
         "reasons": [
-          "only one concrete action"
+          "actions are too vague"
         ]
       },
       "static_response": {
@@ -289,16 +289,16 @@
       "category": "DATA",
       "raw_log": "2024-01-15 11:05:00 CRITICAL Disk /dev/sda1 FULL (100%) — write operations suspended on all services",
       "groq_response": {
-        "cause_probable": "Le disque dur principal /dev/sda1 est plein à 100%.",
+        "cause_probable": "Le disque dur /dev/sda1 est plein à 100% et les écritures sont suspendues.",
         "actions_immediates": [
-          "Rediriger les écritures vers un autre disque disponible",
-          "Supprimer des fichiers inutiles pour libérer de l'espace disque",
-          "Augmenter la capacité du disque dur principal si possible"
+          "Rediriger les écritures vers un autre disque dur disponible.",
+          "Supprimer des fichiers inutiles pour libérer de l'espace disque.",
+          "Réduire la taille des fichiers journaux pour libérer de l'espace disque."
         ],
-        "escalade_si": "Le problème persiste après avoir exécuté les actions ci-dessus ou si la capacité du disque est insuffisante.",
+        "escalade_si": "Si les actions immédiates ne résolvent pas le problème, contacter l'équipe de maintenance pour une intervention plus approfondie.",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 550.64,
+      "groq_latency_ms": 595.16,
       "groq_score": {
         "score": 8,
         "is_actionable": true,
@@ -328,21 +328,21 @@
       "category": "SECURITY",
       "raw_log": "{\"level\":\"critical\",\"service\":\"payment-service\",\"message\":\"PCI DSS violation detected: plaintext credit card numbers found in logs — incident response activated\"}",
       "groq_response": {
-        "cause_probable": "Une faille de sécurité a été détectée dans le service de paiement, permettant l'accès aux numéros de carte de crédit en clair.",
+        "cause_probable": "Une violation de la norme PCI DSS a été détectée, les numéros de cartes de crédit en clair ont été trouvés dans les journaux.",
         "actions_immediates": [
-          "Arrêter immédiatement le service de paiement pour éviter toute nouvelle exposition.",
-          "Exécuter une copie de sauvegarde des logs pour analyse plus tard.",
-          "Activer la fonctionnalité de chiffrement des logs pour empêcher de futures expositions."
+          "Arrêter immédiatement le service payment-service pour empêcher toute nouvelle exposition.",
+          "Exécuter une analyse de la base de données pour identifier les enregistrements contenant des numéros de cartes de crédit en clair.",
+          "Activer la suppression des données sensibles dans les journaux existants."
         ],
-        "escalade_si": "Le problème n'est pas résolu dans les 30 minutes ou si de nouvelles failles sont détectées.",
+        "escalade_si": "Le service ne peut pas être arrêté ou si l'analyse de la base de données révèle une exposition importante.",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 619.19,
+      "groq_latency_ms": 1131.82,
       "groq_score": {
-        "score": 8,
+        "score": 9,
         "is_actionable": true,
         "reasons": [
-          "actions are too vague"
+          "only one concrete action"
         ]
       },
       "static_response": {
@@ -367,20 +367,22 @@
       "category": "NETWORK",
       "raw_log": "Jan 15 11:07:00 prod-server network[4567]: CRITICAL Network partition detected — cluster split-brain: node-1 and node-2 cannot reach node-3",
       "groq_response": {
-        "cause_probable": "Un split-brain a été détecté dans le cluster, empêchant les communications entre les nœuds node-1, node-2 et node-3.",
+        "cause_probable": "Une partition réseau a été détectée entre les nœuds node-1, node-2 et node-3, entraînant un split-brain.",
         "actions_immediates": [
-          "Exécuter la commande `etcdctl member list` pour vérifier la liste des membres du cluster et identifier les nœuds impliqués.",
-          "Effectuer un redémarrage forcé du service network sur les nœuds node-1 et node-2 pour essayer de rétablir la communication.",
-          "Vérifier les configurations de réseau et les règles de sécurité pour s'assurer qu'elles ne sont pas en cause."
+          "Rétablir la communication réseau entre les nœuds node-1 et node-3 en vérifiant les connexions réseau et les configurations de routeur.",
+          "Réinitialiser les services réseau sur node-1 et node-3 pour garantir qu'ils sont synchronisés.",
+          "Exécuter un `netstat -an` sur chaque nœud pour identifier les processus en écoute et les connexions actives."
         ],
-        "escalade_si": "Si les actions immédiates ne résolvent pas le problème, contacter l'équipe de support technique pour une assistance plus approfondie.",
+        "escalade_si": "Si la partition réseau persiste après avoir exécuté les actions ci-dessus, contacter l'équipe réseau pour investigation et résolution.",
         "severite_estimee": "CRITICAL"
       },
-      "groq_latency_ms": 619.24,
+      "groq_latency_ms": 711.42,
       "groq_score": {
-        "score": 10,
+        "score": 9,
         "is_actionable": true,
-        "reasons": []
+        "reasons": [
+          "only one concrete action"
+        ]
       },
       "static_response": {
         "cause_probable": "Problème de connectivité réseau ou de résolution DNS.",
