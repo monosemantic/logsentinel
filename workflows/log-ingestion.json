@@ -155,14 +155,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -896,
-        880
+        -432,
+        664
       ],
-      "id": "0ece6fd9-edbe-46fd-ade0-87d3e1186dcf",
+      "id": "020bf0b0-5c3b-4b74-b865-a34756319d25",
       "name": "Insert rows in a table",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -175,10 +175,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1568,
-        976
+        -1104,
+        760
       ],
-      "id": "071c49e1-6895-4106-a1e7-1599b5d100f6",
+      "id": "7bf2bb18-02b4-4600-922a-54aecbc9029a",
       "name": "Format Detector"
     },
     {
@@ -316,10 +316,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -1344,
-        928
+        -880,
+        712
       ],
-      "id": "bd2358e6-fa03-4e39-aed5-f12ed2f5d429",
+      "id": "e2012df9-a25a-4a96-a2d6-f0b28bccd033",
       "name": "Switch"
     },
     {
@@ -330,10 +330,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        480
+        -656,
+        256
       ],
-      "id": "c3479e02-f48b-433c-b691-241efa16771d",
+      "id": "b60dd655-01b5-4924-857d-8eb917e9868f",
       "name": "JSON Processor"
     },
     {
@@ -344,10 +344,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        672
+        -656,
+        448
       ],
-      "id": "03cac4a7-1934-4d7d-bdab-739c15e6a926",
+      "id": "b96933ef-fee4-4469-8160-d866e6c8638b",
       "name": "Syslog Processor"
     },
     {
@@ -358,10 +358,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        864
+        -656,
+        640
       ],
-      "id": "efe3ecab-dc86-43dd-97f6-db822f6f6c2e",
+      "id": "c901f10c-306b-4e76-a3ae-d67ff8c9c0a2",
       "name": "Apache Processor"
     },
     {
@@ -372,10 +372,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        1056
+        -656,
+        832
       ],
-      "id": "05700416-1560-449c-8a32-9c05d8b4e340",
+      "id": "642fb2ab-663c-4cb5-9dfe-8d73a1a682e5",
       "name": "Plaintext Processor"
     },
     {
@@ -386,29 +386,29 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1120,
-        1248
+        -656,
+        1024
       ],
-      "id": "6b4073df-80bd-4674-bb2d-58729f627783",
+      "id": "5c8815df-149b-4656-a728-18338e4457a3",
       "name": "Unknown Processor"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT COALESCE(s.current_state, 'INFO') AS current_state, s.last_event_time FROM (SELECT 1) AS dummy LEFT JOIN afd_states s ON s.source_id = '{{ $json.source_id }}'",
+        "query": "SELECT\n  COALESCE(s.current_state, 'INFO')   AS current_state,\n  COALESCE(s.cascade_count, 0)        AS cascade_count,\n  s.last_event_time IS NULL           AS is_new_service,\n  COALESCE(\n    EXTRACT(EPOCH FROM (NOW() - s.last_event_time))::int,\n    999999\n  )                                   AS elapsed_since_last_sec,\n  COALESCE(\n    EXTRACT(EPOCH FROM (NOW() - s.cascade_start_time))::int,\n    999999\n  )                                   AS cascade_elapsed_sec\nFROM (SELECT 1) AS dummy\nLEFT JOIN afd_states s\n  ON s.source_id = '{{ $json.source_id }}'\n AND '{{ $json.source_id }}' <> ''",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -672,
-        880
+        -208,
+        664
       ],
-      "id": "587e7ca7-120b-44e8-be7d-5c205dca864a",
+      "id": "5660c632-b83c-49e8-aa3f-f2acbaaf0aea",
       "name": "AFD State Read",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -416,34 +416,34 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// WF1 - Code Node: AFD Engine + Regex Evaluation\n// Issue #5 | Branch: feat/05-wf1-afd-engine\n// LogSentinel - IA-01\n//\n// $json = output of \"AFD State Read\" (always 1 row, COALESCE LEFT JOIN)\n// $('Insert rows in a table').first().json = log row with id, source_id, message\n//\n// n8n mode: runOnceForEachItem\n// Phase 1 scope: ERROR_CASCADE, RECOVERY, cascade_count not implemented (Issue #13)\n\n\n// 0. ENV CONFIG\n// Requires N8N_BLOCK_ENV_ACCESS_IN_NODE=false in docker-compose (already set).\n\nconst TIMEOUT_WINDOW_SEC = parseInt($env.TIMEOUT_WINDOW ?? '300', 10);\nconst EFFECTIVE_TIMEOUT = Number.isFinite(TIMEOUT_WINDOW_SEC) && TIMEOUT_WINDOW_SEC > 0\n  ? TIMEOUT_WINDOW_SEC : 300;\n\n\n// 1. TRANSITION TABLE delta: Q x Sigma -> Q\n// Source: Issue #3, Section 3, 4x6 = 24 entries\n// Determinism: 1 output per (state, symbol) pair\n// Totality: all 24 entries defined\n// Monotonicity: delta(q, sigma_log) >= q except sigma_timeout (resets to INFO)\n// Absorption: delta(CRITICAL, sigma) = CRITICAL for all sigma != sigma_timeout\n\nconst TRANSITIONS = {\n  //           sigma_info    sigma_warn    sigma_error   sigma_crit    sigma_malformed  sigma_timeout\n  INFO:     { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'INFO',     sigma_timeout: 'INFO'     },\n  WARNING:  { sigma_info: 'INFO',     sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'WARNING',  sigma_timeout: 'INFO'     },\n  ERROR:    { sigma_info: 'WARNING',  sigma_warn: 'WARNING',  sigma_error: 'ERROR',    sigma_crit: 'CRITICAL', sigma_malformed: 'ERROR',    sigma_timeout: 'INFO'     },\n  CRITICAL: { sigma_info: 'CRITICAL', sigma_warn: 'CRITICAL', sigma_error: 'CRITICAL', sigma_crit: 'CRITICAL', sigma_malformed: 'CRITICAL', sigma_timeout: 'INFO'     },\n};\n\n// Note on delta(ERROR, sigma_info) = WARNING (not INFO):\n// Partial recovery - service responds again but we stay in WARNING.\n// Only sigma_timeout (prolonged silence) resets fully to INFO.\n\n\n// 2. REGEX PATTERNS in strict priority order\n// Priority: sigma_crit > sigma_error > sigma_warn > sigma_info > sigma_malformed\n// First match wins. sigma_malformed is the default (no regex). sigma_timeout is internal.\n\nconst REGEX_PATTERNS = [\n  {\n    symbol: 'sigma_crit',\n    // \\b prevents partial matches: \"uncritical\", \"non-fatal\" won't fire.\n    pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i,\n  },\n  {\n    symbol: 'sigma_error',\n    // HTTP 5xx via 5[0-9]{2}. Common exception class names included.\n    // Known false positive (Phase 1): 'GET /error-page 200' -> sigma_error because\n    // '/' is a non-word char so \\b fires before 'error' in the URL path.\n    // Issue #3 Section 5 edge case 1 was wrong on this. Fix in Phase 2 (Issue #4).\n    pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i,\n  },\n  {\n    symbol: 'sigma_warn',\n    // Negative lookahead TIMEOUT(?!_WINDOW): excludes \"TIMEOUT_WINDOW\" (internal config param).\n    pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i,\n  },\n  {\n    symbol: 'sigma_info',\n    // HTTP 2xx via 2[0-9]{2}.\n    pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i,\n  },\n  // sigma_malformed: no pattern, default in evaluateSymbol()\n  // sigma_timeout: internal temporal signal, never in REGEX_PATTERNS\n];\n\n\n// 3. PURE ENGINE FUNCTIONS\n\n/**\n * evaluateSymbol(message) -> symbol in Sigma\n * null/empty -> sigma_malformed before any regex. First match wins.\n */\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\n/**\n * applyTransition(currentState, symbol) -> newState\n * Unknown state falls back to INFO. Unknown symbol leaves state unchanged.\n */\nfunction applyTransition(currentState, symbol) {\n  const row = TRANSITIONS[currentState];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? currentState;\n}\n\n\n// 4. READ LOG DATA from the Insert node (carries id, source_id, message, etc.)\nconst logObject = $('Insert rows in a table').first().json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst now       = new Date();\n\n\n// 5. READ CURRENT AFD STATE from $json (= \"AFD State Read\" output)\n// \"AFD State Read\" uses COALESCE with a LEFT JOIN so it always returns exactly 1 row.\n// New service: current_state = 'INFO', last_event_time = null\nconst stateRow = $json;\n\nlet currentState  = 'INFO';\nlet lastEventTime = now;\nlet isNewService  = true;\n\nif (stateRow?.current_state) {\n  // Normalize legacy 'NOMINAL' (schema.sql default from Phase 0) -> 'INFO' (Phase 1 q0)\n  currentState = (stateRow.current_state === 'NOMINAL') ? 'INFO' : stateRow.current_state;\n  if (!TRANSITIONS[currentState]) currentState = 'INFO';\n\n  if (stateRow.last_event_time) {\n    lastEventTime = new Date(stateRow.last_event_time);\n    isNewService  = false;\n    // last_event_time is null for new services (COALESCE returned INFO but no real row)\n  }\n}\n\n\n// 6. TEMPORAL RESET (sigma_timeout)\n// If no log received for TIMEOUT_WINDOW seconds: apply delta(q, sigma_timeout) first,\n// then delta(result, sigma_log). New services skip this (no last_event_time to compare).\n\nconst elapsedMs  = now - lastEventTime;\nconst elapsedSec = elapsedMs / 1000;\n\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n}\n\n\n// 7. SYMBOL EVALUATION AND TRANSITION\n\nconst symbol        = evaluateSymbol(message);\nconst newState      = applyTransition(stateAfterTimeout, symbol);\nconst previousState = currentState; // state before any transition (audit trail)\n\n\n// 8. RETURN ENRICHED OBJECT\n// \"AFD State Write\" node (after this) runs:\n//   INSERT INTO afd_states ... ON CONFLICT DO UPDATE using $json.afd_state etc.\n// \"Log State Write\" node (after this) runs:\n//   UPDATE logs SET afd_state, afd_symbol, previous_state WHERE id = $json.id\n\nreturn {\n  ...logObject,           // all fields from Insert node (including id)\n  afd_symbol:      symbol,\n  afd_state:       newState,\n  previous_state:  previousState,\n  source_id:       sourceId,\n  is_new_service:  isNewService,\n  timeout_applied: timeoutApplied,\n  elapsed_sec:     Math.round(elapsedSec),\n  timeout_window:  EFFECTIVE_TIMEOUT,\n  engine_ts:       now.toISOString(),\n  // Not in Phase 1: cascade_count, cascade_start_time, ERROR_CASCADE, RECOVERY (Issue #13)\n};\n"
+        "jsCode": "// 0. CONFIG\nconst TIMEOUT_WINDOW_SEC  = parseInt($env.TIMEOUT_WINDOW    ?? '300', 10);\nconst CASCADE_THRESHOLD   = parseInt($env.CASCADE_THRESHOLD ?? '3',   10);\nconst CASCADE_WINDOW_SEC  = parseInt($env.CASCADE_WINDOW    ?? '60',  10);\n\nconst EFFECTIVE_TIMEOUT   = Number.isFinite(TIMEOUT_WINDOW_SEC)  && TIMEOUT_WINDOW_SEC  > 0 ? TIMEOUT_WINDOW_SEC  : 300;\nconst EFFECTIVE_THRESHOLD = Number.isFinite(CASCADE_THRESHOLD)   && CASCADE_THRESHOLD   > 0 ? CASCADE_THRESHOLD   : 3;\nconst EFFECTIVE_CASCADE   = Number.isFinite(CASCADE_WINDOW_SEC)  && CASCADE_WINDOW_SEC  > 0 ? CASCADE_WINDOW_SEC  : 60;\n\n// 1. TRANSITION TABLE 6×6\nconst TRANSITIONS = {\n  INFO:          { sigma_info:'INFO',     sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'INFO',     sigma_malformed:'INFO',          sigma_timeout:'INFO'  },\n  WARNING:       { sigma_info:'INFO',     sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'WARNING',  sigma_malformed:'WARNING',       sigma_timeout:'INFO'  },\n  ERROR:         { sigma_info:'WARNING',  sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'ERROR',    sigma_malformed:'ERROR',         sigma_timeout:'INFO'  },\n  ERROR_CASCADE: { sigma_info:'WARNING',  sigma_warn:'ERROR',    sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'ERROR',    sigma_malformed:'ERROR_CASCADE', sigma_timeout:'INFO'  },\n  CRITICAL:      { sigma_info:'CRITICAL', sigma_warn:'CRITICAL', sigma_error:'CRITICAL', sigma_crit:'CRITICAL', sigma_ack:'RECOVERY', sigma_malformed:'CRITICAL',      sigma_timeout:'INFO'  },\n  RECOVERY:      { sigma_info:'INFO',     sigma_warn:'WARNING',  sigma_error:'ERROR',    sigma_crit:'CRITICAL', sigma_ack:'RECOVERY', sigma_malformed:'RECOVERY',      sigma_timeout:'INFO'  },\n};\n\n// 2. REGEX PATTERNS\nconst REGEX_PATTERNS = [\n  { symbol: 'sigma_crit',  pattern: /\\b(CRITICAL|FATAL|EMERGENCY|PANIC|EMERG|KERN_CRIT|SEV1|P1)\\b/i },\n  { symbol: 'sigma_error', pattern: /\\b(ERROR|Exception|Traceback|FAILED|FAILURE|5[0-9]{2}|NullPointer|OutOfMemory|Segfault|SIGSEGV|SIGABRT)\\b/i },\n  { symbol: 'sigma_warn',  pattern: /\\b(WARN|WARNING|SLOW|RETRY|DEPRECATED|TIMEOUT(?!_WINDOW)|HIGH_LATENCY|BACKPRESSURE|THROTTL)\\b/i },\n  { symbol: 'sigma_info',  pattern: /\\b(INFO|DEBUG|TRACE|OK|SUCCESS|STARTED|STOPPED|HEALTHY|2[0-9]{2}|CONNECTED|INITIALIZED)\\b/i },\n];\nconst ACK_PATTERN = /\\b(__AFD_ACK__)\\b/;\n\nfunction evaluateSymbol(message) {\n  if (message === null || message === undefined) return 'sigma_malformed';\n  if (typeof message !== 'string' || message.trim() === '') return 'sigma_malformed';\n  if (ACK_PATTERN.test(message)) return 'sigma_ack';\n  for (const { symbol, pattern } of REGEX_PATTERNS) {\n    if (pattern.test(message)) return symbol;\n  }\n  return 'sigma_malformed';\n}\n\nfunction applyTransition(state, symbol) {\n  const row = TRANSITIONS[state];\n  if (!row) return TRANSITIONS['INFO'][symbol] ?? 'INFO';\n  return row[symbol] ?? state;\n}\n\n// 3. READ LOG\nconst logObject = $('Insert rows in a table').item.json;\nconst sourceId  = logObject.source_id ?? 'unknown';\nconst message   = logObject.message   ?? '';\nconst logId     = logObject.id        ?? null;\nconst now       = new Date();\n\n// 4. READ AFD STATE\nconst stateRow = $json;\n\nlet rawState = stateRow?.current_state ?? 'INFO';\nif (rawState === 'NOMINAL')  rawState = 'INFO';\nif (rawState === 'DEGRADED') rawState = 'WARNING';\nlet currentState = TRANSITIONS[rawState] ? rawState : 'INFO';\n\nconst isNewService      = stateRow?.is_new_service !== false;\nconst cascadeCount      = parseInt(stateRow?.cascade_count ?? '0', 10) || 0;\nconst elapsedSec        = Number(stateRow?.elapsed_since_last_sec ?? 999999);\nconst cascadeElapsedSec = Number(stateRow?.cascade_elapsed_sec   ?? 999999);\n\n// 5. TEMPORAL RESET\nlet stateAfterTimeout = currentState;\nlet timeoutApplied    = false;\nlet newCascadeCount   = cascadeCount;\n\nif (!isNewService && elapsedSec > EFFECTIVE_TIMEOUT) {\n  stateAfterTimeout = applyTransition(currentState, 'sigma_timeout');\n  timeoutApplied    = true;\n  newCascadeCount   = 0;\n}\n\n// 6. SYMBOL + TRANSITION + CASCADE WINDOW\nconst symbol      = evaluateSymbol(message);\nconst rawNewState = applyTransition(stateAfterTimeout, symbol);\n\nlet newState      = rawNewState;\nlet cascade_reset = 'keep';\n\nif (rawNewState === 'ERROR') {\n  if (cascadeElapsedSec > EFFECTIVE_CASCADE) {\n    newCascadeCount = 1;\n    cascade_reset   = 'reset_now';\n    newState        = 'ERROR';\n  } else {\n    newCascadeCount = cascadeCount + 1;\n    cascade_reset   = 'keep';\n    if (newCascadeCount >= EFFECTIVE_THRESHOLD) {\n      newState = 'ERROR_CASCADE';\n    }\n  }\n} else if (rawNewState === 'ERROR_CASCADE') {\n  newCascadeCount = cascadeCount + 1;\n  cascade_reset   = 'keep';\n} else {\n  if (currentState === 'ERROR' || currentState === 'ERROR_CASCADE') {\n    newCascadeCount = 0;\n    cascade_reset   = 'reset_null';\n  }\n}\n\nconst previousState = currentState;\n\n// 7. OUTPUT\nreturn {\n  ...logObject,\n  afd_symbol:        symbol,\n  afd_state:         newState,\n  previous_state:    previousState,\n  source_id:         sourceId,\n  id:                logId,\n  cascade_count:     newCascadeCount,\n  cascade_reset:     cascade_reset,\n  is_new_service:    isNewService,\n  timeout_applied:   timeoutApplied,\n  elapsed_sec:       Math.round(elapsedSec),\n  cascade_elapsed:   Math.round(cascadeElapsedSec),\n  cascade_threshold: EFFECTIVE_THRESHOLD,\n  cascade_window:    EFFECTIVE_CASCADE,\n  engine_ts:         now.toISOString(),\n  engine_version:    'v2',\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -448,
-        880
+        16,
+        664
       ],
-      "id": "6461c4c4-65ef-46c5-8287-38a3e2dc4d62",
+      "id": "c6e07d8d-e194-46b1-9f04-7375d0d64232",
       "name": "AFD Engine"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO afd_states (source_id, current_state, previous_state, last_symbol, last_event_time, updated_at) VALUES ('{{ $json.source_id }}', '{{ $json.afd_state }}', '{{ $json.previous_state }}', '{{ $json.afd_symbol }}', NOW(), NOW()) ON CONFLICT (source_id) DO UPDATE SET current_state = EXCLUDED.current_state, previous_state = EXCLUDED.previous_state, last_symbol = EXCLUDED.last_symbol, last_event_time = EXCLUDED.last_event_time, updated_at = EXCLUDED.updated_at",
+        "query": "INSERT INTO afd_states (\n  source_id, current_state, previous_state, last_symbol,\n  last_event_time, cascade_count, cascade_start_time, updated_at\n)\nVALUES (\n  '{{ $json.source_id }}',\n  '{{ $json.afd_state }}',\n  '{{ $json.previous_state }}',\n  '{{ $json.afd_symbol }}',\n  NOW(),\n  {{ $json.cascade_count }},\n  CASE '{{ $json.cascade_reset }}'\n    WHEN 'reset_now' THEN NOW()\n    ELSE NULL\n  END,\n  NOW()\n)\nON CONFLICT (source_id) DO UPDATE SET\n  current_state      = EXCLUDED.current_state,\n  previous_state     = EXCLUDED.previous_state,\n  last_symbol        = EXCLUDED.last_symbol,\n  last_event_time    = NOW(),\n  cascade_count      = EXCLUDED.cascade_count,\n  cascade_start_time = CASE '{{ $json.cascade_reset }}'\n    WHEN 'reset_now'  THEN NOW()\n    WHEN 'reset_null' THEN NULL\n    ELSE afd_states.cascade_start_time\n  END,\n  updated_at         = NOW()",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -224,
-        784
+        240,
+        568
       ],
-      "id": "d53fa4dd-96e0-4691-b27e-f925fda00a2d",
+      "id": "d257c23d-ad18-4dd3-9893-99de30ee6932",
       "name": "AFD State Write",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -457,14 +457,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -224,
-        976
+        240,
+        760
       ],
-      "id": "1af39269-4e5f-4f1c-a742-e29a5db465bd",
+      "id": "45d058cf-dec0-48a6-90c8-ea3cee6a1811",
       "name": "Log State Write",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -558,6 +558,31 @@
                 },
                 "conditions": [
                   {
+                    "id": "9d97fd1e-49d1-401b-98ac-618d1b463c50",
+                    "leftValue": "={{ $json.afd_state }}",
+                    "rightValue": "RECOVERY",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RECOVERY Handler"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
                     "id": "ff408d4f-2f53-4e9a-bbfc-7d9bfa22e67d",
                     "leftValue": "={{ ['CRITICAL', 'ERROR_CASCADE'].includes($json.afd_state) }}",
                     "rightValue": "",
@@ -580,10 +605,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -224,
-        528
+        240,
+        280
       ],
-      "id": "4c47b42d-4f0a-408d-9c02-6a9a672838ee",
+      "id": "fc96383f-9471-4c62-a3f2-a7b21633786c",
       "name": "AFD State Switch Router"
     },
     {
@@ -598,15 +623,15 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        0,
-        192
+        464,
+        -32
       ],
-      "id": "eb9609a6-8d27-405c-a5c7-a495465f4c56",
+      "id": "ac57f744-7aa5-440e-b173-48b76848e244",
       "name": "Send an Email",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
       "credentials": {
         "smtp": {
-          "id": "xsaeTmjErAVMeeAL",
+          "id": "HZ4ykWGX2Lk64qkQ",
           "name": "SMTP account"
         }
       }
@@ -623,15 +648,15 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        0,
-        576
+        464,
+        352
       ],
-      "id": "8d365d24-8e27-4154-87cf-048a284137c4",
+      "id": "8fe4de58-6c24-45f8-b43f-28602c20bd45",
       "name": "Send an Email1",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
       "credentials": {
         "smtp": {
-          "id": "xsaeTmjErAVMeeAL",
+          "id": "HZ4ykWGX2Lk64qkQ",
           "name": "SMTP account"
         }
       }
@@ -645,10 +670,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        384
+        464,
+        160
       ],
-      "id": "ebae0b69-adf8-4487-8bc8-f4641147e9ff",
+      "id": "f54d803f-8852-4a78-a310-7f40eeda7ada",
       "name": "WARNING Message"
     },
     {
@@ -660,10 +685,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        0
+        464,
+        -224
       ],
-      "id": "79762da5-74c4-4ce8-a126-22d96f43b133",
+      "id": "6090ebf2-f907-4655-9b93-4936354400eb",
       "name": "INFO Message"
     },
     {
@@ -675,10 +700,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        768
+        464,
+        544
       ],
-      "id": "c227d851-8939-4c92-ad85-1bb69bbc5bce",
+      "id": "ce19b482-2c50-4fa1-b343-36d6461f9db2",
       "name": "ERROR Message"
     },
     {
@@ -690,10 +715,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
-        960
+        464,
+        928
       ],
-      "id": "dc30af4a-8981-48c0-96c2-3fc818a38afa",
+      "id": "09e3a44d-451a-48b5-abc3-1d2779b0ccae",
       "name": "CRITICAL Message"
     },
     {
@@ -707,10 +732,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        224,
-        464
+        688,
+        352
       ],
-      "id": "0d275027-a336-4a6b-a237-71435686ad8b",
+      "id": "ac744d7f-97e3-429e-b949-c6a2547e9867",
       "name": "Final Response"
     },
     {
@@ -723,10 +748,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1792,
-        976
+        -1328,
+        760
       ],
-      "id": "5e04e5d5-375e-4532-88d1-64aab3232379",
+      "id": "e36483f8-796d-4c05-81db-824d57e890fb",
       "name": "Webhook1",
       "webhookId": "a489eedb-7558-4cf6-b7ed-ec74ce5c03bd"
     },
@@ -739,15 +764,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        464,
-        1648
+        912,
+        1216
       ],
-      "id": "05e10f63-cc38-4bb7-852c-ea905d323aeb",
+      "id": "f270d84f-9924-46b4-9220-c1192de7578d",
       "name": "Get Recent Logs",
       "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -759,10 +784,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        688,
-        1648
+        1136,
+        1216
       ],
-      "id": "fd8a4258-250b-4116-869c-9ab38a2a8aef",
+      "id": "f90d7c90-ffbf-4f90-bc74-d48a7cefb8ec",
       "name": "Format Recent Logs"
     },
     {
@@ -772,10 +797,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1888,
-        1648
+        2704,
+        1024
       ],
-      "id": "1d3b3319-8c8e-45d0-b781-260f89e0ea79",
+      "id": "a02e5147-0ba2-49ea-9598-984eaa4cc01d",
       "name": "Format Alert Message"
     },
     {
@@ -789,15 +814,15 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        2224,
-        1648
+        2928,
+        1024
       ],
-      "id": "2f7b8c25-2d40-479a-b6ab-180ffa5eb9da",
+      "id": "c4ebafc7-be43-482b-bc83-cb044e031fb9",
       "name": "Alert Email",
       "webhookId": "53180bb1-81f6-432f-bd65-23720f897a7f",
       "credentials": {
         "smtp": {
-          "id": "xsaeTmjErAVMeeAL",
+          "id": "HZ4ykWGX2Lk64qkQ",
           "name": "SMTP account"
         }
       }
@@ -811,14 +836,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        2224,
-        1840
+        2928,
+        1216
       ],
-      "id": "6dc95465-356a-4d66-9617-ff9192a69233",
+      "id": "57b52d44-56be-4fa6-a86e-ba8217dc0fa0",
       "name": "Reset ACK Time",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -852,14 +877,14 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2224,
-        1456
+        2928,
+        832
       ],
-      "id": "aab565e4-8ead-4185-97cf-84fd75df1b3b",
+      "id": "5349fe24-c7f2-472e-87cd-684b862788de",
       "name": "Twilio WhatsApp Alert",
       "credentials": {
         "httpBasicAuth": {
-          "id": "nFNQQLi2HhozL6qX",
+          "id": "CWeWIvKiHuGZeewK",
           "name": "Unnamed credential"
         }
       }
@@ -873,15 +898,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -64,
-        1264
+        464,
+        1120
       ],
-      "id": "b6bf6736-0b15-46c4-83e8-90b5ab19c839",
+      "id": "172155c9-06aa-46be-8ffe-84b578af774e",
       "name": "Count Critical Services",
       "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -914,10 +939,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        144,
-        1264
+        688,
+        1120
       ],
-      "id": "ba126454-0f76-41d5-8435-dd687b8e35fe",
+      "id": "36961dc3-b17e-4d8d-97aa-7aab47cb2615",
       "name": "System Wide Critical?",
       "alwaysOutputData": false
     },
@@ -930,14 +955,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        448,
-        1248
+        1808,
+        784
       ],
-      "id": "5373cebc-a7c3-40a5-8f6c-b5e1186e1487",
+      "id": "e3fcfc2c-8690-4035-b804-be583779d880",
       "name": "Get All Critical Services",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -949,10 +974,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        688,
-        1248
+        2032,
+        784
       ],
-      "id": "705670a1-ad6f-487f-91f9-71519d6f3ed8",
+      "id": "b0ac7166-17c4-41b9-b809-97e6dceb61f6",
       "name": "Build Correlation Prompt"
     },
     {
@@ -969,14 +994,14 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        928,
-        1248
+        2256,
+        784
       ],
-      "id": "e34818fa-8cf1-4fbc-9647-41d60ada99b8",
+      "id": "fc8e7cbf-f2d8-4e74-94d4-97a6c3c85ca5",
       "name": "Groq Correlation Call",
       "credentials": {
         "httpBearerAuth": {
-          "id": "cfsT0gadKYY8U1p2",
+          "id": "iprK9yIrmvNmjond",
           "name": "Bearer Auth account"
         }
       }
@@ -988,10 +1013,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
-        1248
+        2480,
+        784
       ],
-      "id": "eaba0b09-ee20-406f-9b31-4b500e647f0b",
+      "id": "20b730e3-0ae4-46ff-b0d6-a0fe8c8863fd",
       "name": "Parse Correlation Response"
     },
     {
@@ -1003,10 +1028,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1456,
-        1248
+        2704,
+        784
       ],
-      "id": "8b9097fb-20e6-47ea-95cb-86235237f78e",
+      "id": "91791b61-7f2e-4007-9183-de26f15ed293",
       "name": "System Wide Alert Message"
     },
     {
@@ -1018,14 +1043,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        608,
-        2224
+        1584,
+        1216
       ],
-      "id": "9ee3fc93-9427-4273-a000-9b67823fcd42",
+      "id": "df98f7fb-7203-49e0-ab1a-7c2a5f40666e",
       "name": "Check LLM Cache",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -1058,10 +1083,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        816,
-        2224
+        1808,
+        1216
       ],
-      "id": "c045f1c6-e442-4c0e-8117-ec830f39f9f5",
+      "id": "2828523c-7d97-43c3-b96e-5f42ec6e7c25",
       "name": "Cache Found?"
     },
     {
@@ -1071,10 +1096,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        976,
-        1952
+        2480,
+        976
       ],
-      "id": "60612993-a373-4377-8026-6220ecd969a2",
+      "id": "2cfc1ad3-8b55-47d5-b37b-9461bb76363b",
       "name": "Use Cached LLM Response"
     },
     {
@@ -1086,14 +1111,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1168,
-        1952
+        2704,
+        1216
       ],
-      "id": "1f2c407f-1843-4473-a900-d63594d1f0a4",
+      "id": "fbb352c6-a66c-41ca-918b-d93e23a1730e",
       "name": "Update LLM Cache Hit",
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -1107,15 +1132,15 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1696,
-        2240
+        2704,
+        1408
       ],
-      "id": "bb6b8c84-3de9-4806-99d2-16a6fcc7355d",
+      "id": "f0ff6fef-55ba-4b37-b968-dd924b0ef916",
       "name": "Store LLM Cache",
       "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "ppKqF1hEUn1tlvXf",
+          "id": "nfpFHuBjkrDPl751",
           "name": "Postgres account"
         }
       }
@@ -1127,10 +1152,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1472,
-        2240
+        2480,
+        1360
       ],
-      "id": "3205b284-7807-4967-9029-30cadb657a0a",
+      "id": "711697cc-d1ef-4be5-9e7d-1d1b1d8c4009",
       "name": "Parse LLM Response1"
     },
     {
@@ -1140,10 +1165,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        944,
-        1648
+        1360,
+        1216
       ],
-      "id": "1c05941e-622a-48d9-b9e1-d8e2762ad648",
+      "id": "7b6a66fd-6a43-48cf-8c9a-f21043e630a8",
       "name": "Build LLM Cache Key"
     },
     {
@@ -1153,10 +1178,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1040,
-        2240
+        2032,
+        1360
       ],
-      "id": "0bc8f75c-cac2-45a0-a7de-8b77b6d68b87",
+      "id": "841455c3-8cfb-43ab-83f5-97e8c8a8e5d9",
       "name": "Build LLM Prompt"
     },
     {
@@ -1173,17 +1198,32 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1264,
-        2240
+        2256,
+        1360
       ],
-      "id": "2236b722-7b12-48ac-950c-4d068a3759b8",
+      "id": "172ab3ed-1ddb-45a7-9441-f93b21ea5140",
       "name": "Groq API Call",
       "credentials": {
         "httpBearerAuth": {
-          "id": "cfsT0gadKYY8U1p2",
+          "id": "iprK9yIrmvNmjond",
           "name": "Bearer Auth account"
         }
       }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"RECOVERY\",\n  \"message\": \"monitoring_post_incident\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        736
+      ],
+      "id": "729b943a-90b4-414c-9fb5-5a9f9488a43a",
+      "name": "RECOVERY Message"
     }
   ],
   "pinData": {},
@@ -1365,6 +1405,13 @@
           },
           {
             "node": "ERROR Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "RECOVERY Message",
             "type": "main",
             "index": 0
           }
@@ -1631,16 +1678,6 @@
         ]
       ]
     },
-    "Store LLM Cache": {
-      "main": [
-        []
-      ]
-    },
-    "Update LLM Cache Hit": {
-      "main": [
-        []
-      ]
-    },
     "Build LLM Cache Key": {
       "main": [
         [
@@ -1673,6 +1710,17 @@
           }
         ]
       ]
+    },
+    "RECOVERY Message": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -1680,11 +1728,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "c3964e00-79fa-4e3c-bde2-9bbfeb3c05f8",
+  "versionId": "e2baf941-d710-4b2b-8d40-8705ba130d95",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
+    "instanceId": "cec0fdf9ad402c6f327a3e127a496886f6a2287d720a12376d03789c2a708588"
   },
-  "id": "lENlBdSR0FEiGn7r",
+  "id": "xFnXopS8rxxWf7od",
   "tags": []
 }
