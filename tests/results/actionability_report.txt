@@ -1,0 +1,32 @@
+Issue #19 — LLM Actionability Evaluation
+==================================================
+
+Logs evaluated: 10
+Groq avg score: 9.1/10
+Static avg score: 10/10
+Groq actionability rate: 100.0%
+Static actionability rate: 100.0%
+Groq avg latency: 633.44 ms
+
+Rubric:
+- cause_probable: 2 points
+- at least 3 immediate actions: 3 points
+- concrete actions: 2 points
+- escalation condition: 2 points
+- severity: 1 point
+- actionable if score >= 7/10
+
+Per-log results:
+- log_id=15 source=api-gateway category=PERFORMANCE groq=10/10 static=10/10
+- log_id=16 source=auth-service category=SYSTEM groq=10/10 static=10/10
+- log_id=61 source=db-service category=AVAILABILITY groq=9/10 static=10/10
+- log_id=62 source=auth-service category=SECURITY groq=8/10 static=10/10
+- log_id=63 source=system-monitor category=SYSTEM groq=10/10 static=10/10
+- log_id=64 source=api-gateway category=AVAILABILITY groq=10/10 static=10/10
+- log_id=65 source=waf-service category=SECURITY groq=8/10 static=10/10
+- log_id=66 source=system-monitor category=DATA groq=8/10 static=10/10
+- log_id=67 source=payment-service category=SECURITY groq=9/10 static=10/10
+- log_id=68 source=network-monitor category=NETWORK groq=9/10 static=10/10
+
+Notes:
+- Groq responses were successfully evaluated.

@@ -39,7 +39,10 @@ errors = 0
 
 for i, log in enumerate(dataset):
     payload = json.dumps(
-        {"raw_log": log["raw_log"], "source_id": log.get("source_id", "test-service")}
+        {
+            "raw_log": log["raw_log"],
+            "source_id": f"{log.get('source_id', 'test-service')}-t{log['id']}",
+        }
     )
     headers = {
         "Content-Type": "application/json",

@@ -1,5 +1,5 @@
 {
-    "name": "Feedback workflow",
+    "name": "Feedback Workflow",
     "nodes": [
         {
             "parameters": {
@@ -19,7 +19,7 @@
         },
         {
             "parameters": {
-                "jsCode": "// 1. Get WhatsApp data directly from the Webhook node\n// Replace 'WhatsApp Feedback Webhook' with the exact name of your webhook node\nconst webhookData = $('WhatsApp Feedback Webhook').item.json;\nconst body = webhookData.body?.Body?.trim()?.toUpperCase() || \"\";\nconst from = webhookData.body?.From;\n\n// 2. Get context data from the Postgres node (the current input)\nconst source_id = $json.source_id || null;\nconst afd_state = $json.afd_state || null;\nconst message = $json.message || null;\n\nlet result = {\n  type: \"UNKNOWN\",\n  new_state: afd_state,\n  raw: body,\n  from: from,\n  source_id: source_id,\n  afd_state: afd_state,\n  message: message\n};\n\n// 3. Command Logic\n// 3. Improved Command Logic using .startsWith()\nif (body.startsWith(\"ACK\")) {\n    result.type = \"ACK\";\n} \nelse if (body.startsWith(\"FALSE POSITIVE\")) {\n    result.type = \"FALSE_POSITIVE\";\n} \nelse if (body.startsWith(\"CORRIGER WARNING\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"WARNING\";\n} \nelse if (body.startsWith(\"CORRIGER ERROR\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"ERROR\";\n} \nelse if (body.startsWith(\"RESOLVED\")) {\n    result.type = \"RESOLVED\";\n} \nelse if (body.startsWith(\"STATUS\")) {\n    result.type = \"STATUS\";\n} \nelse if (body.startsWith(\"ESCALATE\")) {\n    result.type = \"ESCALATE\";\n} \nelse if (body.startsWith(\"HELP\")) {\n    result.type = \"HELP\";\n}\n\nreturn [{ json: result }];"
+                "jsCode": "// 1. Get WhatsApp data directly from the Webhook node\n// Replace 'WhatsApp Feedback Webhook' with the exact name of your webhook node\nconst webhookData = $('WhatsApp Feedback Webhook').item.json;\nconst body = webhookData.body?.Body?.trim()?.toUpperCase() || \"\";\nconst from = webhookData.body?.From;\n\n// 2. Get context data from the Postgres node (the current input)\nconst source_id = $json.source_id || null;\nconst afd_state = $json.afd_state || null;\nconst message = $json.message || null;\n\nlet result = {\n  type: \"UNKNOWN\",\n  new_state: afd_state,\n  raw: body,\n  from: from,\n  source_id: source_id,\n  afd_state: afd_state,\n  message: message\n};\n\n// 3. Command Logic\n// 3. Improved Command Logic using .startsWith()\nif (body.startsWith(\"ACK\")) {\n    result.type = \"ACK\";\n} \nelse if (body.startsWith(\"FALSE-POSITIVE\")) {\n    result.type = \"FALSE_POSITIVE\";\n} \nelse if (body.startsWith(\"CORRIGER-WARNING\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"WARNING\";\n} \nelse if (body.startsWith(\"CORRIGER-ERROR\")) {\n    result.type = \"CORRIGER\";\n    result.new_state = \"ERROR\";\n} \nelse if (body.startsWith(\"RESOLVED\")) {\n    result.type = \"RESOLVED\";\n} \nelse if (body.startsWith(\"STATUS\")) {\n    result.type = \"STATUS\";\n} \nelse if (body.startsWith(\"ESCALATE\")) {\n    result.type = \"ESCALATE\";\n} \nelse if (body.startsWith(\"HELP\")) {\n    result.type = \"HELP\";\n}\n\nreturn [{ json: result }];"
             },
             "type": "n8n-nodes-base.code",
             "typeVersion": 2,
@@ -215,7 +215,7 @@
             "type": "n8n-nodes-base.switch",
             "typeVersion": 3.4,
             "position": [
-                16,
+                -48,
                 416
             ],
             "id": "84c2e38f-9f8e-4dbc-b0bb-1e8416d25d08",
@@ -234,7 +234,13 @@
                 112
             ],
             "id": "50b0faab-3156-4c1c-a7c0-f95e44faf93e",
-            "name": "FALSE_POSITIVE Handler"
+            "name": "FALSE_POSITIVE Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
         },
         {
             "parameters": {
@@ -249,7 +255,13 @@
                 304
             ],
             "id": "6a6bcd11-4fbd-496e-b316-772096128aa2",
-            "name": "CORRIGER Handler"
+            "name": "CORRIGER Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
         },
         {
             "parameters": {
@@ -264,12 +276,18 @@
                 496
             ],
             "id": "322b877a-364c-43d9-ae38-3986eb094988",
-            "name": "RESOLVED Handler"
+            "name": "RESOLVED Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
         },
         {
             "parameters": {
                 "operation": "executeQuery",
-                "query": "SELECT \n    source_id, \n    current_state, \n    last_event_time \nFROM afd_states \nORDER BY current_state DESC, last_event_time DESC;",
+                "query": "SELECT \n    source_id,\n    current_state,\n    TO_CHAR(last_event_time, 'HH24:MI:SS') AS last_update\nFROM afd_states\nORDER BY last_event_time DESC;",
                 "options": {}
             },
             "type": "n8n-nodes-base.postgres",
@@ -279,42 +297,13 @@
                 688
             ],
             "id": "1b20716e-cd55-46f8-a446-afe0440f3003",
-            "name": "STATUS Handler"
-        },
-        {
-            "parameters": {
-                "method": "POST",
-                "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
-                "authentication": "genericCredentialType",
-                "genericAuthType": "httpBasicAuth",
-                "sendBody": true,
-                "contentType": "form-urlencoded",
-                "bodyParameters": {
-                    "parameters": [
-                        {
-                            "name": "From",
-                            "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
-                        },
-                        {
-                            "name": "To",
-                            "value": "={{$env.TWILIO_WHATSAPP_ESCALATION}}"
-                        },
-                        {
-                            "name": "Body",
-                            "value": "={{ $json.message}}"
-                        }
-                    ]
-                },
-                "options": {}
-            },
-            "type": "n8n-nodes-base.httpRequest",
-            "typeVersion": 4.4,
-            "position": [
-                688,
-                496
-            ],
-            "id": "14fbbcf7-5a09-4778-952c-49da5e9bb165",
-            "name": "Escalation Alert (Twilio)"
+            "name": "STATUS Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
         },
         {
             "parameters": {
@@ -329,7 +318,13 @@
                 -80
             ],
             "id": "bf80453a-d4b4-4553-989d-3679dac74870",
-            "name": "ACK Handler"
+            "name": "ACK Handler",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
         },
         {
             "parameters": {
@@ -344,7 +339,13 @@
                 496
             ],
             "id": "45ff5bb5-4d8f-42b4-8538-77ef9ce0d8ae",
-            "name": "Fetch alert context"
+            "name": "Fetch alert context",
+            "credentials": {
+                "postgres": {
+                    "id": "ppKqF1hEUn1tlvXf",
+                    "name": "Postgres account"
+                }
+            }
         },
         {
             "parameters": {
@@ -409,22 +410,7 @@
         {
             "parameters": {
                 "mode": "raw",
-                "jsonOutput": "={ \n  \"message\": \"*ESCALATION REQUEST*\\n*Service:* apache\\n*State:* CRITICAL\\n*Message:* 127.0.0.1 - - [15/Jan/2024:14:23:01 +0000] \\\"POST /api/checkout 500 124\\\" CRITICAL: Database connection pool exhausted\\n\\n*Immediate intervention required*\" \n}",
-                "options": {}
-            },
-            "type": "n8n-nodes-base.set",
-            "typeVersion": 3.4,
-            "position": [
-                464,
-                880
-            ],
-            "id": "7001c817-cc85-4685-803f-52dd0335bad9",
-            "name": "ESCALATE Message"
-        },
-        {
-            "parameters": {
-                "mode": "raw",
-                "jsonOutput": "{\n  \"message\": \"GUIDE DES COMMANDES DISPONIBLES\\n\\n*ACK* : Confirmer la prise en charge de l'alerte.\\n\\n*FALSE POSITIVE* : Signaler une erreur de classification (l'état repassera en NOMINAL).\\n\\n*CORRIGER [ETAT]* : Forcer manuellement un nouvel état.\\nExemple : CORRIGER WARNING\\n\\n*RESOLVED* : Clôturer l'incident et calculer le temps de résolution (MTTR).\\n\\n*STATUS* : Obtenir l'état actuel de tous les services monitorés.\\n\\n*ESCALATE* : Transférer l'alerte à l'astreinte de niveau supérieur.\\n\\n*HELP* : Afficher ce menu d'aide.\"\n}",
+                "jsonOutput": "{\n  \"message\": \"GUIDE DES COMMANDES DISPONIBLES\\n\\n*ACK* : Confirmer la prise en charge de l'alerte.\\n\\n*FALSE- POSITIVE* : Signaler une erreur de classification (l'état repassera en NOMINAL).\\n\\n*CORRIGER-[ETAT]* : Forcer manuellement un nouvel état.\\nExemple : CORRIGER-WARNING\\n\\n*RESOLVED* : Clôturer l'incident et calculer le temps de résolution (MTTR).\\n\\n*STATUS* : Obtenir l'état actuel de tous les services monitorés.\\n\\n*ESCALATE* : Transférer l'alerte à l'astreinte de niveau supérieur.\\n\\n*HELP* : Afficher ce menu d'aide.\"\n}",
                 "options": {}
             },
             "type": "n8n-nodes-base.set",
@@ -438,7 +424,7 @@
         },
         {
             "parameters": {
-                "jsCode": "const items = $input.all();\nlet statusList = items.map(item => {\n  return `• *${item.json.source_id}*: ${item.json.current_state}`;\n}).join('\\n');\n\nreturn {\n  message: `État actuel des services :*\\n${statusList}`\n};"
+                "jsCode": "const items = $input.all();\n\nfunction getEmoji(state) {\n  switch(state) {\n    case \"NOMINAL\":\n      return \"✅\";\n    case \"WARNING\":\n      return \"⚠️\";\n    case \"ERROR\":\n      return \"🟡\";\n    case \"CRITICAL\":\n      return \"🔴\";\n    default:\n      return \"❓\";\n  }\n}\n\nlet lines = items.map(item => {\n  return `├ ${item.json.source_id.padEnd(15)} : ${getEmoji(item.json.current_state)} ${item.json.current_state}`;\n});\n\nconst lastUpdate = items[0]?.json?.last_update || \"unknown\";\n\nreturn [{\n  json: {\n    message:\n`📊 *État du système*\n\n${lines.join(\"\\n\")}\n\nDernière mise à jour : ${lastUpdate}`\n  }\n}];"
             },
             "type": "n8n-nodes-base.code",
             "typeVersion": 2,
@@ -451,7 +437,7 @@
         },
         {
             "parameters": {
-                "jsCode": "// On récupère le texte avec la majuscule \"Body\"\nconst text = $input.item.json.body.Body; \n\nif (!text) {\n  return { extracted_service: \"unknown\" };\n}\n\n// On sépare les mots\nconst parts = text.split(\" \");\n\n/* Si l'admin écrit \"ESCALATE payment-api\" :\n  parts[0] = \"ESCALATE\"\n  parts[1] = \"payment-api\"\n*/\nconst service = parts[1] ? parts[1].toLowerCase() : \"all\"; \n\nreturn {\n  extracted_service: service\n};"
+                "jsCode": "// On récupère le texte avec la majuscule \"Body\"\nconst text = $input.item.json.body.Body; \n\nif (!text) {\n  return { extracted_service: \"unknown\" };\n}\n\n// On sépare les mots\nconst parts = text.split(\" \");\n\n\nconst service = parts[1] ? parts[1].toLowerCase() : \"all\"; \n\nreturn {\n  extracted_service: service\n};"
             },
             "type": "n8n-nodes-base.code",
             "typeVersion": 2,
@@ -461,6 +447,101 @@
             ],
             "id": "d8775a29-f177-4478-a04b-01029b6c3441",
             "name": "Extract Service"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpBasicAuth",
+                "sendBody": true,
+                "contentType": "form-urlencoded",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "From",
+                            "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+                        },
+                        {
+                            "name": "To",
+                            "value": "={{$env.TWILIO_WHATSAPP_ADMIN}}"
+                        },
+                        {
+                            "name": "Body",
+                            "value": "={{ $json.message}}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.4,
+            "position": [
+                768,
+                496
+            ],
+            "id": "14fbbcf7-5a09-4778-952c-49da5e9bb165",
+            "name": "Send WhatsApp Reply",
+            "credentials": {
+                "httpBasicAuth": {
+                    "id": "nFNQQLi2HhozL6qX",
+                    "name": "Unnamed credential"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "return [{\n  json: {\n    source_id: $json.source_id,\n    message: $json.message,\n    response:\n`Escalade envoyée pour ${$json.source_id}.`\n  }\n}];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                464,
+                912
+            ],
+            "id": "f51836d3-2641-427c-ace7-e52aff5cf144",
+            "name": "ESCALATE Message"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpBasicAuth",
+                "sendBody": true,
+                "contentType": "form-urlencoded",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "From",
+                            "value": "={{$env.TWILIO_WHATSAPP_FROM}}"
+                        },
+                        {
+                            "name": "To",
+                            "value": "={{$env.TWILIO_WHATSAPP_ESCALATION}}"
+                        },
+                        {
+                            "name": "Body",
+                            "value": "={{ `ESCALADE : ${$json.source_id} est en CRITICAL.  Message: ${$json.message}  Prise en charge requise immédiatement.` }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.4,
+            "position": [
+                768,
+                816
+            ],
+            "id": "7f9af046-61bb-448f-890c-8e02589e07d0",
+            "name": "Send Escalation Reply",
+            "credentials": {
+                "httpBasicAuth": {
+                    "id": "nFNQQLi2HhozL6qX",
+                    "name": "Unnamed credential"
+                }
+            }
         }
     ],
     "pinData": {},
@@ -610,7 +691,7 @@
             "main": [
                 [
                     {
-                        "node": "Escalation Alert (Twilio)",
+                        "node": "Send WhatsApp Reply",
                         "type": "main",
                         "index": 0
                     }
@@ -621,7 +702,7 @@
             "main": [
                 [
                     {
-                        "node": "Escalation Alert (Twilio)",
+                        "node": "Send WhatsApp Reply",
                         "type": "main",
                         "index": 0
                     }
@@ -632,7 +713,7 @@
             "main": [
                 [
                     {
-                        "node": "Escalation Alert (Twilio)",
+                        "node": "Send WhatsApp Reply",
                         "type": "main",
                         "index": 0
                     }
@@ -643,18 +724,7 @@
             "main": [
                 [
                     {
-                        "node": "Escalation Alert (Twilio)",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        },
-        "ESCALATE Message": {
-            "main": [
-                [
-                    {
-                        "node": "Escalation Alert (Twilio)",
+                        "node": "Send WhatsApp Reply",
                         "type": "main",
                         "index": 0
                     }
@@ -665,7 +735,7 @@
             "main": [
                 [
                     {
-                        "node": "Escalation Alert (Twilio)",
+                        "node": "Send WhatsApp Reply",
                         "type": "main",
                         "index": 0
                     }
@@ -676,7 +746,7 @@
             "main": [
                 [
                     {
-                        "node": "Escalation Alert (Twilio)",
+                        "node": "Send WhatsApp Reply",
                         "type": "main",
                         "index": 0
                     }
@@ -693,6 +763,17 @@
                     }
                 ]
             ]
+        },
+        "ESCALATE Message": {
+            "main": [
+                [
+                    {
+                        "node": "Send Escalation Reply",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
         }
     },
     "active": false,
@@ -700,8 +781,9 @@
         "executionOrder": "v1",
         "binaryMode": "separate"
     },
-    "versionId": "7c99a461-ca98-448b-9dca-d7bc9a9e23a7",
+    "versionId": "b81d0fef-bb13-4486-a2b2-65bd7df236a6",
     "meta": {
+        "templateCredsSetupCompleted": true,
         "instanceId": "3cc12abac201836b73335193ababc7cd5c292dee27ca27a8da644aabb3ae79e1"
     },
     "id": "PCMX9uiPMyIde27A",

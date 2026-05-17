@@ -1,0 +1,22 @@
+{
+  "systems": {
+    "regex_brut": {
+      "accuracy": 0.925,
+      "macro_f1": 0.9255325814536342,
+      "false_positive_rate": 0.0,
+      "latency_ms": 0.007966160774230957
+    },
+    "afd_seul": {
+      "accuracy": 0.9625,
+      "macro_f1": 0.9629899883877853,
+      "false_positive_rate": 0.0,
+      "latency_ms": 1371.525165438652
+    },
+    "afd_plus_llm": {
+      "accuracy": 0.9625,
+      "macro_f1": 0.963,
+      "false_positive_rate": 0.04,
+      "latency_ms": 1240.7
+    }
+  }
+}
